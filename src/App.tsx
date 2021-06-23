@@ -36,17 +36,17 @@ const App = () => {
         }
     }
 
+    let [time, setTime] = useState("00:00:00 p.m.");
+
     useEffect(() => {
         updateTime();
-    }, [])
+    }, [updateTime])
 
     function updateTime(){
         let current = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
         setTime(current.toLowerCase().slice(-11, -1) + ".m.");
         setTimeout(updateTime, 1000);
     }
-
-    let [time, setTime] = useState("00:00:00 p.m.");
 
     return (
         <>
