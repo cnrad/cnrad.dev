@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import * as Icons from './components/Icons'
@@ -40,7 +40,7 @@ const App = () => {
 
     useEffect(() => {
         updateTime();
-    }, [updateTime])
+    })
 
     function updateTime(){
         let current = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
