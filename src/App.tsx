@@ -36,6 +36,34 @@ const App = () => {
         }
     }
 
+    const linkAnimParent = {
+        init: {
+            opacity: 1
+        },
+        load: {
+            opacity: 1,
+            transition: {
+                delayChildren: 0.5,
+                staggerChildren: 0.1
+            }
+        }
+    }
+
+    const linkAnim = {
+        init: {
+            opacity: 0,
+            y: 10
+        },
+        load: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                ease: "easeInOut"
+            }
+        }
+    }
+
     let [time, setTime] = useState("00:00:00 p.m.");
 
     useEffect(() => {
@@ -61,19 +89,19 @@ const App = () => {
                         <Icons.ClockIcon />
                         {time}
                     </Time>
-                    <Contact variants={childAnim}>
-                        <Link color="#ccc" target="_blank" href="mailto:hello@cnrad.dev">
+                    <Contact initial="init" animate="load"  variants={linkAnimParent}>
+                        <Link variants={linkAnim} color="#ccc" target="_blank" href="mailto:hello@cnrad.dev">
                             <Icons.MailIcon />
                         </Link>
-                        <Link color="#ccc" target="_blank" href="https://twitter.com/cnraddd">
+                        <Link variants={linkAnim} color="#ccc" target="_blank" href="https://twitter.com/cnraddd">
                             <Icons.TwitterIcon />
                         </Link>
-                        <Link color="#ccc" target="_blank" href="https://github.com/cnrad">
+                        <Link variants={linkAnim} color="#ccc" target="_blank" href="https://github.com/cnrad">
                             <Icons.GitHubIcon />
                         </Link>
                     </Contact>
                 </Container>
-                <Background src="https://wallpaperaccess.com/full/1638152.jpg" />
+                <Background src="/assets/background.jpg" />
             </Wrapper>
         </>
     );
@@ -117,7 +145,7 @@ const Container = styled(motion.div)`
 
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 25px;
     align-items: left;
     justify-content: center;
     padding-left: 4rem;
@@ -131,11 +159,11 @@ const Header = styled(motion.div)`
 const Bio = styled(motion.div)`
     font-size: 1.4rem;
     font-weight: 400;
-    margin-top: -5px;
+    margin-top: -20px;
     color: #7b8290;
 `
 
-const Link = styled.a<{color: string}>`
+const Link = styled(motion.a)<{color: string}>`
     color: ${({color}) => color};
     text-decoration: none;
     transition: color 0.15s ease-in-out;
@@ -149,7 +177,6 @@ const Link = styled.a<{color: string}>`
 const Time = styled(motion.div)`
     font-size: 1.25rem;
     font-weight: 300;
-    margin-bottom: 25px;
 `
 
 const Contact = styled(motion.div)`
