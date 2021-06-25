@@ -3,24 +3,18 @@ import styled from 'styled-components';
 
 const PageWrapper = (props: any) => {
 
-    const pageVariants = {
-        initial: {
-          opacity: 0,
-        },
-        in: {
-          opacity: 1,
-        },
-        out: {
-          opacity: 0,
-        },
-    }
+    const pageTransition = {
+        type: "tween",
+        ease: "anticipate",
+        duration: 0.25,
+      };
 
     return (
         <Wrapper
-            initial="initial"
-            animate="in"
-            exit="out"
-            variants={pageVariants}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={pageTransition}
         >
             {props.children}
         </Wrapper>

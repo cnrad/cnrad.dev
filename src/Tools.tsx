@@ -1,18 +1,13 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import PageWrapper from './PageWrapper';
-
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Tools = () => {
     return (
         <PageWrapper>
             <Container>
-                <To href="/tools/json-ts">Json to TypeScript</To>
+                <Link to="/tools/json-ts">Json to TypeScript</Link>
             </Container>
         </PageWrapper>
     );
@@ -29,7 +24,7 @@ const Container = styled(motion.div)`
     font-family: -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif;
 `
 
-const To = styled(motion.a)`
+const To = styled(Link)`
     font-size: 2rem;
 `
 
