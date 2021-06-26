@@ -8,8 +8,6 @@ import Tools from "./Tools"
 import { AnimatePresence } from "framer-motion";
 import styled from 'styled-components';
 
-import jsonTs from './tools/jsonTs';
-
 
 const App = () => {
 
@@ -21,7 +19,6 @@ const App = () => {
                 <Switch location={location} key={location.pathname}>
                     <Route exact path="/" component={Main} />
                     <Route exact path="/tools" component={Tools} />
-                    <Route exact path="/tools/json-ts" component={jsonTs} />
                 </Switch>
             </AnimatePresence>
         </Entire>

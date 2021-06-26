@@ -6,7 +6,7 @@ const PageWrapper = (props: any) => {
     const pageTransition = {
         type: "tween",
         ease: "anticipate",
-        duration: 0.25,
+        duration: 0.3,
       };
 
     return (

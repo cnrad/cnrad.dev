@@ -1,17 +1,16 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import PageWrapper from '../PageWrapper';
 import { Link } from "react-router-dom";
 
 const jsonTs = () => {
     return (
         <PageWrapper>
-            <Link to="/tools">back</Link>
+            <To to="/tools">back</To>
         </PageWrapper>
     );
 }
 
-const To = styled(motion.a)`
+const To = styled(Link)`
     font-size: 2rem;
 `
 
