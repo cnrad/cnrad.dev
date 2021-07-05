@@ -193,6 +193,17 @@ const To = styled(motion.a)<{color: string}>`
 const Time = styled(motion.div)`
     font-size: 1.25rem;
     font-weight: 300;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    height: 1.25rem;
+    padding: 2px 0;
+    
+    & > * {
+        padding-right: 5px;
+    }
 `
 
 const Contact = styled(motion.div)`
