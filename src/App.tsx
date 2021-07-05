@@ -166,10 +166,27 @@ const To = styled(motion.a)<{color: string}>`
     color: ${({color}) => color};
     text-decoration: none;
     transition: color 0.15s ease-in-out;
+    position: relative;
 
     &:hover {
-        text-decoration: underline;
         color: #fff;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -1px;
+        left: 0;
+        background-color: #FFF;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+    }
+
+    &:hover:before {
+        visibility: visible;
+        width: 100%;
     }
 `
 
