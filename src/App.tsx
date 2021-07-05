@@ -80,7 +80,7 @@ const App = () => {
             <Wrapper>
                 <Container initial="init" animate="load" variants={containerAnim}>
                     <Header variants={childAnim}>Conrad Crawford</Header>
-                    <Bio variants={childAnim}>16 year old web <To color="#949eb3" href="https://github.com/cnrad">developer</To>.</Bio>
+                    <Bio variants={childAnim}>16 year old web <DevLink color="#949eb3" href="https://github.com/cnrad">developer</DevLink>.</Bio>
                     <Time variants={childAnim}>
                         <Icons.ClockIcon />
                         {time}
@@ -162,7 +162,7 @@ const Bio = styled(motion.div)`
     color: #7b8290;
 `
 
-const To = styled(motion.a)<{color: string}>`
+const DevLink = styled(motion.a)<{color: string}>`
     color: ${({color}) => color};
     text-decoration: none;
     transition: color 0.15s ease-in-out;
@@ -190,6 +190,17 @@ const To = styled(motion.a)<{color: string}>`
     }
 `
 
+const To = styled(motion.a)<{color: string}>`
+    color: ${({color}) => color};
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+    position: relative;
+
+    &:hover {
+        color: #fff;
+    }
+`
+
 const Time = styled(motion.div)`
     font-size: 1.25rem;
     font-weight: 300;
@@ -202,7 +213,7 @@ const Time = styled(motion.div)`
     padding: 2px 0;
     
     & > * {
-        padding-right: 5px;
+        margin-right: 10px;
     }
 `
 
