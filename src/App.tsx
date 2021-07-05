@@ -213,7 +213,7 @@ const Time = styled(motion.div)`
     padding: 2px 0;
     
     & > * {
-        margin-right: 10px;
+        margin-right: 15px;
     }
 `
 
