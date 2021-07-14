@@ -95,6 +95,9 @@ const App = () => {
                         <To variants={linkAnim} color="#ccc" target="_blank" href="https://github.com/cnrad">
                             <Icons.GitHubIcon />
                         </To>
+                        <To variants={linkAnim} color="#ccc" target="_blank" href="https://linkedin.com/in/cnrad">
+                            <Icons.LinkedinLogo />
+                        </To>
                         {/* <To variants={linkAnim} color="#ccc" target="_blank" href="https://poly.work/cnrad">
                             <Icons.PolyworkIcon />
                         </To> */}
