@@ -125,9 +125,10 @@ const Background = styled.img`
     position: fixed;
     top: -5rem;
     right: 0;
+    object-fit: cover;
     
-    width: auto;
-    height: 100%;
+    width: 100vw;
+    height: auto;
     min-height: 70rem;
     filter: grayscale(50%);
     pointer-events: none;
