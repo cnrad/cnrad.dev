@@ -89,9 +89,9 @@ const App = () => {
                         <To variants={linkAnim} color="#ccc" target="_blank" href="mailto:hello@cnrad.dev">
                             <Icons.MailIcon />
                         </To>
-                        <To variants={linkAnim} color="#ccc" target="_blank" href="https://twitter.com/atcnrad">
+                        {/*<To variants={linkAnim} color="#ccc" target="_blank" href="https://twitter.com/atcnrad">
                             <Icons.TwitterIcon />
-                        </To>
+                        </To>*/}
                         <To variants={linkAnim} color="#ccc" target="_blank" href="https://github.com/cnrad">
                             <Icons.GitHubIcon />
                         </To>
