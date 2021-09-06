@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import * as Icons from './components/Icons'
+import * as Icons from '../src/Icons'
+import Head from 'next/head';
 
 const App = () => {
 
@@ -74,6 +75,19 @@ const App = () => {
 
     return (
         <>
+            <Head>
+                <meta charSet="utf-8" />    
+                <title>Conrad Crawford</title>
+                <link rel="icon" href="/favicon.ico" />
+                <meta name="viewport" content="width=device-width,initial-scale=1" />
+                <meta name="theme-color" content="#000000" />
+                <meta name="keywords" content="cnrad, Conrad Crawford, Conrad, Crawford, web developer, github, typescript" />
+                <meta name="description" content="Conrad Crawford - Full-stack TypeScript Developer." />
+                <meta name="author" content="Conrad Crawford" />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+                <link rel="manifest" href="/manifest.json" />
+            </Head>
+
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" /> 
