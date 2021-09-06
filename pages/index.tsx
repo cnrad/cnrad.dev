@@ -86,6 +86,7 @@ const App = () => {
                 <meta name="author" content="Conrad Crawford" />
                 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 <link rel="manifest" href="/manifest.json" />
+                <noscript><style>{"* {opacity: 1 !important;}"}</style></noscript>
             </Head>
 
             <link rel="preconnect" href="https://fonts.googleapis.com" />
