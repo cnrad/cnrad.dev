@@ -119,7 +119,7 @@ const App = () => {
                         </To> */}
                     </Contact>
                 </Container>
-                <Background src="/assets/background.jpg" />
+                <Background src="/assets/background.jpg" initial={{opacity: 0, scale: 1.25}} animate={{opacity: 1, scale: 1}} transition={{duration: 0.25, easing: "easeInOut"}} />
             </Wrapper>
         </>
     );
@@ -135,7 +135,7 @@ const Wrapper = styled.div`
     color: #fff;
 `
 
-const Background = styled.img`
+const Background = styled(motion.img)`
     z-index: 0;
     position: fixed;
     top: -5rem;
