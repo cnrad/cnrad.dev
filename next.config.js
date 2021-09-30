@@ -10,7 +10,7 @@ module.exports = {
       },
       {
         source: '/twitter',
-        destination: 'https://twitter.com/atcnrad',
+        destination: 'https://twitter.com/notcnrad',
         permanent: true,
       },
       {
