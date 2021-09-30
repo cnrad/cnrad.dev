@@ -104,9 +104,9 @@ const App = () => {
                         <To variants={linkAnim} color="#ccc" target="_blank" href="mailto:hello@cnrad.dev">
                             <Icons.MailIcon />
                         </To>
-                        {/*<To variants={linkAnim} color="#ccc" target="_blank" href="https://twitter.com/atcnrad">
+                        <To variants={linkAnim} color="#ccc" target="_blank" href="https://twitter.com/notcnrad">
                             <Icons.TwitterIcon />
-                        </To>*/}
+                        </To>
                         <To variants={linkAnim} color="#ccc" target="_blank" href="https://github.com/cnrad">
                             <Icons.GitHubIcon />
                         </To>
@@ -119,7 +119,7 @@ const App = () => {
                         </To> */}
                     </Contact>
                 </Container>
-                <Background src="/assets/background.jpg" />
+                <Background src="/assets/background.jpg" initial={{opacity: 0, scale: 1.25}} animate={{opacity: 1, scale: 1}} transition={{duration: 0.25, easing: [0, 0.65, 0.90, 1]}} />
             </Wrapper>
         </>
     );
@@ -135,7 +135,7 @@ const Wrapper = styled.div`
     color: #fff;
 `
 
-const Background = styled.img`
+const Background = styled(motion.img)`
     z-index: 0;
     position: fixed;
     top: -5rem;
