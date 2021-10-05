@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import * as Icons from '../src/Icons'
 import Head from 'next/head';
+import { Spotify } from '../src/components/spotify';
 
 const App = () => {
 
@@ -61,18 +62,28 @@ const App = () => {
         }
     }
 
-    let [time, setTime] = useState("00:00:00 p.m.");
+    const [time, setTime] = useState("00:00:00 p.m.");
+    const [presence, setPresence] = useState({spotify: null}) as any;
 
     useEffect(() => {
         updateTime();
-    })
+    }, [])
+
+    useEffect(() => {
+        fetch('/api/fetchPresence')
+            .then(res => {
+                console.log(res)
+                return res.json();
+            })
+            .then(json => setPresence(json.data));
+    }, [])
 
     function updateTime(){
         let current = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
         setTime(current.toLowerCase().slice(-11, -1) + ".m.");
         setTimeout(updateTime, 1000);
     }
-
+    
     return (
         <>
             <Head>
@@ -118,6 +129,10 @@ const App = () => {
                             <Icons.PolyworkIcon />
                         </To> */}
                     </Contact>
+
+
+                    <Spotify />
+                    
                 </Container>
                 <Background src="/assets/background.jpg" initial={{opacity: 0, scale: 1.25}} animate={{opacity: 1, scale: 1}} transition={{duration: 0.25, easing: [0, 0.65, 0.90, 1]}} />
             </Wrapper>
