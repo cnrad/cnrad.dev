@@ -12,7 +12,7 @@ export function Spotify() {
     }
 
     return (
-        <Presence>
+        <Presence initial={{opacity: 0, y: -50}} animate={{opacity: 1, y: -100}} transition={{duration: 1.25, easing: [0, 0.5, 0.28, 0.99]}}>
             <ListeningTo>Listening to Spotify</ListeningTo>
             <SpotifyCont>
                 <AlbumImg src={user.spotify.album_art_url} />
@@ -33,7 +33,7 @@ export function Spotify() {
 
 const Presence = styled(motion.div)`
     font-family: Karla, sans-serif;
-    width: 17rem;
+    width: 20rem;
     height: 7rem;
 
     display: flex;
@@ -51,8 +51,8 @@ const Presence = styled(motion.div)`
 `;
 
 const ListeningTo = styled(motion.p)`
-    font-weight: 700;
-    color: #fff;
+    font-weight: 600;
+    color: #e6e6e6;
     font-size: 1.1rem;
     margin: 0 0 0.75rem 0;
 `;
