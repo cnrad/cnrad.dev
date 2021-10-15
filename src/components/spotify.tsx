@@ -12,16 +12,17 @@ export function Spotify() {
     }
 
     return (
-        <Presence initial={{opacity: 0, y: -50}} animate={{opacity: 1, y: -100}} transition={{duration: 1.25, easing: [0, 0.5, 0.28, 0.99]}}>
+        <Presence
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: -100 }}
+            transition={{ duration: 1.25, easing: [0, 0.5, 0.28, 0.99] }}
+        >
             <ListeningTo>Listening to Spotify</ListeningTo>
             <SpotifyCont>
                 <AlbumImg src={user.spotify.album_art_url} />
-                <SpotifyIcon src='/assets/spotify-logo.svg' />
+                <SpotifyIcon src="/assets/spotify-logo.svg" />
                 <TextCont>
-                    <SongTitle 
-                        href={`https://open.spotify.com/track/${user.spotify.track_id}`}
-                        target="_blank"
-                    >
+                    <SongTitle href={`https://open.spotify.com/track/${user.spotify.track_id}`} target="_blank">
                         {user.spotify.song}
                     </SongTitle>
                     <SongArtist>{user.spotify.artist}</SongArtist>
@@ -42,8 +43,8 @@ const Presence = styled(motion.div)`
     justify-content: start;
 
     position: absolute;
-    bottom: 2rem;
-    transform: translate(0, -100%);
+    left: auto;
+    top: 93%;
 
     @media (max-height: 600px) {
         display: none;
@@ -85,7 +86,7 @@ const SpotifyIcon = styled(motion.img)`
     background-color: #000;
     border: 2px solid #000;
     pointer-events: none;
-`
+`;
 
 const TextCont = styled(motion.div)`
     width: auto;
