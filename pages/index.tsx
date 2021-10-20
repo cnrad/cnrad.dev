@@ -147,9 +147,9 @@ const App = () => {
                 </Container>
                 <Background
                     src="/assets/background.jpg"
-                    initial={{ opacity: 0, scale: 1.25 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.25, easing: [0, 0.65, 0.9, 1] }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.25, easing: [0, 1, 0.5, 1] }}
                 />
             </Wrapper>
         </>
