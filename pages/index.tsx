@@ -114,7 +114,7 @@ const App = () => {
                 <Container initial="init" animate="load" variants={containerAnim}>
                     <Header variants={childAnim}>Conrad Crawford</Header>
                     <Bio variants={childAnim}>
-                        16 year old web{" "}
+                        17 year old web{" "}
                         <DevLink color="#949eb3" href="https://github.com/cnrad">
                             developer
                         </DevLink>
