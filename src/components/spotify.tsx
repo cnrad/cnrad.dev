@@ -12,106 +12,38 @@ export function Spotify() {
     }
 
     return (
-        <Presence
+        <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: -100 }}
             transition={{ duration: 1.25, easing: [0, 0.5, 0.28, 0.99] }}
+            className="absolute left-8 -bottom-16 w-[20rem] h-[7rem] hidden md:flex flex-col items-start justify-start "
         >
-            <ListeningTo>Listening to Spotify</ListeningTo>
-            <SpotifyCont>
-                <AlbumImg src={user.spotify.album_art_url} />
-                <SpotifyIcon src="/assets/spotify-logo.svg" />
-                <TextCont>
-                    <SongTitle href={`https://open.spotify.com/track/${user.spotify.track_id}`} target="_blank">
+            <h1 className="text-white font-semibold text-base mb-2 flex items-center justify-center">
+                Listening to Spotify
+                <span className="ml-2 w-2 h-2">
+                    <span className="absolute w-2 h-2 bg-red-600 rounded-full animate-ping" />
+                    <span className="absolute w-2 h-2 bg-red-600 rounded-full" />
+                </span>
+            </h1>
+
+            <div className="w-full h-[6rem] flex flex-row items-center justify-start">
+                <img src={user.spotify.album_art_url} className="w-20 h-20 rounded-md mr-4 pointer-events-none" />
+                {/* <img
+                    src="/assets/spotify-logo.svg"
+                    className="absolute -bottom-1 left-[62px] w-6 h-6 rounded-full bg-black border-2 border-black pointer-events-none"
+                /> */}
+                <div className="w-auto h-full flex flex-col items-start justify-center">
+                    <a
+                        href={`https://open.spotify.com/track/${user.spotify.track_id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium text-[#e1eafd] mb-1"
+                    >
                         {user.spotify.song}
-                    </SongTitle>
-                    <SongArtist>{user.spotify.artist}</SongArtist>
-                </TextCont>
-            </SpotifyCont>
-        </Presence>
+                    </a>
+                    <p className="text-[#cad2e0] font-normal text-sm">{user.spotify.artist}</p>
+                </div>
+            </div>
+        </motion.div>
     );
 }
-
-const Presence = styled(motion.div)`
-    font-family: Karla, sans-serif;
-    width: 20rem;
-    height: 7rem;
-
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: start;
-
-    position: absolute;
-    left: auto;
-    top: 93%;
-
-    @media (max-height: 600px) {
-        display: none;
-    }
-`;
-
-const ListeningTo = styled(motion.p)`
-    font-weight: 600;
-    color: #e6e6e6;
-    font-size: 1.1rem;
-    margin: 0 0 0.75rem 0;
-`;
-
-const SpotifyCont = styled(motion.div)`
-    width: 100%;
-    height: 6rem;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-`;
-
-const AlbumImg = styled(motion.img)`
-    width: 5rem;
-    height: 5rem;
-    border-radius: 0.75rem;
-    margin-right: 1rem;
-    pointer-events: none;
-`;
-
-const SpotifyIcon = styled(motion.img)`
-    position: absolute;
-    bottom: -5px;
-    left: 60px;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 50%;
-    background-color: #000;
-    border: 2px solid #000;
-    pointer-events: none;
-`;
-
-const TextCont = styled(motion.div)`
-    width: auto;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
-`;
-
-const SongTitle = styled(motion.a)`
-    font-weight: 500;
-    color: #e1eafd;
-    font-size: 1.15rem;
-    margin: 0.15rem 0;
-
-    &:hover {
-        text-decoration: underline;
-    }
-`;
-
-const SongArtist = styled(motion.p)`
-    font-weight: 400;
-    color: #cad2e0;
-    font-size: 1.05rem;
-    margin: 0.15rem 0;
-`;

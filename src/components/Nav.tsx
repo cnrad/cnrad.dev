@@ -3,9 +3,17 @@ import { motion } from "framer-motion";
 const LandingButton = ({ name }: any) => {
     return (
         <motion.h1
-            initial={{ color: "rgba(255, 255, 255, 0.8)", backgroundColor: "rgba(0, 0, 0, 0)" }}
-            whileHover={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(100, 100, 120, 0.25)" }}
-            transition={{ duration: 0.1, ease: "easeInOut" }}
+            animate={{
+                color: "rgba(255, 255, 255, 0.8)",
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                borderRadius: "0.25rem",
+            }}
+            whileHover={{
+                color: "rgba(255, 255, 255, 1)",
+                backgroundColor: "rgba(200, 200, 220, 0.1)",
+                borderRadius: "0.45rem",
+            }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="cursor-pointer rounded-lg px-4 py-2"
         >
             {name}
