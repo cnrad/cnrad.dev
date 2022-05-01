@@ -2,7 +2,7 @@ import { useLanyard } from "use-lanyard";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-export function Spotify() {
+const Spotify = () => {
     //code inspired by alistair @ github.com/alii, design inspired by phineas @ github.com/Phineas
 
     const { data: user } = useLanyard("705665813994012695");
@@ -16,9 +16,9 @@ export function Spotify() {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: -100 }}
             transition={{ duration: 1.25, easing: [0, 0.5, 0.28, 0.99] }}
-            className="absolute left-8 -bottom-16 w-[20rem] h-[7rem] hidden md:flex flex-col items-start justify-start "
+            className="fixed left-6 -bottom-20 w-[20rem] h-[7rem] hidden md:flex flex-col items-start justify-start "
         >
-            <h1 className="text-white font-semibold text-base mb-2 flex items-center justify-center">
+            <h1 className="text-gray-100 font-semibold text-base mb-2 flex items-center justify-center">
                 Listening to Spotify
                 <span className="ml-2 w-2 h-2">
                     <span className="absolute w-2 h-2 bg-red-600 rounded-full animate-ping" />
@@ -49,4 +49,6 @@ export function Spotify() {
             </div>
         </motion.div>
     );
-}
+};
+
+export default Spotify;
