@@ -27,7 +27,10 @@ export function Spotify() {
             </h1>
 
             <div className="w-full h-[6rem] flex flex-row items-center justify-start">
-                <img src={user.spotify.album_art_url} className="w-20 h-20 rounded-md mr-4 pointer-events-none" />
+                <img
+                    src={user.spotify.album_art_url}
+                    className="w-[4.5rem] h-[4.5rem] rounded-md mr-4 pointer-events-none"
+                />
                 {/* <img
                     src="/assets/spotify-logo.svg"
                     className="absolute -bottom-1 left-[62px] w-6 h-6 rounded-full bg-black border-2 border-black pointer-events-none"
@@ -37,7 +40,7 @@ export function Spotify() {
                         href={`https://open.spotify.com/track/${user.spotify.track_id}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-medium text-[#e1eafd] mb-1"
+                        className="font-medium text-[#e1eafd]"
                     >
                         {user.spotify.song}
                     </a>
