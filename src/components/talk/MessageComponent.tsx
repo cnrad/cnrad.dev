@@ -22,7 +22,7 @@ const MessageComponent = () => {
     };
 
     return (
-        <div className="col-span-2 row-span-3 bg-opacity-50 bg-slate-500/10 rounded-md p-4">
+        <div className="md:col-span-2 row-span-3 bg-opacity-50 bg-white/5 rounded-md p-4 border border-zinc-800/50">
             <h1 className="font-bold text-sm text-slate-500 mb-1">EMAIL</h1>
             <input
                 placeholder="example@gmail.com"

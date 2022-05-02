@@ -3,17 +3,26 @@ import MessageComponent from "../components/talk/MessageComponent";
 import ContactLink from "../components/talk/ContactLink";
 import { SiTwitter, SiDiscord } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
+import { motion } from "framer-motion";
+import GradientBar from "../components/GradientBar";
 
 const Talk = () => {
     return (
-        <div className="mt-12 w-full h-screen">
-            <h1 className="text-white font-bold text-3xl mb-2">Let's chat 💬</h1>
+        <motion.div
+            key="talk"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ ease: "easeOut", duration: 0.25 }}
+            className="mt-36 w-full "
+        >
+            <h1 className="text-white font-bold text-3xl mb-2 mt-8">Let's chat 💬</h1>
             <p className="text-gray-200 mb-8">
                 Have an inquiry, or want to connect? Feel free to leave a message below, or get in touch via Discord,
                 Twitter, or email.
             </p>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
                 <MessageComponent />
 
                 <div className="">
@@ -21,22 +30,25 @@ const Talk = () => {
                         name="cnrad#0566"
                         icon={<SiDiscord className="w-6 h-6 text-[#5865F2]" />}
                         link="https://discord.com/users/705665813994012695"
+                        borderColor="hover:border-[#5865F2]/50"
                     />
 
                     <ContactLink
                         name="@notcnrad"
                         icon={<SiTwitter className="w-6 h-6 text-[#1DA1F2]" />}
                         link="https://twitter.com/notcnrad"
+                        borderColor="hover:border-[#1DA1F2]/50"
                     />
 
                     <ContactLink
                         name="hello@cnrad.dev"
                         icon={<FiMail className="w-6 h-6 text-gray-400" />}
                         link="mailto:hello@cnrad.dev"
+                        borderColor="hover:border-gray-400/50"
                     />
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

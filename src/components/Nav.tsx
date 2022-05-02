@@ -36,7 +36,7 @@ const LinkButton = ({ icon, href }: any) => {
 
 const Nav = () => {
     return (
-        <div className="w-full flex flex-row justify-between items-center h-16">
+        <div className="z-[999] fixed w-[90%] md:w-[50rem] flex flex-row justify-between items-center px-4 py-2 mt-4 md:mt-6 rounded-md bg-[#12181d]/60 border border-slate-800/50 backdrop-blur-lg">
             <div className="flex flex-row items-center justify-between">
                 <LandingButton name="Home" link="/" />
                 <LandingButton name="Talk" link="/talk" />

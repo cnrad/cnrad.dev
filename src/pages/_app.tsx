@@ -4,6 +4,15 @@ import Spotify from "../components/Spotify";
 import Head from "next/head";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import { AnimatePresence } from "framer-motion";
+import { Router } from "next/router";
+
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+Router.events.on("routeChangeStart", () => NProgress.start());
+Router.events.on("routeChangeComplete", () => NProgress.done());
+Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -26,10 +35,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <style>{"* {opacity: 1 !important;}"}</style>
                 </noscript>
             </Head>
-            <div className="flex flex-row justify-center w-full h-full bg-gradient-to-bl from-black to-[#060c1a]">
-                <div className="w-[50rem]">
-                    <Nav />
-                    <Component {...pageProps} />
+            <div className="flex flex-row justify-center w-full h-full bg-gradient-to-bl from-black to-[#0d131f]">
+                <Nav />
+                <div className="w-[80%] md:w-[50rem]">
+                    <AnimatePresence exitBeforeEnter>
+                        <Component {...pageProps} />
+                    </AnimatePresence>
                     <Footer />
                 </div>
                 <Spotify />
