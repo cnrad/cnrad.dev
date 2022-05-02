@@ -26,7 +26,7 @@ const ContactLink = ({ name, icon, link }: { name: string; icon: ReactElement; l
                 className="mb-4 row-start-3 flex flex-row items-center bg-opacity-50 bg-slate-500/10 rounded-md p-4 border border-zinc-800/50 cursor-pointer"
             >
                 {icon}
-                <h1 className="font-medium text-sm text-slate-400 mx-2">{name}</h1>
+                <h1 className="font-medium text-sm text-slate-400 mx-3">{name}</h1>
                 <FiExternalLink className="w-5 h-5 text-gray-600" />
             </animated.a>
         </Link>
