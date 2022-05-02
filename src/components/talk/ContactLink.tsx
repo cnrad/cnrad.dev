@@ -2,9 +2,24 @@ import React, { ReactElement } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { animated, useSpring } from "react-spring";
 import Link from "next/link";
+import { classNames } from "../../lib/classNames";
 
-const ContactLink = ({ name, icon, link }: { name: string; icon: ReactElement; link: string }) => {
-    const calc = (x: number, y: number) => [-(y - window.innerHeight / 2) / 35, (x - window.innerWidth / 2) / 35, 1.05];
+const ContactLink = ({
+    name,
+    icon,
+    link,
+    borderColor,
+}: {
+    name: string;
+    icon: ReactElement;
+    link: string;
+    borderColor?: string;
+}) => {
+    const calc = (x: number, y: number) => [
+        -(y - window.innerHeight / 3) / 35,
+        (x - window.innerWidth / 1.5) / 30,
+        1.05,
+    ];
     const trans = (x: number, y: number, s: number): string =>
         `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 
@@ -23,7 +38,10 @@ const ContactLink = ({ name, icon, link }: { name: string; icon: ReactElement; l
                 }
                 onMouseLeave={() => set({ xys: [0, 0, 1] })}
                 style={{ transform: props.xys.to(trans) }}
-                className="mb-4 row-start-3 flex flex-row items-center bg-opacity-50 bg-slate-500/10 rounded-md p-4 border border-zinc-800/50 cursor-pointer"
+                className={classNames(
+                    borderColor ? borderColor : "hover:border-white/50",
+                    `mb-4 row-start-3 flex flex-row items-center bg-opacity-50 bg-white/5 rounded-md p-4 border border-zinc-800/50 cursor-pointer transition-colors duration-150`
+                )}
             >
                 {icon}
                 <h1 className="font-medium text-sm text-slate-400 mx-3">{name}</h1>
