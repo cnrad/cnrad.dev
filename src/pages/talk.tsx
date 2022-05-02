@@ -31,7 +31,7 @@ const Talk = () => {
 
                     <ContactLink
                         name="hello@cnrad.dev"
-                        icon={<FiMail className="w-6 h-6 text-gray-100" />}
+                        icon={<FiMail className="w-6 h-6 text-gray-400" />}
                         link="mailto:hello@cnrad.dev"
                     />
                 </div>

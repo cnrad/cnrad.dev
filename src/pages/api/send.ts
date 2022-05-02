@@ -7,14 +7,11 @@ type Data = {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    let data = req.body;
-
-    console.log(req.body);
+    let data = req.body as Data;
 
     if (!data) return res.status(500).json({ result: "Nice try :)" });
 
     if (data.message.length < 1 || data.email.length < 1) return res.status(500).json({ result: "FIELD_EMPTY" });
-
     if (data.message.length > 1000) return res.status(500).json({ result: "MESSAGE_TOO_LONG" });
     if (data.email.length > 500) return res.status(500).json({ result: "NAME_TOO_LONG" });
 
@@ -23,9 +20,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             embeds: [
                 {
                     color: 3108090,
-                    title: req.headers["x-forwarded-for"] ?? req.socket.remoteAddress ?? "unknown!?",
+                    title: data.email,
                     author: {
-                        email: data.email,
+                        name: req.headers["x-forwarded-for"] ?? req.socket.remoteAddress ?? "unknown!?",
                     },
                     description: data.message,
                 },
