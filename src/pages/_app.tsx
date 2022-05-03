@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
                 <Nav />
                 <div className="w-[80%] md:w-[50rem]">
                     <AnimatePresence exitBeforeEnter>
-                        <Component {...pageProps} />
+                        <Component {...pageProps} key={router.pathname} />
                     </AnimatePresence>
                     <Footer />
                 </div>
