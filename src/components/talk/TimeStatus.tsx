@@ -18,9 +18,10 @@ const TimeStatus = () => {
     }, []);
 
     return (
-        <p className="text-white/40 text-sm mb-10">
+        <p className="text-white/50 text-sm mb-10">
             It's currently <span className="font-semibold text-white/60">{time}</span> for me, so I'm probably{" "}
-            <span className="font-semibold text-white/60">{awake ? "awake" : "sleeping"}</span>.
+            <span className="font-semibold text-white/60">{awake ? "awake" : "sleeping"}</span>. I'll get back to you
+            soon.
         </p>
     );
 };
