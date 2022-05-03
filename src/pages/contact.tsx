@@ -10,11 +10,10 @@ import TimeStatus from "../components/talk/TimeStatus";
 const Talk = () => {
     return (
         <motion.div
-            key="talk"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ ease: "easeOut", duration: 0.25 }}
+            transition={{ ease: "easeOut", duration: 0.15 }}
             className="mt-36 w-full"
         >
             <h1 className="text-white font-bold text-3xl mb-3 mt-8">Let's chat 💬</h1>

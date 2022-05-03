@@ -5,12 +5,11 @@ const TimeStatus = () => {
     const [awake, setAwake] = useState<boolean>(true);
 
     function updateTime() {
-        let currentDate = new Date();
-        let current = currentDate.toLocaleString("en-US", { timeZone: "America/New_York" });
+        let current = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
         setTime(`${current.slice(-11, -6)}${current.slice(-3, -1)}.M.`);
-        setTimeout(updateTime, 1000);
+        setTimeout(updateTime, 60 * 1000);
 
-        if (currentDate.getHours() < 7) setAwake(false);
+        if (new Date().getHours() < 7) setAwake(false);
     }
 
     useEffect(() => {
