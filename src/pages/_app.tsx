@@ -30,12 +30,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <meta name="description" content="Conrad Crawford - Fullstack TypeScript Developer." />
                 <meta name="author" content="Conrad Crawford" />
                 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-                <link rel="manifest" href="/manifest.json" />
-                <noscript>
-                    <style>{"* {opacity: 1 !important;}"}</style>
-                </noscript>
             </Head>
-            <div className="flex flex-row justify-center w-full h-full bg-gradient-to-bl from-black to-[#0d131f]">
+            <div className="flex flex-row justify-center w-full h-full bg-gradient-to-bl from-black to-[#0d131f] min-h-screen">
                 <Nav />
                 <div className="w-[80%] md:w-[50rem]">
                     <AnimatePresence exitBeforeEnter>

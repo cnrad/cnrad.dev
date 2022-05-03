@@ -43,9 +43,10 @@ const MessageComponent = () => {
 
                 <button
                     onClick={sendMessage}
-                    className="bg-blue-600/40 flex flex-row items-center justify-center rounded-full px-5 py-2 text-white font-medium hover:bg-blue-400/40 transition-colors duration-75"
+                    className="border border-indigo-600/80 bg-indigo-600/70 hover:bg-indigo-500/70 flex flex-row items-center justify-center rounded-full px-5 py-2 text-sm text-white font-medium transition-colors duration-75"
                 >
-                    Send <RiSendPlane2Fill className="ml-2" />
+                    <span className="mt-[2px]">Send</span>
+                    <RiSendPlane2Fill className="ml-2" />
                 </button>
             </div>
         </div>

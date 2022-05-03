@@ -40,7 +40,7 @@ const ContactLink = ({
                 style={{ transform: props.xys.to(trans) }}
                 className={classNames(
                     borderColor ? borderColor : "hover:border-white/50",
-                    `mb-4 row-start-3 flex flex-row items-center bg-opacity-50 bg-white/5 rounded-md p-4 border border-zinc-800/50 cursor-pointer transition-colors duration-150`
+                    `shadow-white shadow-none hover:shadow-2xl mb-4 row-start-3 flex flex-row items-center bg-opacity-50 bg-white/5 rounded-md p-4 border border-zinc-800/50 cursor-pointer transition-colors duration-150`
                 )}
             >
                 {icon}

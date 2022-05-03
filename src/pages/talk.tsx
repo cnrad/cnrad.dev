@@ -5,6 +5,7 @@ import { SiTwitter, SiDiscord } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import { motion } from "framer-motion";
 import GradientBar from "../components/GradientBar";
+import TimeStatus from "../components/talk/TimeStatus";
 
 const Talk = () => {
     return (
@@ -14,13 +15,15 @@ const Talk = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ ease: "easeOut", duration: 0.25 }}
-            className="mt-36 w-full "
+            className="mt-36 w-full"
         >
             <h1 className="text-white font-bold text-3xl mb-2 mt-8">Let's chat 💬</h1>
-            <p className="text-gray-200 mb-8">
+            <p className="text-gray-200 mb-4">
                 Have an inquiry, or want to connect? Feel free to leave a message below, or get in touch via Discord,
                 Twitter, or email.
             </p>
+
+            <TimeStatus />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
                 <MessageComponent />
