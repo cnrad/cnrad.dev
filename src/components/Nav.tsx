@@ -36,24 +36,33 @@ const LinkButton = ({ icon, href }: any) => {
 };
 
 const Nav = () => {
-    const { scrollY } = useViewportScroll();
     const prevScrollY = useRef(0);
     const [navShow, setNavShow] = useState(true);
 
     useEffect(() => {
-        if (scrollY.get() > prevScrollY.current) return setNavShow(false);
-        return setNavShow(true);
-    }, [scrollY]);
+        const onScroll = () => {
+            if (prevScrollY.current > window.scrollY) {
+                prevScrollY.current = window.scrollY;
+                return setNavShow(true);
+            } else {
+                prevScrollY.current = window.scrollY;
+                return setNavShow(false);
+            }
+        };
+
+        window.addEventListener("scroll", onScroll);
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     return (
         <motion.div
-            animate={{ opacity: navShow ? 1 : 0, y: navShow ? 0 : -200 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            animate={{ opacity: navShow ? 1 : 0.3, y: navShow ? 0 : -15 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
             className="z-[999] fixed w-[90%] md:w-[50rem] flex flex-row justify-between items-center px-4 py-2 mt-4 md:mt-6 rounded-md bg-[#12181d]/60 border border-slate-800/50 backdrop-blur-lg"
         >
             <div className="flex flex-row items-center justify-between">
                 <LandingButton name="Home" link="/" />
-                <LandingButton name="Talk" link="/talk" />
+                <LandingButton name="Contact" link="/contact" />
             </div>
 
             <div className="flex flex-row items-center justify-center gap-4 text-white">
