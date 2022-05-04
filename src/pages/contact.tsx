@@ -24,10 +24,10 @@ const Talk = () => {
 
             <TimeStatus />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20">
+            <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4 mb-20">
                 <MessageComponent />
 
-                <div className="">
+                <div className="row-start-1 md:row-auto">
                     <ContactLink
                         name="cnrad#0566"
                         icon={<SiDiscord className="w-6 h-6 text-[#5865F2]" />}

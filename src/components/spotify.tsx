@@ -31,16 +31,12 @@ const Spotify = () => {
                     src={user.spotify.album_art_url}
                     className="w-[4.5rem] h-[4.5rem] rounded-md mr-4 pointer-events-none"
                 />
-                {/* <img
-                    src="/assets/spotify-logo.svg"
-                    className="absolute -bottom-1 left-[62px] w-6 h-6 rounded-full bg-black border-2 border-black pointer-events-none"
-                /> */}
                 <div className="w-auto h-full flex flex-col items-start justify-center">
                     <a
                         href={`https://open.spotify.com/track/${user.spotify.track_id}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-medium text-[#e1eafd]"
+                        className="font-medium text-[#e1eafd] hover:underline"
                     >
                         {user.spotify.song}
                     </a>

@@ -7,6 +7,7 @@ type Data = {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+
     let data = req.body as Data;
 
     if (!data) return res.status(500).json({ result: "Nice try :)" });

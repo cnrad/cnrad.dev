@@ -15,6 +15,8 @@ const MessageComponent = () => {
             message: message.current,
         });
 
+        console.log("sent");
+
         if (response.data.result === "FIELD_EMPTY") return setErrMsg("Error: Field empty");
         if (response.data.result === "DISCORD_API_ERROR") return setErrMsg("Error: Could not process request");
 
@@ -28,14 +30,14 @@ const MessageComponent = () => {
                 placeholder="example@gmail.com"
                 type="text"
                 onChange={(e: any) => (email.current = e.target.value)}
-                className="w-full p-2 mb-4 rounded-md bg-slate-200/5 text-white text-sm placeholder:text-slate-200/20"
+                className="w-full p-2 mb-4 rounded-md bg-slate-200/5 text-sm placeholder:text-slate-200/20"
             />
 
             <h1 className="font-bold text-sm text-slate-500 mb-1">MESSAGE</h1>
             <textarea
                 placeholder="Hi Conrad, what's up?"
                 onChange={(e: any) => (message.current = e.target.value)}
-                className="w-full p-2 h-36 mb-4 rounded-md bg-slate-200/5 text-white text-sm placeholder:text-slate-200/20"
+                className="w-full p-2 h-36 mb-4 rounded-md bg-slate-200/5 text-sm placeholder:text-slate-200/20"
             />
 
             <div className="w-full flex flex-row justify-between items-center">
