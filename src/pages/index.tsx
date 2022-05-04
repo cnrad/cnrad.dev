@@ -41,16 +41,16 @@ const Index = () => {
 
             <h2 className="text-white font-medium text-3xl mb-4">Technologies 💻</h2>
             <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I've used a lot of various technologies to streamline my workflow and develop quality projects, and
-                always have the desire to learn more and try them out. Below is a list of technologies and languages
-                I've used in the past, or use currently.
+                I use many various tools to streamline my development process and increase the quality of both my code,
+                and my projects. Below is a list of technologies and languages I've had experience with in the past, or
+                use currently.
             </p>
             <div className="w-full flex flex-wrap flex-row justify-center p-1 border border-slate-800 rounded-md bg-black/10">
-                <TechItem icon={SiJavascript} name="JavaScript" />
                 <TechItem icon={SiTypescript} name="TypeScript" />
                 <TechItem icon={SiVisualstudiocode} name="VSCode" />
                 <TechItem icon={SiReact} name="React.js" />
                 <TechItem icon={SiNodeJs} name="Node.js" />
+                <TechItem icon={SiJavascript} name="JavaScript" />
                 <TechItem icon={SiYarn} name="Yarn" />
                 <TechItem icon={SiNextJs} name="Next.js" />
                 <TechItem icon={SiTailwindCSS} name="TailwindCSS" />
