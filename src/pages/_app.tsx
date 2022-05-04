@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 import { AnimatePresence } from "framer-motion";
 import { Router } from "next/router";
 
+import "react-tippy/dist/tippy.css";
+
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { useEffect } from "react";
@@ -42,7 +44,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
             </Head>
             <div className="flex flex-row justify-center w-full h-full bg-gradient-to-bl from-black to-[#0d131f] min-h-screen">
                 <Nav />
-                <div className="w-[80%] md:w-[50rem]">
+                <div className="w-[80%] md:w-[45rem]">
                     <AnimatePresence exitBeforeEnter>
                         <Component {...pageProps} key={router.pathname} />
                     </AnimatePresence>
