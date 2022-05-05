@@ -43,14 +43,20 @@ const Index = ({ stats }: AppProps) => {
                 on the backend.
             </p>
 
-            <h2 className="text-white font-medium text-3xl mb-4">Projects ⚙️</h2>
+            <h2 className="text-white font-medium text-3xl mb-4">What I Do</h2>
             <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
-                In my free time, I enjoy creating open source projects so I can learn from others, and provide
-                useful/fun creations to others. In total, these little projects have earned me{" "}
+                I'm passionate about everything technology; from designing and developing software, to understanding how
+                the many moving parts of the internet work together, to cybersecurity, systems, programming, and more. I
+                strive to learn more about these things every day, and utilize my knowledge to further understand{" "}
+                <i>how</i> or <i>why</i> certain things work.
+                <br className="mb-4" />
+                In my free time, I enjoy creating open source projects, so I can learn from others and showcase my
+                skills. In total, all of my open sourced projects have earnt me{" "}
                 <span className="font-bold text-slate-200">{stats.stars}</span> stars on GitHub, and{" "}
                 <span className="font-bold text-slate-200">{stats.forks}</span> people have forked my projects to
                 contribute to.
             </p>
+            <div className="mb-12">projects</div>
 
             <h2 className="text-white font-medium text-3xl mb-4">Technologies 💻</h2>
             <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
