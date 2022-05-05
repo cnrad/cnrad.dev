@@ -23,7 +23,11 @@ import {
 } from "react-icons/si";
 import { TechItem } from "../components/TechItem";
 
-const Index = () => {
+interface AppProps {
+    stats: Record<string, number>;
+}
+
+const Index = ({ stats }: AppProps) => {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -39,13 +43,22 @@ const Index = () => {
                 on the backend.
             </p>
 
+            <h2 className="text-white font-medium text-3xl mb-4">Projects ⚙️</h2>
+            <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
+                In my free time, I enjoy creating open source projects so I can learn from others, and provide
+                useful/fun creations to others. In total, these little projects have earned me{" "}
+                <span className="font-bold text-slate-200">{stats.stars}</span> stars on GitHub, and{" "}
+                <span className="font-bold text-slate-200">{stats.forks}</span> people have forked my projects to
+                contribute to.
+            </p>
+
             <h2 className="text-white font-medium text-3xl mb-4">Technologies 💻</h2>
             <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
                 I use many various tools to streamline my development process and increase the quality of both my code,
                 and my projects. Below is a list of technologies and languages I've had experience with in the past, or
                 use currently.
             </p>
-            <div className="w-full flex flex-wrap flex-row justify-center p-1 border border-slate-800 rounded-md bg-black/10">
+            <div className="w-full flex flex-wrap flex-row justify-center p-1 border border-slate-800 rounded-md bg-black/10 mb-12">
                 <TechItem icon={SiTypescript} name="TypeScript" />
                 <TechItem icon={SiVisualstudiocode} name="VSCode" />
                 <TechItem icon={SiReact} name="React.js" />
@@ -67,5 +80,13 @@ const Index = () => {
         </motion.div>
     );
 };
+
+export async function getServerSideProps(ctx: any) {
+    const stats = await fetch(`https://api.github-star-counter.workers.dev/user/cnrad`).then(res => res.json());
+
+    return {
+        props: { stats }, // will be passed to the page component as props
+    };
+}
 
 export default Index;
