@@ -22,12 +22,16 @@ import {
     SiPrisma,
 } from "react-icons/si";
 import { TechItem } from "../components/TechItem";
+import RepoItem from "../components/RepoItem";
 
 interface AppProps {
     stats: Record<string, number>;
+    topRepos: Record<any, any>;
 }
 
-const Index = ({ stats }: AppProps) => {
+const Index = ({ stats, topRepos }: AppProps) => {
+    console.log(topRepos);
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -37,26 +41,19 @@ const Index = ({ stats }: AppProps) => {
             className="mt-24 w-full mb-32"
         >
             <h1 className="mt-36 text-white font-bold text-5xl mb-6">Hey, I'm Conrad ✌️</h1>
-            <p className="text-gray-300 leading-6 font-light tracking-wide mb-12">
+            <p className="text-gray-300 leading-6 tracking-wide mb-12">
                 I'm a self-taught software engineer from the United States. I'm currently pursuing full-stack web
                 development to create stunning user experiences on the front-end, and scalable and secure infrastructure
                 on the backend.
             </p>
 
-            <h2 className="text-white font-medium text-3xl mb-4">What I Do</h2>
-            <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
+            <h2 className="text-white font-medium text-3xl mb-4">What I Do 💭</h2>
+            <p className="text-gray-300 leading-6 font-light tracking-wide mb-12">
                 I'm passionate about everything technology; from designing and developing software, to understanding how
-                the many moving parts of the internet work together, to cybersecurity, systems, programming, and more. I
-                strive to learn more about these things every day, and utilize my knowledge to further understand{" "}
-                <i>how</i> or <i>why</i> certain things work.
-                <br className="mb-4" />
-                In my free time, I enjoy creating open source projects, so I can learn from others and showcase my
-                skills. In total, all of my open sourced projects have earnt me{" "}
-                <span className="font-bold text-slate-200">{stats.stars}</span> stars on GitHub, and{" "}
-                <span className="font-bold text-slate-200">{stats.forks}</span> people have forked my projects to
-                contribute to.
+                the many moving parts of the internet work together, to cybersecurity, systems, programming, and so much
+                more. I strive to learn more about these things every day, and utilize my knowledge to further
+                understand <i>how</i> or <i>why</i> the technology around us works.
             </p>
-            <div className="mb-12">projects</div>
 
             <h2 className="text-white font-medium text-3xl mb-4">Technologies 💻</h2>
             <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
@@ -83,6 +80,35 @@ const Index = ({ stats }: AppProps) => {
                 <TechItem icon={SiSwift} name="Swift" />
                 <TechItem icon={SiPython} name="Python" />
             </div>
+
+            <h2 className="text-white font-medium text-3xl mb-4">Projects 🛠️</h2>
+            <p className="text-gray-300 leading-6 font-light tracking-wide mb-6">
+                In my free time, I enjoy creating open source projects on{" "}
+                <a
+                    href="https://github.com/cnrad"
+                    rel="noreferrer"
+                    className="font-semibold text-violet-500 hover:underline"
+                >
+                    GitHub
+                </a>
+                , so I can learn from others and showcase what I know. In total, all of my open sourced projects have
+                earnt me <span className="font-bold text-slate-200">{stats.stars}</span> stars on GitHub, and{" "}
+                <span className="font-bold text-slate-200">{stats.forks}</span> forks. Below are some of my most popular
+                repositories.
+            </p>
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 mb-12 gap-2">
+                {topRepos.map((repo: Record<string, any>) => {
+                    return (
+                        <RepoItem
+                            name={repo.name}
+                            description={repo.description}
+                            stars={repo.stargazers_count}
+                            forks={repo.forks_count}
+                            language={repo.language}
+                        />
+                    );
+                })}
+            </div>
         </motion.div>
     );
 };
@@ -90,8 +116,16 @@ const Index = ({ stats }: AppProps) => {
 export async function getServerSideProps(ctx: any) {
     const stats = await fetch(`https://api.github-star-counter.workers.dev/user/cnrad`).then(res => res.json());
 
+    const repos = await fetch(`https://api.github.com/users/cnrad/repos?type=owner&per_page=100`).then(res =>
+        res.json()
+    );
+
+    let topRepos = repos
+        .sort((a: Record<string, any>, b: Record<string, any>) => b.stargazers_count - a.stargazers_count)
+        .slice(0, 4);
+
     return {
-        props: { stats }, // will be passed to the page component as props
+        props: { stats, topRepos },
     };
 }
 
