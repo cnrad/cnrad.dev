@@ -38,11 +38,11 @@ function MyApp({ Component, pageProps, router }: AppProps) {
                     name="keywords"
                     content="cnrad, Conrad Crawford, Conrad, Crawford, web developer, github, typescript"
                 />
-                <meta name="description" content="Conrad Crawford - Fullstack TypeScript Developer." />
+                <meta name="description" content="Conrad Crawford - Software Engineer" />
                 <meta name="author" content="Conrad Crawford" />
                 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
             </Head>
-            <div className="flex flex-row justify-center w-full h-full bg-gradient-to-bl from-black to-[#0d131f] min-h-screen">
+            <div className="text-black dark:text-white flex flex-row justify-center w-full h-full bg-gradient-to-bl from-white to-[#fff] dark:from-black dark:to-[#0d131f] min-h-screen">
                 <Nav />
                 <div className="w-[80%] md:w-[45rem]">
                     <AnimatePresence exitBeforeEnter>

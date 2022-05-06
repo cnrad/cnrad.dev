@@ -16,8 +16,8 @@ const Talk = () => {
             transition={{ ease: "easeOut", duration: 0.15 }}
             className="mt-36 w-full"
         >
-            <h1 className="text-white font-bold text-3xl mb-3 mt-8">Let's chat 💬</h1>
-            <p className="text-gray-200 mb-6">
+            <h1 className="text-black dark:text-white font-bold text-3xl mb-3 mt-8">Let's chat 💬</h1>
+            <p className="text-gray-800 dark:text-gray-200 mb-6">
                 Have an inquiry, or want to connect? Feel free to leave a message below, or get in touch via Discord,
                 Twitter, or email.
             </p>

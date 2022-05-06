@@ -3,25 +3,22 @@ import { SiTwitter, SiGithub, SiLinkedin } from "react-icons/si";
 import { FiMail } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import ThemeToggle from "./ThemeToggle";
+import { classNames } from "../lib/classNames";
 
 const LandingButton = ({ name, link, selected }: any) => {
     return (
         <Link href={link}>
-            <motion.h1
-                animate={{
-                    color: "rgba(255, 255, 255, 0.8)",
-                    backgroundColor: selected ? "rgba(200, 200, 220, 0.15)" : "rgba(0, 0, 0, 0)",
-                    borderRadius: "0.25rem",
-                }}
-                whileHover={{
-                    color: "rgba(255, 255, 255, 1)",
-                    backgroundColor: selected ? "rgba(200, 200, 220, 0.15)" : "rgba(200, 200, 220, 0.05)",
-                }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="cursor-pointer rounded-lg px-4 py-2 text-sm"
+            <h1
+                className={classNames(
+                    selected
+                        ? "bg-black/10 dark:bg-[#c8c8dc]/10"
+                        : "bg-transparent hover:bg-gray-700/5 dark:hover:bg-[#c8c8dc]/5 dark:text-white",
+                    "cursor-pointer px-4 py-2 text-sm rounded-md text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition-all duration-75"
+                )}
             >
                 {name}
-            </motion.h1>
+            </h1>
         </Link>
     );
 };
@@ -38,8 +35,9 @@ const Nav = () => {
     const router = useRouter();
 
     return (
-        <motion.div className="z-[999] fixed w-[90%] md:w-[50rem] flex flex-row justify-between items-center px-4 py-2 mt-4 md:mt-6 rounded-md bg-[#12181d]/60 border border-slate-800/50 backdrop-blur-lg">
+        <motion.div className="z-[999] fixed w-[90%] md:w-[50rem] flex flex-row justify-between items-center px-4 py-2 mt-4 md:mt-6 rounded-md bg-white/60 dark:bg-[#12181d]/60 border border-slate-800/50 backdrop-blur-lg">
             <div className="flex flex-row items-center justify-between gap-2">
+                <ThemeToggle />
                 <LandingButton name="Home" link="/" selected={router.pathname === "/"} />
                 <LandingButton name="Contact" link="/contact" selected={router.pathname === "/contact"} />
             </div>
