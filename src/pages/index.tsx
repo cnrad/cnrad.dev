@@ -57,7 +57,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
 
             <h2 className="font-medium text-3xl mb-4">Technologies 💻</h2>
             <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I use many various tools to streamline my development process and increase the quality of both my code,
+                I use a variety of tools to streamline my development process and increase the quality of both my code,
                 and my projects. Below is a list of technologies and languages I've had experience with in the past, or
                 use currently.
             </p>
