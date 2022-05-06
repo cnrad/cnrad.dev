@@ -11,7 +11,7 @@ body {
     font-family: Roboto, sans-serif;
     background: #000;
     overscroll-behavior-y: none;
-    @apply text-white;
+    /* @apply text-white; */
 }
 
 a {
