@@ -22,3 +22,7 @@ a {
 * {
     box-sizing: border-box;
 }
+
+.spinner {
+    display: none !important;
+}
