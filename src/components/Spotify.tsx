@@ -12,7 +12,7 @@ const Spotify = () => {
         <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: -100 }}
-            transition={{ duration: 1.25, easing: [0, 0.5, 0.28, 0.99] }}
+            transition={{ duration: 0.5, easing: [0, 0.5, 0.28, 0.99] }}
             className="fixed left-6 -bottom-20 w-[20rem] h-[7rem] hidden lg:flex flex-col items-start justify-start"
         >
             <h1 className="text-black dark:text-gray-100 font-semibold text-base mb-2 flex items-center justify-center">
