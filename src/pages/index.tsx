@@ -38,7 +38,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
             transition={{ ease: "easeOut", duration: 0.15 }}
             className="mt-24 w-full mb-32"
         >
-            <h1 className="mt-36 font-bold text-4xl md:text-5xl mb-6">Hey, I'm Conrad ✌️</h1>
+            <h1 className="mt-36 font-bold text-4xl md:text-5xl mb-4">Hey, I'm Conrad 👋</h1>
             <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
                 I'm a self-taught software engineer from the United States. I'm currently pursuing full-stack web
                 development to create stunning user experiences on the front-end, and scalable and secure infrastructure
@@ -119,7 +119,7 @@ export async function getServerSideProps(ctx: any) {
         res.json()
     );
 
-    let topRepos = repos
+    const topRepos = repos
         .sort((a: Record<string, any>, b: Record<string, any>) => b.stargazers_count - a.stargazers_count)
         .slice(0, 4);
 

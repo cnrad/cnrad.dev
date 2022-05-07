@@ -7,10 +7,15 @@ const MessageComponent = () => {
     const email = useRef<string>("");
     const message = useRef<string>("");
     const [sending, setSending] = useState(false);
-    let [errMsg, setErrMsg] = useState("");
+    const [errMsg, setErrMsg] = useState("");
+
+    const emailRegex = new RegExp(
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
 
     const sendMessage = async () => {
-        if (email.current == "" || message.current == "") return setErrMsg("Error: Field empty");
+        if (email.current == "" || message.current == "") return setErrMsg("Please fill out all fields!");
+        if (!emailRegex.test(email.current)) return setErrMsg("Hmm, that doesn't look like an email.");
 
         setSending(true);
 
@@ -19,8 +24,8 @@ const MessageComponent = () => {
             message: message.current,
         });
 
-        if (response.data.result === "FIELD_EMPTY") return setErrMsg("Error: Field empty");
-        if (response.data.result === "DISCORD_API_ERROR") return setErrMsg("Error: Could not process request");
+        if (response.data.result === "FIELD_EMPTY") return setErrMsg("Please fill out all fields!");
+        if (response.data.result === "DISCORD_API_ERROR") return setErrMsg("Something went wrong...");
 
         setSending(false);
 
