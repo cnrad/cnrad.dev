@@ -98,6 +98,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 {topRepos.map((repo: Record<string, any>) => {
                     return (
                         <RepoItem
+                            key={repo.name}
                             name={repo.name}
                             description={repo.description}
                             stars={repo.stargazers_count}

@@ -2,17 +2,16 @@ import { useEffect, useState } from "react";
 import { FiSun, FiMoon } from "react-icons/fi";
 
 const ThemeToggle = () => {
-    const [theme, setTheme] = useState<string>("light");
+    const [theme, setTheme] = useState<string>("dark");
 
     useEffect(() => {
-        let theme = localStorage.getItem("theme") as string;
+        let storedTheme = localStorage.getItem("theme") as string;
 
-        if (typeof localStorage.getItem("theme") !== "string") {
-            window.matchMedia("(prefers-color-scheme: dark)").matches ? setTheme("dark") : setTheme("light");
+        if (!storedTheme) {
             localStorage.setItem("theme", theme);
         } else {
-            setTheme(theme);
-            theme === "dark" ? document.querySelector("html")?.classList.add("dark") : null;
+            setTheme(storedTheme);
+            storedTheme === "dark" ? document.querySelector("html")?.classList.add("dark") : null;
         }
     }, []);
 
@@ -31,9 +30,9 @@ const ThemeToggle = () => {
             className="p-2 rounded-md bg-transparent hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
             onClick={() => changeTheme(theme)}
         >
-            {theme === "light" && <FiSun className="text-black w-5 h-5" />}
+            {theme === "light" && <FiSun className="text-black w-6 h-6 xs:w-5 xs:h-5" />}
 
-            {theme === "dark" && <FiMoon className="text-white w-5 h-5" />}
+            {theme === "dark" && <FiMoon className="text-white w-6 h-6 xs:w-5 xs:h-5" />}
         </button>
     );
 };
