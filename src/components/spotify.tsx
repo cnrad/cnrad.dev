@@ -27,6 +27,7 @@ const Spotify = () => {
                 <img
                     src={user.spotify.album_art_url}
                     className="w-[4.5rem] h-[4.5rem] rounded-md mr-4 pointer-events-none"
+                    alt={user.spotify.album}
                 />
                 <div className="w-auto h-full flex flex-col items-start justify-center">
                     <a
