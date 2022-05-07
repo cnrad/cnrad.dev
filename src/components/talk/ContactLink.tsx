@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { animated, useSpring } from "react-spring";
 import Link from "next/link";
-import { classNames } from "../../lib/classNames";
+import { classNames } from "../../util/classNames";
 
 const calc = (x: number, y: number) => [-(y - window.innerHeight / 3) / 35, (x - window.innerWidth / 1.5) / 30, 1.05];
 const trans = (x: number, y: number, s: number): string =>
