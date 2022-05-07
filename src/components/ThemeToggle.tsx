@@ -31,7 +31,6 @@ const ThemeToggle = () => {
             onClick={() => changeTheme(theme)}
         >
             {theme === "light" && <FiSun className="text-black w-6 h-6 xs:w-5 xs:h-5" />}
-
             {theme === "dark" && <FiMoon className="text-white w-6 h-6 xs:w-5 xs:h-5" />}
         </button>
     );

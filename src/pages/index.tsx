@@ -114,7 +114,6 @@ const Index = ({ stats, topRepos }: AppProps) => {
 
 export async function getServerSideProps(ctx: any) {
     const stats = await fetch(`https://api.github-star-counter.workers.dev/user/cnrad`).then(res => res.json());
-
     const repos = await fetch(`https://api.github.com/users/cnrad/repos?type=owner&per_page=100`).then(res =>
         res.json()
     );

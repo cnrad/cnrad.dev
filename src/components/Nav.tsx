@@ -4,7 +4,7 @@ import { FiMail } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ThemeToggle from "./ThemeToggle";
-import { classNames } from "../lib/classNames";
+import { classNames } from "../util/classNames";
 import { ReactElement, useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 
