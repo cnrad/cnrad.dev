@@ -3,12 +3,10 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 
 const Spotify = () => {
-    //code inspired by alistair @ github.com/alii, design inspired by phineas @ github.com/Phineas
-
     const { data: user } = useLanyard("705665813994012695");
 
     if (!user || !user.spotify) {
-        return <></>;
+        return null;
     }
 
     return (
@@ -16,7 +14,7 @@ const Spotify = () => {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: -100 }}
             transition={{ duration: 1.25, easing: [0, 0.5, 0.28, 0.99] }}
-            className="fixed left-6 -bottom-20 w-[20rem] h-[7rem] hidden md:flex flex-col items-start justify-start "
+            className="fixed left-6 -bottom-20 w-[20rem] h-[7rem] hidden lg:flex flex-col items-start justify-start"
         >
             <h1 className="text-black dark:text-gray-100 font-semibold text-base mb-2 flex items-center justify-center">
                 Listening to Spotify

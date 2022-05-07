@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import ThemeToggle from "./ThemeToggle";
 import { classNames } from "../lib/classNames";
+import { ReactElement } from "react";
 
-const LandingButton = ({ name, link, selected }: any) => {
+const LandingButton = ({ name, link, selected }: { name: string; link: string; selected: boolean }) => {
     return (
         <Link href={link}>
             <h1
@@ -23,7 +24,7 @@ const LandingButton = ({ name, link, selected }: any) => {
     );
 };
 
-const LinkButton = ({ icon, href }: any) => {
+const LinkButton = ({ icon, href }: { icon: ReactElement; href: string }) => {
     return (
         <a target="_blank" rel="noreferrer" href={href}>
             {icon}
@@ -42,7 +43,7 @@ const Nav = () => {
                 <LandingButton name="Contact" link="/contact" selected={router.pathname === "/contact"} />
             </div>
 
-            <div className="flex flex-row items-center justify-center gap-4">
+            <div className="flex flex-row items-center justify-center gap-2 xs:gap-4">
                 <LinkButton href={"https://github.com/cnrad"} icon={<SiGithub className="w-6 h-6 cursor-pointer" />} />
                 <LinkButton
                     href={"https://twitter.com/notcnrad"}

@@ -3,6 +3,9 @@ module.exports = {
     darkMode: 'class',
     theme: {
         extend: {
+            screens: {
+                'xs': '445px',
+            },
             animation: {
                 'spin-slow': 'spin 2s linear infinite',
             },
