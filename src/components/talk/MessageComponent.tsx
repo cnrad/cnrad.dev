@@ -1,24 +1,28 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import { RiSendPlane2Fill } from "react-icons/ri";
+import { ImSpinner2 } from "react-icons/im";
 
 const MessageComponent = () => {
     const email = useRef<string>("");
     const message = useRef<string>("");
+    const [sending, setSending] = useState(false);
     let [errMsg, setErrMsg] = useState("");
 
     const sendMessage = async () => {
         if (email.current == "" || message.current == "") return setErrMsg("Error: Field empty");
+
+        setSending(true);
 
         let response = await axios.post("/api/send", {
             email: email.current,
             message: message.current,
         });
 
-        console.log("sent");
-
         if (response.data.result === "FIELD_EMPTY") return setErrMsg("Error: Field empty");
         if (response.data.result === "DISCORD_API_ERROR") return setErrMsg("Error: Could not process request");
+
+        setSending(false);
 
         return setErrMsg("Thanks for reaching out!");
     };
@@ -41,14 +45,15 @@ const MessageComponent = () => {
             />
 
             <div className="w-full flex flex-row justify-between items-center">
-                <p className="text-gray-600 text-sm">{errMsg}</p>
+                <p className="text-gray-900 dark:text-gray-300 text-sm">{errMsg}</p>
 
                 <button
                     onClick={sendMessage}
                     className="border border-gray-800 hover:bg-gray-200 dark:border-indigo-600/80 dark:bg-indigo-600/70 dark:hover:bg-indigo-500/70 flex flex-row items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-colors duration-75"
                 >
                     <span className="mt-[2px]">Send</span>
-                    <RiSendPlane2Fill className="ml-2" />
+                    {!sending && <RiSendPlane2Fill className="ml-2" />}
+                    {sending && <ImSpinner2 className="w-4 h-4 ml-2 animate-spin" />}
                 </button>
             </div>
         </div>
