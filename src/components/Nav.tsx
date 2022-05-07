@@ -10,8 +10,8 @@ import { HiMenu, HiX } from "react-icons/hi";
 
 const LandingButton = ({ name, link, selected }: { name: string; link: string; selected: boolean }) => {
     return (
-        <Link href={link} passHref>
-            <h1
+        <Link href={link}>
+            <a
                 className={classNames(
                     selected
                         ? "bg-black/10 dark:bg-[#c8c8dc]/10"
@@ -20,7 +20,7 @@ const LandingButton = ({ name, link, selected }: { name: string; link: string; s
                 )}
             >
                 {name}
-            </h1>
+            </a>
         </Link>
     );
 };
@@ -37,8 +37,8 @@ const MobileLandingButton = ({
     onClick: () => void;
 }) => {
     return (
-        <Link href={link} passHref>
-            <h1
+        <Link href={link}>
+            <a
                 className={classNames(
                     selected ? "bg-black/10 dark:bg-[#c8c8dc]/10" : "bg-transparent dark:text-white",
                     "flex flex-grow justify-center border border-slate-800/30 cursor-pointer w-auto py-4 text-base text-black/80 dark:text-white/80 transition-all duration-75"
@@ -46,7 +46,7 @@ const MobileLandingButton = ({
                 onClick={onClick}
             >
                 {name}
-            </h1>
+            </a>
         </Link>
     );
 };
