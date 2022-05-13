@@ -13,3 +13,6 @@
 - https://cnrad.dev/github
 - https://cnrad.dev/twitter
 - https://cnrad.dev/linkedin
+
+
+<sub>**Design heavily inspired by [Alistair](https://github.com/alii)'s [personal site](https://alistair.sh)**</sub>
