@@ -29,16 +29,18 @@ const Spotify = () => {
                     className="w-[4.5rem] h-[4.5rem] rounded-md mr-4 pointer-events-none"
                     alt={user.spotify.album}
                 />
-                <div className="w-auto h-full flex flex-col items-start justify-center">
+                <div className="w-56 h-full flex flex-col items-start justify-center">
                     <a
                         href={`https://open.spotify.com/track/${user.spotify.track_id}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-medium text-gray-900 dark:text-[#e1eafd] hover:underline"
+                        className="w-full font-medium text-gray-900 dark:text-[#e1eafd] hover:underline truncate"
                     >
                         {user.spotify.song}
                     </a>
-                    <p className="text-gray-600 dark:text-[#cad2e0] font-normal text-sm">{user.spotify.artist}</p>
+                    <p className="w-full text-gray-600 dark:text-[#cad2e0] font-normal text-sm truncate">
+                        {user.spotify.artist}
+                    </p>
                 </div>
             </div>
         </motion.div>
