@@ -1,13 +1,6 @@
-import React from "react";
-import MessageComponent from "../components/talk/MessageComponent";
-import ContactLink from "../components/talk/ContactLink";
-import { SiTwitter, SiDiscord } from "react-icons/si";
-import { FiMail } from "react-icons/fi";
 import { motion } from "framer-motion";
-import GradientBar from "../components/GradientBar";
-import TimeStatus from "../components/talk/TimeStatus";
 
-const Talk = () => {
+const NotFound = () => {
     return (
         <motion.div
             key="talk"
@@ -23,4 +16,4 @@ const Talk = () => {
     );
 };
 
-export default Talk;
+export default NotFound;

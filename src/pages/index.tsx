@@ -1,7 +1,4 @@
-import GradientBar from "../components/GradientBar";
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
 import {
     SiVisualstudiocode,
     SiDocker,

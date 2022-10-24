@@ -7,6 +7,7 @@ import ThemeToggle from "./ThemeToggle";
 import { classNames } from "../util/classNames";
 import { ReactElement, useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
+import { Tooltip } from "react-tippy";
 
 const LandingButton = ({ name, link, selected }: { name: string; link: string; selected: boolean }) => {
     return (
@@ -51,11 +52,13 @@ const MobileLandingButton = ({
     );
 };
 
-const LinkButton = ({ icon, href }: { icon: ReactElement; href: string }) => {
+const LinkButton = ({ title, icon, href }: any) => {
     return (
-        <a target="_blank" rel="noreferrer" href={href}>
-            {icon}
-        </a>
+        <Tooltip title={title} position={"top"} duration={250}>
+            <a target="_blank" rel="noreferrer" href={href}>
+                {icon}
+            </a>
+        </Tooltip>
     );
 };
 
@@ -78,18 +81,25 @@ const Nav = () => {
 
                 <div className="flex flex-row items-center justify-center gap-2 xs:gap-4">
                     <LinkButton
+                        title="GitHub"
                         href={"https://github.com/cnrad"}
                         icon={<SiGithub className="w-6 h-6 cursor-pointer" />}
                     />
                     <LinkButton
+                        title="Twitter"
                         href={"https://twitter.com/notcnrad"}
                         icon={<SiTwitter className="w-6 h-6 cursor-pointer" />}
                     />
                     <LinkButton
+                        title="LinkedIn"
                         href={"https://linkedin.com/in/cnrad"}
                         icon={<SiLinkedin className="w-6 h-6 cursor-pointer" />}
                     />
-                    <LinkButton href={"mailto:hello@cnrad.dev"} icon={<FiMail className="w-6 h-6 cursor-pointer" />} />
+                    <LinkButton
+                        title="Email"
+                        href={"mailto:hello@cnrad.dev"}
+                        icon={<FiMail className="w-6 h-6 cursor-pointer" />}
+                    />
                 </div>
             </motion.div>
 
