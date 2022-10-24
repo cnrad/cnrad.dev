@@ -25,3 +25,22 @@ a {
 .spinner {
     display: none !important;
 }
+
+.dark .enter {
+    background: rgb(29, 32, 44) !important;
+    color: #fff;
+    border: none;
+}
+
+.enter {
+    background: rgb(245, 245, 245) !important;
+    border: 1px solid rgb(0, 0, 0, 0.1);
+}
+
+.dark .tippy-tooltip-content {
+    color: #fff;
+}
+
+.tippy-tooltip-content {
+    color: #000;
+}
