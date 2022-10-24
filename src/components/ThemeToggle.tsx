@@ -11,6 +11,7 @@ const ThemeToggle = () => {
             localStorage.setItem("theme", theme);
         } else {
             setTheme(storedTheme);
+            storedTheme === "light" ? document.querySelector("html")?.classList.remove("dark") : null;
             storedTheme === "dark" ? document.querySelector("html")?.classList.add("dark") : null;
         }
     }, []);
