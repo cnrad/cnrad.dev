@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import ThemeToggle from "./ThemeToggle";
 import { classNames } from "../util/classNames";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Tooltip } from "react-tippy";
 
