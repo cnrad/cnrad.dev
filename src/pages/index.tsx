@@ -3,7 +3,7 @@ import {
     SiVisualstudiocode,
     SiRust,
     SiGit,
-    SiGo,
+    SiDocker,
     SiNextdotjs as SiNextJs,
     SiNodedotjs as SiNodeJs,
     SiPostgresql,
@@ -72,7 +72,7 @@ const Index = ({ stats, topRepos }: AppProps) => {
                 <TechItem icon={SiGit} name="Git" />
                 <TechItem icon={SiPython} name="Python" />
                 <TechItem icon={SiRust} name="Rust" />
-                <TechItem icon={SiGo} name="Golang" />
+                <TechItem icon={SiDocker} name="Docker" />
                 <TechItem icon={SiSwift} name="Swift" />
             </div>
 
