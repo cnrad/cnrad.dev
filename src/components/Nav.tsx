@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import ThemeToggle from "./ThemeToggle";
 import { classNames } from "../util/classNames";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Tooltip } from "react-tippy";
 
@@ -83,22 +83,30 @@ const Nav = () => {
                     <LinkButton
                         title="GitHub"
                         href={"https://github.com/cnrad"}
-                        icon={<SiGithub className="w-6 h-6 cursor-pointer" />}
+                        icon={
+                            <SiGithub className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
+                        }
                     />
                     <LinkButton
                         title="Twitter"
                         href={"https://twitter.com/notcnrad"}
-                        icon={<SiTwitter className="w-6 h-6 cursor-pointer" />}
+                        icon={
+                            <SiTwitter className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
+                        }
                     />
                     <LinkButton
                         title="LinkedIn"
                         href={"https://linkedin.com/in/cnrad"}
-                        icon={<SiLinkedin className="w-6 h-6 cursor-pointer" />}
+                        icon={
+                            <SiLinkedin className="w-6 h-6 cursor-pointer hover:fill-white fill-gray-400 transition-colors" />
+                        }
                     />
                     <LinkButton
                         title="Email"
                         href={"mailto:hello@cnrad.dev"}
-                        icon={<FiMail className="w-6 h-6 cursor-pointer" />}
+                        icon={
+                            <FiMail className="w-6 h-6 cursor-pointer hover:stroke-white stroke-gray-400 transition-colors" />
+                        }
                     />
                 </div>
             </motion.div>
