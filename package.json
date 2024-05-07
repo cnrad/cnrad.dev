@@ -9,6 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@c-side/react": "^1.0.2",
         "@types/nprogress": "^0.2.0",
         "@types/styled-components": "^5.1.14",
         "axios": "^0.27.2",
