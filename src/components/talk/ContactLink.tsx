@@ -25,7 +25,7 @@ const ContactLink = ({
     }));
 
     return (
-        <Link href={link} passHref>
+        <Link href={link} passHref legacyBehavior>
             <animated.a
                 target="_blank"
                 rel="noreferrer noopener"
