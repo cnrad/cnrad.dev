@@ -22,20 +22,20 @@ const RepoItem = ({ name, description, stars, forks, language }: RepoProps) => {
                 <h1 className="font-semibold mb-1">{name}</h1>
                 <p className="text-sm text-gray-800/70 dark:text-gray-100/70">{description}</p>
                 <div className="mt-auto flex flex-row gap-4 text-gray-700 dark:text-gray-300 text-sm">
-                    <p className="flex flex-row items-center">
+                    <div className="flex flex-row items-center">
                         <motion.div
                             className="w-3 h-3 rounded-full mr-1"
                             style={{ background: Languages[language], border: `solid 3px ${Languages[language]}` }}
                         />
                         {language}
-                    </p>
+                    </div>
 
-                    <p className="flex flex-row items-center justify-center">
+                    <div className="flex flex-row items-center justify-center">
                         <AiOutlineStar className="mr-1 w-4 h-4" /> {stars}
-                    </p>
-                    <p className="flex flex-row items-center justify-center">
+                    </div>
+                    <div className="flex flex-row items-center justify-center">
                         <BiGitRepoForked className="mr-1 w-4 h-4" /> {forks}
-                    </p>
+                    </div>
                 </div>
             </div>
         </a>

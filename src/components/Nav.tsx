@@ -11,7 +11,7 @@ import { Tooltip } from "react-tippy";
 
 const LandingButton = ({ name, link, selected }: { name: string; link: string; selected: boolean }) => {
     return (
-        <Link href={link}>
+        <Link href={link} legacyBehavior>
             <a
                 className={classNames(
                     selected
@@ -38,7 +38,7 @@ const MobileLandingButton = ({
     onClick: () => void;
 }) => {
     return (
-        <Link href={link}>
+        <Link href={link} legacyBehavior>
             <a
                 className={classNames(
                     selected ? "bg-black/10 dark:bg-[#c8c8dc]/10" : "bg-transparent dark:text-white",
