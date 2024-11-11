@@ -8,7 +8,10 @@ const ThemeToggle = () => {
         let storedTheme = localStorage.getItem("theme") as string;
 
         if (!storedTheme) {
-            localStorage.setItem("theme", theme);
+            localStorage.setItem(
+                "theme",
+                window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
+            );
         } else {
             setTheme(storedTheme);
             storedTheme === "light" ? document.querySelector("html")?.classList.remove("dark") : null;
