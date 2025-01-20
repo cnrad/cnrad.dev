@@ -11,6 +11,7 @@ export default {
       fontFamily: {
         sans: ["var(--font-helvetica-neue)", "sans-serif"],
         ysabeau: ["var(--font-ysabeau)", "sans-serif"],
+        karla: ["var(--font-karla)", "sans-serif"],
       },
     },
   },
