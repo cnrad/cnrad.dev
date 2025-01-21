@@ -1,6 +1,7 @@
 import { Nav } from "@/components/Nav";
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
+import { BlogContent } from "@/components/blog/BlogWrapper";
 
 export default function Home() {
   return (
@@ -65,11 +66,7 @@ export default function Home() {
         </PageContent>
       </PageWrapper>
 
-      <article
-        className="h-full max-w-xl text-black text-sm ml-24 leading-relaxed overflow-y-auto flex flex-col gap-4 py-24"
-        style={{ scrollbarWidth: "none" }}
-      >
-        {/* TODO: semantic elements why not */}
+      <BlogContent>
         <div>
           <header className="font-bold text-2xl mt-8">
             Why is measurable difference so difficult?
@@ -134,7 +131,7 @@ export default function Home() {
           ea voluptate velit esse quam nihil molestiae consequatur, vel illum
           qui dolorem eum fugiat quo voluptas nulla pariatur?
         </p>
-      </article>
+      </BlogContent>
     </div>
   );
 }
