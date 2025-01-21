@@ -7,7 +7,7 @@ export const CurrentAge = () => {
 
   const update = () => {
     const age = (
-      (new Date().getTime() - new Date("2004-12-08T00:00:00Z").getTime()) /
+      (new Date().getTime() - new Date("2004-12-08T17:10:00Z").getTime()) /
       (365.25 * 24 * 60 * 60 * 1000)
     ).toFixed(10);
 
