@@ -73,7 +73,7 @@ export default function Art() {
                   }}
                   href={collection.href}
                 >
-                  <div className="p-5 bg-gradient-to-t from-black from-25% to-black/0">
+                  <div className="p-5 bg-linear-to-t from-black from-25% to-black/0">
                     <h5 className="text-white font-medium text-lg">
                       {collection.name}
                     </h5>

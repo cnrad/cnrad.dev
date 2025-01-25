@@ -209,11 +209,11 @@ const ImageComponent = ({ piece }: { piece: (typeof WORKS)[number] }) => {
   return (
     <div className="group relative h-auto w-full cursor-pointer overflow-visible rounded-md">
       <div
-        className="absolute bottom-0 z-[5] min-h-[min(100%,10rem)] w-full rounded-md transition-all duration-200 group-hover:bg-black/15 group-hover:backdrop-blur-md"
+        className="absolute bottom-0 z-5 min-h-[min(100%,10rem)] w-full rounded-md transition-all duration-200 group-hover:bg-black/15 group-hover:backdrop-blur-md"
         style={{ mask: "linear-gradient(transparent, black, black)" }}
       />
 
-      <div className="absolute bottom-0 z-[10] flex min-h-16 w-full flex-col items-center justify-center gap-1 bg-transparent py-4 opacity-0 transition-all duration-200 group-hover:opacity-100">
+      <div className="absolute bottom-0 z-10 flex min-h-16 w-full flex-col items-center justify-center gap-1 bg-transparent py-4 opacity-0 transition-all duration-200 group-hover:opacity-100">
         <p className="text-sm font-semibold text-white/70">
           {piece.name} {piece.featured ? "*" : null}
         </p>
@@ -258,7 +258,7 @@ const ImageComponent = ({ piece }: { piece: (typeof WORKS)[number] }) => {
         height={400}
         src={`/art/${piece.src}`}
         alt={piece.name}
-        className="z-[10] h-fit w-full rounded-md object-cover"
+        className="z-10 h-fit w-full rounded-md object-cover"
       />
     </div>
   );
