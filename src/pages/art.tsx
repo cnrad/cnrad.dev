@@ -20,16 +20,13 @@ const COLLECTIONS = [
 
 export default function Art() {
   return (
-    <PageWrapper className="pr-12">
+    <PageWrapper className="@max-xl:pr-0 pr-12 flex-row @max-xl:flex-col overflow-y-auto">
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full mt-6">
+        <div className="flex flex-col gap-6 text-sm h-full">
           <div className="flex flex-col">
-            <h1 className="text-2xl mb-1 font-medium text-black">
-              Conrad Crawford
-            </h1>
             <p className="mb-2">
-              digital abstract expressionist. exploring the depth of expression
-              through color.
+              digital abstract expressionist. actively exploring the obscurity
+              of color.
             </p>
             <div className="flex flex-row gap-6">
               <a
@@ -71,6 +68,8 @@ export default function Art() {
                   backgroundSize: "cover",
                 }}
                 href={collection.href}
+                target="_blank"
+                rel="noreferrer noopener"
               >
                 <div className="p-5 bg-linear-to-t from-black from-25% to-black/0">
                   <h5 className="text-white font-medium text-lg">

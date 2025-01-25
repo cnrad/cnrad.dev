@@ -7,7 +7,7 @@ export const BlogContent = forwardRef<HTMLElement, HTMLMotionProps<"article">>(
       <motion.article
         ref={ref}
         initial={{
-          y: 10,
+          y: 15,
           opacity: 0,
         }}
         animate={{
@@ -15,14 +15,19 @@ export const BlogContent = forwardRef<HTMLElement, HTMLMotionProps<"article">>(
           opacity: 1,
         }}
         exit={{
-          y: 10,
+          y: -20,
           opacity: 0,
+          scale: 1.05,
+          transition: {
+            duration: 0.35,
+            ease: [0.26, 1, 0.6, 1],
+          },
         }}
         transition={{
-          duration: 1,
+          duration: 1.25,
           ease: [0.26, 1, 0.6, 1],
         }}
-        className="py-14 h-full max-w-xl text-black text-sm ml-24 leading-relaxed overflow-y-auto flex flex-col gap-4"
+        className="py-14 max-w-2xl text-black text-sm ml-12 leading-relaxed flex flex-col gap-4 px-4"
         style={{ scrollbarWidth: "none" }}
         {...props}
       >

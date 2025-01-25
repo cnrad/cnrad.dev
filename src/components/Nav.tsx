@@ -16,7 +16,7 @@ export const Nav = () => {
   return (
     <motion.div
       layoutId="nav"
-      className="font-karla py-3 w-min text-sm flex flex-row gap-6 text-[#A0A0A0]"
+      className="@max-sm:top-8 @max-sm:fixed font-karla py-3 w-min text-sm flex flex-row gap-6 text-[#A0A0A0]"
     >
       {Object.entries(PAGES).map(([name, href]) => (
         <Link

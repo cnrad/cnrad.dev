@@ -179,14 +179,22 @@ export const Gallery = () => {
       }}
       exit={{
         y: 10,
+        x: 10,
         opacity: 0,
+        transition: {
+          duration: 0.35,
+          ease: [0.26, 1, 0.6, 1],
+        },
       }}
       transition={{
         duration: 1,
         ease: [0.26, 1, 0.6, 1],
       }}
-      className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14"
+      className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14 px-4 @max-xl:pt-0 @max-sm:px-8 @max-xl:px-12"
     >
+      <h3 className="font-bold leading-none text-sm @min-xl:hidden">
+        individuals
+      </h3>
       {Array(3)
         .fill("")
         .map((_val, i, arr) => (
@@ -212,7 +220,7 @@ const ImageComponent = ({ piece }: { piece: (typeof WORKS)[number] }) => {
       />
 
       <div className="absolute bottom-0 z-10 flex min-h-16 w-full flex-col items-center justify-center gap-1 bg-transparent py-4 opacity-0 transition-all duration-200 group-hover:opacity-100">
-        <p className="text-sm font-semibold text-white/70">
+        <p className="text-sm font-semibold text-white/85">
           {piece.name} {piece.featured ? "*" : null}
         </p>
         <a

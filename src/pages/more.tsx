@@ -6,11 +6,8 @@ export default function Home() {
   return (
     <PageWrapper>
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full mt-6">
+        <div className="flex flex-col gap-6 text-sm h-full">
           <div className="flex flex-col">
-            <h1 className="text-2xl mb-1 font-medium text-black">
-              Conrad Crawford
-            </h1>
             <p className="mb-2">
               below are some other things. i&apos;m not sure what they are yet.
             </p>

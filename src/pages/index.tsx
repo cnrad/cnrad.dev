@@ -5,19 +5,16 @@ export default function Home() {
   return (
     <PageWrapper>
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full mt-6">
+        <div className="flex flex-col gap-6 text-sm h-full">
           <div className="flex flex-col">
-            <h1 className="text-2xl mb-1 font-medium text-black">
-              Conrad Crawford
-            </h1>
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
               making things look good. interested in the why more than the what.
               fascinated by magic rocks.
             </p>
-            <div className="flex flex-row gap-6">
+            <div className="flex flex-row gap-6 flex-wrap gap-y-1">
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100"
+                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
                 href="https://github.com/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -25,7 +22,7 @@ export default function Home() {
                 github
               </a>
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100"
+                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
                 href="https://x.com/notcnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -33,7 +30,7 @@ export default function Home() {
                 twitter (x)
               </a>
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100"
+                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
                 href="https://linkedin.com/in/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -41,7 +38,7 @@ export default function Home() {
                 linkedin
               </a>
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100"
+                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
                 target="_blank"
                 rel="noopener noreferrer"
               >
