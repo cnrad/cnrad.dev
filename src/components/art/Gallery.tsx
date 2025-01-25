@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from "motion/react";
 import Image from "next/image";
 
@@ -187,7 +185,7 @@ export const Gallery = () => {
         duration: 1,
         ease: [0.26, 1, 0.6, 1],
       }}
-      className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+      className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14"
     >
       {Array(3)
         .fill("")

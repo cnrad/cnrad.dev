@@ -1,5 +1,3 @@
-"use client";
-
 import { HTMLMotionProps, motion } from "motion/react";
 import { forwardRef } from "react";
 
@@ -24,7 +22,7 @@ export const BlogContent = forwardRef<HTMLElement, HTMLMotionProps<"article">>(
           duration: 1,
           ease: [0.26, 1, 0.6, 1],
         }}
-        className="h-full max-w-xl text-black text-sm ml-24 leading-relaxed overflow-y-auto flex flex-col gap-4 py-24"
+        className="py-14 h-full max-w-xl text-black text-sm ml-24 leading-relaxed overflow-y-auto flex flex-col gap-4"
         style={{ scrollbarWidth: "none" }}
         {...props}
       >

@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-helvetica-neue), sans-serif;
+  --font-ysabeau: var(--font-ysabeau), sans-serif;
+  --font-karla: var(--font-karla), sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}

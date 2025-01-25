@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/util/utils";
 import { motion } from "motion/react";
 import Link from "next/link";

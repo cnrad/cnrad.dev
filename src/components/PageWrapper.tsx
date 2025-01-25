@@ -1,6 +1,6 @@
 import { cn } from "@/util/utils";
 import { ComponentProps } from "react";
-import { Nav } from "./Nav";
+import { AnimatePresence } from "motion/react";
 
 export const PageWrapper = ({
   children,
@@ -9,12 +9,13 @@ export const PageWrapper = ({
 }: ComponentProps<"div">) => {
   return (
     <div
-      className={cn("flex flex-col max-w-lg h-full p-14", className)}
+      className={cn(
+        "flex flex-row w-full h-full items-start overflow-y-scroll",
+        className
+      )}
       {...props}
     >
-      <Nav />
-
-      {children}
+      <AnimatePresence mode="wait">{children}</AnimatePresence>
     </div>
   );
 };
