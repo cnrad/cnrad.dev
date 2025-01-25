@@ -13,7 +13,7 @@ export const PAGE_TRANSITION = {
     scale: 0.98,
   },
   transition: {
-    duration: 0.35,
-    ease: "easeOut",
+    duration: 0.5,
+    ease: [0.26, 1, 0.6, 1],
   },
 };

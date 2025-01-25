@@ -1,8 +1,19 @@
+import { cn } from "@/util/utils";
 import { ComponentProps } from "react";
+import { Nav } from "./Nav";
 
-export const PageWrapper = ({ children, ...props }: ComponentProps<"div">) => {
+export const PageWrapper = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<"div">) => {
   return (
-    <div className="flex flex-col max-w-lg h-full p-14" {...props}>
+    <div
+      className={cn("flex flex-col max-w-lg h-full p-14", className)}
+      {...props}
+    >
+      <Nav />
+
       {children}
     </div>
   );

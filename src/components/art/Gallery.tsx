@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import Image from "next/image";
 
 // challenge TODO: scrape the heights of each and dynamically determine the order to make the total height of each column closest to equal
@@ -169,7 +170,25 @@ const WORKS = [
 
 export const Gallery = () => {
   return (
-    <div className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <motion.div
+      initial={{
+        y: 10,
+        opacity: 0,
+      }}
+      animate={{
+        y: 0,
+        opacity: 1,
+      }}
+      exit={{
+        y: 10,
+        opacity: 0,
+      }}
+      transition={{
+        duration: 1,
+        ease: [0.26, 1, 0.6, 1],
+      }}
+      className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+    >
       {Array(3)
         .fill("")
         .map((_val, i, arr) => (
@@ -182,7 +201,7 @@ export const Gallery = () => {
             ))}
           </div>
         ))}
-    </div>
+    </motion.div>
   );
 };
 

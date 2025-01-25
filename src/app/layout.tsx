@@ -76,6 +76,7 @@ export default function RootLayout({
               "linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%)",
           }}
         />
+
         <AnimatePresence mode="wait">{children}</AnimatePresence>
       </body>
     </html>

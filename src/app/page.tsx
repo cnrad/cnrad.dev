@@ -5,8 +5,6 @@ import { PageWrapper } from "@/components/PageWrapper";
 export default function Home() {
   return (
     <PageWrapper>
-      <Nav />
-
       <PageContent key="home">
         <div className="flex flex-col gap-6 text-sm h-full mt-6">
           <div className="flex flex-col">
@@ -85,7 +83,7 @@ export default function Home() {
                 <p className="opacity-50">frontend engineer (contract)</p>
               </a>
 
-              <a href="https://dimension.devr" className="flex flex-col group">
+              <a href="https://dimension.dev" className="flex flex-col group">
                 <p>
                   <span
                     className="font-medium group-hover:text-transparent text-black transition-all duration-200"

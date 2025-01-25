@@ -1,4 +1,3 @@
-import { Nav } from "@/components/Nav";
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Gallery } from "@/components/art/Gallery";
@@ -7,24 +6,22 @@ const COLLECTIONS = [
   {
     name: "SPHERUS",
     description: "a collection of attempts to convey ineffable emotions.",
-    thumbnail: "/spherus-thumbnail.webp",
     href: "https://spherus.cnrad.dev",
+    thumbnail: "/art/spherus_thumbnail.png",
   },
   {
     name: "FIGURA",
     description:
       "a collection of 12 beautiful, abstract wallpapers - all in stunning 6k resolution.",
-    thumbnail: "/figura.webp",
     href: "https://cnrad.gumroad.com/l/figura",
+    thumbnail: "/art/figura_thumbnail.jpeg",
   },
 ] as const;
 
 export default function Art() {
   return (
     <div className="h-full w-full flex flex-row">
-      <PageWrapper>
-        <Nav />
-
+      <PageWrapper className="pr-12">
         <PageContent key="art">
           <div className="flex flex-col gap-6 text-sm h-full mt-6">
             <div className="flex flex-col">
@@ -32,8 +29,8 @@ export default function Art() {
                 Conrad Crawford
               </h1>
               <p className="mb-2">
-                digital abstract expressionist. exploring how color affects
-                every aspect of our lives.
+                digital abstract expressionist. exploring the depth of
+                expression through color.
               </p>
               <div className="flex flex-row gap-6">
                 <a
@@ -66,28 +63,25 @@ export default function Art() {
               <h3 className="font-bold leading-none">collections</h3>
 
               {COLLECTIONS.map((collection) => (
-                <div className="flex flex-row gap-2">
-                  <img
-                    src={collection.thumbnail}
-                    alt={collection.name}
-                    className="rounded-sm w-16 h-full object-cover"
-                  />
-
-                  <div key={collection.name} className="flex flex-col">
-                    <h5 className="text-black font-medium">
+                <a
+                  key={collection.name}
+                  className="flex flex-col mb-2 rounded-lg hover:brightness-75 cursor-pointer transition-all duration-200 pt-16 overflow-clip"
+                  style={{
+                    background: `url(${collection.thumbnail})`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                  }}
+                  href={collection.href}
+                >
+                  <div className="p-5 bg-gradient-to-t from-black from-25% to-black/0">
+                    <h5 className="text-white font-medium text-lg">
                       {collection.name}
                     </h5>
-                    <p className="text-black/50 mb-2">
+                    <p className="text-white opacity-75">
                       {collection.description}
                     </p>
-                    <a
-                      href={collection.href}
-                      className="text-black/60 w-min hover:text-black"
-                    >
-                      Visit
-                    </a>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 
@@ -98,7 +92,7 @@ export default function Art() {
         </PageContent>
       </PageWrapper>
 
-      <div className="h-full w-full text-black text-sm px-24 leading-relaxed overflow-y-auto flex flex-col gap-4 py-24">
+      <div className="h-full w-full text-black text-sm pl-12 pr-24 leading-relaxed overflow-y-auto flex flex-col gap-4 py-24">
         <Gallery />
       </div>
     </div>

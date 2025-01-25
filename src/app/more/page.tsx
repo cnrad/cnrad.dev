@@ -1,4 +1,3 @@
-import { Nav } from "@/components/Nav";
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
 import { CurrentAge } from "@/components/more/CurrentAge";
@@ -6,8 +5,6 @@ import { CurrentAge } from "@/components/more/CurrentAge";
 export default function Home() {
   return (
     <PageWrapper>
-      <Nav />
-
       <PageContent key="more">
         <div className="flex flex-col gap-6 text-sm h-full mt-6">
           <div className="flex flex-col">
