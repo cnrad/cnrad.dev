@@ -7,14 +7,14 @@ const COLLECTIONS = [
     name: "SPHERUS",
     description: "a collection of attempts to convey ineffable emotions.",
     href: "https://spherus.cnrad.dev",
-    thumbnail: "/art/spherus_thumbnail.png",
+    thumbnail: "/art/spherus_thumbnail.webp",
   },
   {
     name: "FIGURA",
     description:
       "a collection of 12 beautiful, abstract wallpapers - all in stunning 6k resolution.",
     href: "https://cnrad.gumroad.com/l/figura",
-    thumbnail: "/art/figura_thumbnail.jpeg",
+    thumbnail: "/art/figura_thumbnail.webp",
   },
 ] as const;
 

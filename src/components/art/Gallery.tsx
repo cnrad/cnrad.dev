@@ -6,30 +6,30 @@ const WORKS = [
   {
     name: "Ultrawide Minimalism (1)",
     date: "06.03.24",
-    src: "ultrawide_minimalism_1.png",
+    src: "ultrawide_minimalism_1.webp",
     post: "https://x.com/notcnrad/status/1797489177782845750",
   },
   {
     name: "Ultrawide Minimalism (2)",
     date: "06.03.24",
-    src: "ultrawide_minimalism_2.png",
+    src: "ultrawide_minimalism_2.webp",
     post: "https://x.com/notcnrad/status/1797489177782845750",
   },
   {
     name: "The Moment Our Eyes First Met",
     date: "04.08.23",
-    src: "themomentoureyesfirstmet.png",
+    src: "themomentoureyesfirstmet.webp",
   },
   {
     name: "Arcus Exploration",
     date: "06.20.23",
-    src: "arcus.png",
+    src: "arcus.webp",
     post: "https://x.com/notcnrad/status/1671238076180430851",
   },
   {
     name: "Arcus Exploration 2",
     date: "06.21.23",
-    src: "arcus_background.png",
+    src: "arcus_background.webp",
     unsplash:
       "https://unsplash.com/photos/a-dark-background-with-a-pattern-of-wavy-lines-EcWBgAdRqrQ",
     post: "https://x.com/notcnrad/status/1671634017446141956",
@@ -37,40 +37,40 @@ const WORKS = [
   {
     name: "Fluctus",
     date: "01.08.24",
-    src: "fluctus.png",
+    src: "fluctus.webp",
   },
   {
     name: "Dawn of a New Tomorrow",
     date: "09.11.23",
-    src: "dawnofanewtomorrow.png",
+    src: "dawnofanewtomorrow.webp",
     post: "https://x.com/notcnrad/status/1701223417372971378",
   },
   {
     name: "Neo (Commission - Hop Inc.)",
     date: "01.08.24",
-    src: "neo_hop.png",
+    src: "neo_hop.webp",
     post: "https://x.com/notcnrad/status/1641602543703736324",
   },
   {
     name: "Neo",
     date: "03.29.23",
-    src: "neo.png",
+    src: "neo.webp",
     post: "https://x.com/notcnrad/status/1640931894933028870",
   },
   {
     name: "Light Trail 1",
     date: "01.08.24",
-    src: "light_trail_2.png",
+    src: "light_trail_2.webp",
   },
   {
     name: "Light Trail 2",
     date: "01.08.24",
-    src: "light_trail.png",
+    src: "light_trail.webp",
   },
   {
     name: "Planet",
     date: "05.09.23",
-    src: "planet.png",
+    src: "planet.webp",
     unsplash:
       "https://unsplash.com/photos/a-red-planet-with-a-black-background-LipGKRm7dBM",
     post: "https://x.com/notcnrad/status/1655962324015124483",
@@ -78,26 +78,26 @@ const WORKS = [
   {
     name: "Rik Style",
     date: "01.08.24",
-    src: "rik_style.png",
+    src: "rik_style.webp",
     unsplash:
       "https://unsplash.com/photos/a-purple-abstract-background-with-lines-and-curves-1uyWq9xVwcE",
   },
   {
     name: "Spectrum",
     date: "01.08.24",
-    src: "spectrum.jpg",
+    src: "spectrum.webp",
     unsplash:
       "https://unsplash.com/photos/a-black-background-with-a-multicolored-wave-of-light-cRoeAzZTWSc",
   },
   {
     name: "To Gently Fall Further Away",
     date: "01.08.24",
-    src: "togentlyfallfurtheraway.png",
+    src: "togentlyfallfurtheraway.webp",
   },
   {
     name: "WWDC Exploration 1",
     date: "06.05.23",
-    src: "wwdcexploration1.png",
+    src: "wwdcexploration1.webp",
     unsplash:
       "https://unsplash.com/photos/a-blue-abstract-background-with-curved-shapes-k3s7LZzX5xU",
     featured: true,
@@ -106,7 +106,7 @@ const WORKS = [
   {
     name: "WWDC Exploration 2",
     date: "06.05.23",
-    src: "wwdcexploration2.png",
+    src: "wwdcexploration2.webp",
     unsplash:
       "https://unsplash.com/photos/a-close-up-of-a-cell-phone-with-a-red-background-gg5lVy-Qlz8",
     post: "https://x.com/notcnrad/status/1665776662871527425",
@@ -114,7 +114,7 @@ const WORKS = [
   {
     name: "WWDC Exploration 3",
     date: "06.05.23",
-    src: "wwdcexploration3.png",
+    src: "wwdcexploration3.webp",
     unsplash:
       "https://unsplash.com/photos/a-close-up-of-a-cell-phone-with-a-green-and-blue-design-jm7hfafFt0g",
     post: "https://x.com/notcnrad/status/1665776662871527425",
@@ -122,31 +122,31 @@ const WORKS = [
   {
     name: "Wallpaper Wednesday 1",
     date: "04.23.23",
-    src: "wallpaper_wednesday_42323_1.png",
+    src: "wallpaper_wednesday_42323_1.webp",
     unsplash: "https://unsplash.com/photos/Utx0LfuC5Mk",
   },
   {
     name: "Wallpaper Wednesday 2",
     date: "04.23.23",
-    src: "wallpaper_wednesday_42323_2.png",
+    src: "wallpaper_wednesday_42323_2.webp",
     unsplash: "https://unsplash.com/photos/xzOSH_cUHFo",
   },
   {
     name: "Wallpaper Wednesday 3",
     date: "04.23.23",
-    src: "wallpaper_wednesday_42323_3.png",
+    src: "wallpaper_wednesday_42323_3.webp",
     unsplash: "https://unsplash.com/photos/mzzpvI2Z5r8",
   },
   {
     name: "Wallpaper Wednesday 4",
     date: "04.23.23",
-    src: "wallpaper_wednesday_42323_4.png",
+    src: "wallpaper_wednesday_42323_4.webp",
     unsplash: "https://unsplash.com/photos/SClBP10L2WI",
   },
   {
     name: "Wallpaper Wednesday 5",
     date: "04.23.23",
-    src: "wallpaper_wednesday_42323_5.png",
+    src: "wallpaper_wednesday_42323_5.webp",
     unsplash:
       "https://unsplash.com/photos/a-black-and-white-photo-of-a-curved-object-3q9dlyY8CbI",
     featured: true,
@@ -155,7 +155,7 @@ const WORKS = [
     name: "Dimension",
     date: "01.31.24",
     post: "https://x.com/notcnrad/status/1752759331970285987",
-    src: "dimension.png",
+    src: "dimension.webp",
   },
 ] as Array<{
   name: string;
