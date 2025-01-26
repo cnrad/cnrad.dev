@@ -186,8 +186,8 @@ const BlogPostItem = ({
   onClick?: () => void;
 }) => (
   <div onClick={onClick} className="flex flex-col group cursor-pointer">
-    <h5 className="text-black font-medium">{title}</h5>
-    <p className="text-black/50 truncate">{description}</p>
-    <p className="font-light italic text-black/60 mt-1">{date}</p>
+    <h5 className="text-primary font-medium">{title}</h5>
+    <p className="text-secondary truncate">{description}</p>
+    <p className="font-light italic text-secondary mt-1">{date}</p>
   </div>
 );

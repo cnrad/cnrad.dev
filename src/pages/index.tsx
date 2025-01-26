@@ -14,7 +14,7 @@ export default function Home() {
             </p>
             <div className="flex flex-row gap-6 flex-wrap gap-y-1">
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://github.com/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -22,7 +22,7 @@ export default function Home() {
                 github
               </a>
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://x.com/notcnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -30,7 +30,7 @@ export default function Home() {
                 twitter (x)
               </a>
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://linkedin.com/in/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export default function Home() {
                 linkedin
               </a>
               <a
-                className="cursor-pointer text-[#A0A0A0] hover:text-black transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -82,7 +82,7 @@ export default function Home() {
               <a href="https://dimension.dev" className="flex flex-col group">
                 <p>
                   <span
-                    className="font-medium group-hover:text-transparent text-black transition-all duration-200"
+                    className="font-medium group-hover:text-transparent text-primary transition-all duration-200"
                     style={{
                       background:
                         "linear-gradient(135deg,color(display-p3 .6196078431 .4784313725 1/1) 0%,color(display-p3 .9960784314 .5450980392 .7333333333/1) 33.33%,color(display-p3 1 .7411764706 .4784313725/1) 66.67%,color(display-p3 .9725490196 .9176470588 .7647058824/1) 100%)",

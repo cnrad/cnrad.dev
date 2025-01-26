@@ -4,16 +4,33 @@
   --font-sans: var(--font-helvetica-neue), sans-serif;
   --font-ysabeau: var(--font-ysabeau), sans-serif;
   --font-karla: var(--font-karla), sans-serif;
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-background: var(--color-background);
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  --color-primary: #000000;
+  --color-secondary: #4c4c4c;
+  --color-background: #ffffff;
+}
+
+[data-theme="dark"] {
+  --color-primary: #ffffff;
+  --color-secondary: #c3c3c3;
+  --color-background: #000000;
+}
+
+[data-theme="sunset"] {
+  --color-primary: #f6ce7f;
+  --color-secondary: #c7b47a;
+  --color-background: #695ede;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--color-primary);
+  background: var(--color-background);
+  transition: all 0.25s ease-out;
   font-family: Arial, Helvetica, sans-serif;
 }
 
