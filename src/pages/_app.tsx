@@ -81,24 +81,25 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <div
           className="fixed top-0 left-2/5 w-full h-screen z-[-3] flex flex-col gap-32 items-center justify-center opacity-75"
           style={{
-            maskImage: "linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0))",
+            maskImage:
+              "linear-gradient(to left, rgba(0,0,0,1) 10%, rgba(0,0,0,0))",
           }}
         >
           <div
-            className="mt-20 min-h-64 blur-md rotate-30 w-[200rem] bg-(--color-secondary)/50 z-[-2]"
+            className="mt-20 min-h-64 blur-md rotate-30 w-[200rem] bg-light z-[-2]"
             style={{
               animation: "sway 6s infinite",
             }}
           />
           <div
-            className="min-h-84 blur-md rotate-30 w-[200rem] bg-(--color-secondary)/50 z-[-2]"
+            className="min-h-84 blur-md rotate-30 w-[200rem] bg-light z-[-2]"
             style={{
               animation: "sway 6s infinite",
               animationDelay: "0.5s",
             }}
           />
           <div
-            className="min-h-36 mt-10 blur-md rotate-30 w-[200rem] bg-(--color-secondary)/50 z-[-2]"
+            className="min-h-36 mt-10 blur-md rotate-30 w-[200rem] bg-light z-[-2]"
             style={{
               animation: "sway 6s infinite",
               animationDelay: "1s",

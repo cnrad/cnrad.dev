@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <PageWrapper>
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full">
+        <div className="flex flex-col gap-6 text-sm h-full text-primary">
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
@@ -14,7 +14,7 @@ export default function Home() {
             </p>
             <div className="flex flex-row gap-6 flex-wrap gap-y-1">
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://github.com/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -22,7 +22,7 @@ export default function Home() {
                 github
               </a>
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://x.com/notcnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -30,7 +30,7 @@ export default function Home() {
                 twitter (x)
               </a>
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://linkedin.com/in/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export default function Home() {
                 linkedin
               </a>
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -58,31 +58,40 @@ export default function Home() {
           <div className="flex flex-col gap-2">
             <h3 className="font-bold leading-none">experience</h3>
 
-            <div className="ml-3 flex flex-col gap-1.5">
-              <a href="https://cside.dev" className="flex flex-col group">
+            <div className="ml-3 flex flex-col gap-1.5 text-primary relative [--index:0]">
+              <a
+                href="https://cside.dev"
+                className="flex flex-col group hover:[--index:0]"
+              >
                 <p>
-                  <span className="font-medium group-hover:text-[#2500DC] transition-all duration-200">
+                  <span className="font-medium group-hover:text-[#2500DC] transition-colors duration-200">
                     c/side
                   </span>{" "}
                   <span className="italic font-normal">(2024 - present)</span>
                 </p>
-                <p className="opacity-50">frontend engineer</p>
+                <p className="text-tertiary">frontend engineer</p>
               </a>
 
-              <a href="https://incard.co" className="flex flex-col group">
+              <a
+                href="https://incard.co"
+                className="flex flex-col group hover:[--index:1]"
+              >
                 <p>
-                  <span className="font-medium group-hover:text-[#8bd442] transition-all duration-200">
+                  <span className="font-medium group-hover:text-[#8bd442] transition-colors duration-200">
                     incard
                   </span>{" "}
                   <span className="italic font-normal">(2024, 2025)</span>
                 </p>
-                <p className="opacity-50">frontend engineer (contract)</p>
+                <p className="text-tertiary">frontend engineer (contract)</p>
               </a>
 
-              <a href="https://dimension.dev" className="flex flex-col group">
+              <a
+                href="https://dimension.dev"
+                className="flex flex-col group hover:[--index:2]"
+              >
                 <p>
                   <span
-                    className="font-medium group-hover:text-transparent text-primary transition-all duration-200"
+                    className="font-medium group-hover:text-transparent text-primary transition-colors duration-200"
                     style={{
                       background:
                         "linear-gradient(135deg,color(display-p3 .6196078431 .4784313725 1/1) 0%,color(display-p3 .9960784314 .5450980392 .7333333333/1) 33.33%,color(display-p3 1 .7411764706 .4784313725/1) 66.67%,color(display-p3 .9725490196 .9176470588 .7647058824/1) 100%)",
@@ -93,7 +102,7 @@ export default function Home() {
                   </span>{" "}
                   <span className="italic font-normal">(2023 - 2024)</span>
                 </p>
-                <p className="opacity-50">full-stack engineer</p>
+                <p className="text-tertiary">full-stack engineer</p>
               </a>
             </div>
           </div>

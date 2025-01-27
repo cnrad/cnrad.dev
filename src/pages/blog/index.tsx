@@ -84,7 +84,7 @@ export default function Blog() {
                 <header className="font-bold text-2xl mt-8">
                   Why is measurable difference so difficult?
                 </header>
-                <p className="text-black/75 text-base">01/24/25</p>
+                <p className="text-secondary text-base">01/24/25</p>
               </div>
 
               <p>
@@ -103,7 +103,7 @@ export default function Blog() {
                 className="w-full rounded-lg max-h-64 mt-4"
               />
 
-              <label className="mb-4 text-xs text-black/50">
+              <label className="mb-4 text-xs text-secondary">
                 Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
                 aut fugit.
               </label>

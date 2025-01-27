@@ -2,7 +2,6 @@ import { cn } from "@/util/utils";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeChanger } from "./ThemeChanger";
 
 const PAGES = {
   home: "/",
@@ -17,22 +16,20 @@ export const Nav = () => {
   return (
     <motion.div
       layoutId="nav"
-      className="@max-sm:top-8 @max-sm:fixed font-karla py-3 w-min text-sm flex flex-row gap-6 text-secondary/70"
+      className="@max-sm:top-8 @max-sm:fixed font-karla py-3 w-10 text-sm flex flex-row gap-6 text-tertiary"
     >
       {Object.entries(PAGES).map(([name, href]) => (
         <Link
           href={href}
           key={name}
           className={cn("transition-colors duration-100 hover:text-secondary", {
-            "text-primary/80 font-medium hover:text-primary/80":
+            "text-primary font-medium hover:text-primary":
               href === "/" ? pathname === href : pathname.includes(href),
           })}
         >
           {name}
         </Link>
       ))}
-
-      <ThemeChanger />
     </motion.div>
   );
 };

@@ -4,27 +4,36 @@
   --font-sans: var(--font-helvetica-neue), sans-serif;
   --font-ysabeau: var(--font-ysabeau), sans-serif;
   --font-karla: var(--font-karla), sans-serif;
+
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
   --color-background: var(--color-background);
+  --color-light: var(--color-light);
 }
 
 :root {
   --color-primary: #000000;
   --color-secondary: #4c4c4c;
+  --color-tertiary: #838383;
   --color-background: #ffffff;
+  --color-light: #8b8b8b;
 }
 
 [data-theme="dark"] {
   --color-primary: #ffffff;
   --color-secondary: #c3c3c3;
+  --color-tertiary: #8b8b8b;
   --color-background: #000000;
+  --color-light: #202020;
 }
 
 [data-theme="sunset"] {
-  --color-primary: #f6ce7f;
+  --color-primary: #ffeac0;
   --color-secondary: #c7b47a;
-  --color-background: #695ede;
+  --color-tertiary: #8b8b8b;
+  --color-background: #0b0905;
+  --color-light: rgb(98, 77, 19);
 }
 
 body {

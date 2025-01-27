@@ -30,7 +30,7 @@ export default function Art() {
             </p>
             <div className="flex flex-row gap-6">
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://unsplash.com/@cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export default function Art() {
                 unsplash
               </a>
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 href="https://x.com/notcnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -46,7 +46,7 @@ export default function Art() {
                 twitter (x)
               </a>
               <a
-                className="cursor-pointer text-secondary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
                 target="_blank"
                 rel="noopener noreferrer"
               >
