@@ -1,5 +1,7 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
+import { SendMessageModal } from "@/components/SendMessageModal";
+import { useState } from "react";
 
 export default function Home() {
   return (
@@ -37,13 +39,11 @@ export default function Home() {
               >
                 linkedin
               </a>
-              <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                message
-              </a>
+              <SendMessageModal>
+                <button className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap">
+                  message
+                </button>
+              </SendMessageModal>
             </div>
           </div>
 
