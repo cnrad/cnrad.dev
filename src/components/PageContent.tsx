@@ -2,7 +2,9 @@ import { PAGE_TRANSITION } from "@/util/const";
 import { HTMLMotionProps, motion } from "motion/react";
 import { forwardRef } from "react";
 import { Nav } from "./Nav";
-import { ThemeChanger } from "./ThemeChanger";
+import dynamic from "next/dynamic";
+
+const ThemeChanger = dynamic(() => import("./ThemeChanger"), { ssr: false });
 
 export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
   function PageContent({ children, ...props }, ref) {

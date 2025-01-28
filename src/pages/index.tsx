@@ -50,7 +50,7 @@ export default function Home() {
           <div className="flex flex-col gap-2">
             <h3 className="font-bold leading-none">philosophy</h3>
             <div className="ml-3">
-              <p>- great design mimics our surroundings</p>
+              <p>- simpler is better, especially at scale</p>
               <p>- there is never a right time to take action</p>
             </div>
           </div>

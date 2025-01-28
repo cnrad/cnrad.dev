@@ -75,7 +75,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
       >
         <Head>
           <title>Conrad Crawford</title>
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 
         <div

@@ -4,8 +4,6 @@ import { SVGProps } from "react";
 export const ThemeChanger = () => {
   const { theme, setTheme } = useTheme();
 
-  // useEffect(() => {}, []);
-
   return (
     <div className="flex flex-row gap-2 items-center">
       <button
@@ -15,11 +13,16 @@ export const ThemeChanger = () => {
         }
         className="text-tertiary hover:text-primary size-4 cursor-pointer transition-colors duration-150"
       >
-        {theme === "light" ? <MoonIcon /> : <SunIcon />}
+        {theme === "light" ? (
+          <MoonIcon suppressHydrationWarning />
+        ) : (
+          <SunIcon suppressHydrationWarning />
+        )}
       </button>
     </div>
   );
 };
+export default ThemeChanger;
 
 const SunIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
