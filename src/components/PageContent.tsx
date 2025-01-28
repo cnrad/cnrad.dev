@@ -11,6 +11,16 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
         layout
         className="flex flex-col w-full max-w-lg h-full @max-sm:p-8 @max-sm:pt-16 p-14 top-0 @max-xl:relative sticky"
       >
+        {/* Corner */}
+        <div className="absolute top-4 left-4 w-3 h-3 border-b border-r border-tertiary/20 border-dashed ml-[1px] mt-[1px]" />
+        <div
+          className="absolute top-7 left-7 w-10 h-10 border-t border-l border-tertiary/20"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom right, rgba(0,0,0,1), rgba(0,0,0,0) 50%)",
+          }}
+        />
+
         <Nav />
 
         <motion.h1

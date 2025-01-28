@@ -9,7 +9,7 @@ export const PageWrapper = ({
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 flex flex-row w-full h-full items-start overflow-y-scroll @max-sm:min-h-full",
+        "absolute top-0 left-0 flex flex-row w-full h-full items-start overflow-y-auto @max-sm:min-h-full",
         className
       )}
       {...props}

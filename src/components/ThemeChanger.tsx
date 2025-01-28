@@ -4,6 +4,8 @@ import { SVGProps } from "react";
 export const ThemeChanger = () => {
   const { theme, setTheme } = useTheme();
 
+  // useEffect(() => {}, []);
+
   return (
     <div className="flex flex-row gap-2 items-center">
       <button
