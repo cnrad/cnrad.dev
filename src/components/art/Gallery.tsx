@@ -1,7 +1,6 @@
-import { motion } from "motion/react";
+import { MotionProps, motion } from "motion/react";
 import Image from "next/image";
 
-// challenge TODO: scrape the heights of each and dynamically determine the order to make the total height of each column closest to equal
 const WORKS = [
   {
     name: "Ultrawide Minimalism (1)",
@@ -74,6 +73,12 @@ const WORKS = [
     unsplash:
       "https://unsplash.com/photos/a-red-planet-with-a-black-background-LipGKRm7dBM",
     post: "https://x.com/notcnrad/status/1655962324015124483",
+  },
+  {
+    name: "Canalis",
+    date: "06.18.23",
+    src: "wallpaper_wednesday_unsplash.webp",
+    unsplash: "https://unsplash.com/photos/08pUkir23Z4",
   },
   {
     name: "Rik Style",
@@ -166,54 +171,69 @@ const WORKS = [
   featured?: boolean;
 }>;
 
+const IMAGE_TRANSITIONS = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20,
+    transition: {
+      duration: 0.15,
+      ease: [0.26, 1, 0.6, 1],
+    },
+  },
+};
+
 export const Gallery = () => {
   return (
-    <motion.div
-      initial={{
-        y: 10,
-        opacity: 0,
-      }}
-      animate={{
-        y: 0,
-        opacity: 1,
-      }}
-      exit={{
-        y: 10,
-        x: 10,
-        opacity: 0,
-        transition: {
-          duration: 0.35,
+    <div className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14 px-4 @max-xl:pt-0 @max-sm:px-8 @max-xl:px-12">
+      <motion.h3
+        initial={IMAGE_TRANSITIONS.initial}
+        animate={IMAGE_TRANSITIONS.animate}
+        exit={IMAGE_TRANSITIONS.exit}
+        transition={{
+          duration: 1,
           ease: [0.26, 1, 0.6, 1],
-        },
-      }}
-      transition={{
-        duration: 1,
-        ease: [0.26, 1, 0.6, 1],
-      }}
-      className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14 px-4 @max-xl:pt-0 @max-sm:px-8 @max-xl:px-12"
-    >
-      <h3 className="font-bold leading-none text-sm @min-xl:hidden">
+        }}
+        className="font-bold leading-none text-sm @min-xl:hidden"
+      >
         individuals
-      </h3>
-      {Array(3)
-        .fill("")
-        .map((_val, i, arr) => (
-          <div key={i} className="relative flex h-auto w-full flex-col gap-4">
-            {WORKS.slice(
-              i * (WORKS.length / arr.length),
-              i * (WORKS.length / arr.length) + WORKS.length / arr.length
-            ).map((piece) => (
-              <ImageComponent key={piece.name} piece={piece} />
-            ))}
-          </div>
-        ))}
-    </motion.div>
+      </motion.h3>
+      {[0, 0, 0].map((_val, i, arr) => (
+        <div key={i} className="relative flex h-auto w-full flex-col gap-4">
+          {WORKS.slice(
+            i * (WORKS.length / arr.length),
+            i * (WORKS.length / arr.length) + WORKS.length / arr.length
+          ).map((piece, i) => (
+            <ImageComponent
+              key={piece.name}
+              piece={piece}
+              initial={IMAGE_TRANSITIONS.initial}
+              animate={IMAGE_TRANSITIONS.animate}
+              exit={IMAGE_TRANSITIONS.exit}
+              transition={{
+                delay: i / 14,
+                duration: 1,
+                ease: [0.26, 1, 0.6, 1],
+              }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
   );
 };
 
-const ImageComponent = ({ piece }: { piece: (typeof WORKS)[number] }) => {
+const ImageComponent = ({
+  piece,
+  ...props
+}: { piece: (typeof WORKS)[number] } & MotionProps) => {
   return (
-    <div className="group relative h-auto w-full cursor-pointer overflow-visible rounded-md">
+    <motion.div
+      className="group relative h-auto w-full cursor-pointer overflow-visible rounded-md"
+      {...props}
+    >
       <div
         className="absolute bottom-0 z-5 min-h-[min(100%,10rem)] w-full rounded-md transition-all duration-200 group-hover:bg-black/15 group-hover:backdrop-blur-md"
         style={{ mask: "linear-gradient(transparent, black, black)" }}
@@ -248,14 +268,17 @@ const ImageComponent = ({ piece }: { piece: (typeof WORKS)[number] }) => {
           </svg>
         </a>
 
-        <a
-          href={piece.unsplash ?? piece.src}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="mt-1 flex flex-row rounded-[4px] border border-white/10 bg-black/25 px-2 py-1 text-xs font-semibold text-white/75 transition-all duration-100 hover:border-white/15 hover:bg-black/50 hover:text-white"
-        >
-          View {piece.unsplash ? "on Unsplash" : null}
-        </a>
+        {/* TODO: view button for all */}
+        {piece.unsplash ? (
+          <a
+            href={piece.unsplash ?? piece.src}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="mt-1 flex flex-row rounded-[4px] border border-white/10 bg-black/25 px-2 py-1 text-xs font-semibold text-white/75 transition-all duration-100 hover:border-white/15 hover:bg-black/50 hover:text-white"
+          >
+            View {piece.unsplash ? "on Unsplash" : null}
+          </a>
+        ) : null}
       </div>
 
       <Image
@@ -266,6 +289,6 @@ const ImageComponent = ({ piece }: { piece: (typeof WORKS)[number] }) => {
         alt={piece.name}
         className="z-10 h-fit w-full rounded-md object-cover"
       />
-    </div>
+    </motion.div>
   );
 };

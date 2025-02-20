@@ -7,6 +7,7 @@ import { AppProps } from "next/app";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ThemeProvider } from "next-themes";
+import Image from "next/image";
 
 const ysabeau = Ysabeau({
   subsets: ["latin"],
@@ -78,34 +79,26 @@ export default function App({ Component, pageProps, router }: AppProps) {
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 
-        <div
-          className="fixed top-0 left-2/5 w-full h-screen z-[-3] flex flex-col gap-32 items-center justify-center opacity-75"
+        <Image
+          src="/shadow.png"
+          fill
+          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none select-none opacity-15"
+          alt="A shadow casted by the light coming through a windowpane"
           style={{
             maskImage:
-              "linear-gradient(to left, rgba(0,0,0,1) 10%, rgba(0,0,0,0))",
+              "linear-gradient(to right, rgba(0,0,0,0) 25%, rgba(0,0,0,1) 75%)",
           }}
-        >
-          <div
-            className="mt-20 min-h-64 blur-md rotate-30 w-[200rem] bg-light z-[-2]"
-            style={{
-              animation: "sway 6s infinite",
-            }}
-          />
-          <div
-            className="min-h-84 blur-md rotate-30 w-[200rem] bg-light z-[-2]"
-            style={{
-              animation: "sway 6s infinite",
-              animationDelay: "0.5s",
-            }}
-          />
-          <div
-            className="min-h-36 mt-10 blur-md rotate-30 w-[200rem] bg-light z-[-2]"
-            style={{
-              animation: "sway 6s infinite",
-              animationDelay: "1s",
-            }}
-          />
-        </div>
+        />
+
+        {/* Corner */}
+        <div className="@max-sm:hidden absolute top-4 left-4 w-3 h-3 border-b border-r border-tertiary/20 border-dashed ml-[1px] mt-[1px]" />
+        <div
+          className="@max-sm:hidden absolute top-7 left-7 w-10 h-10 border-t border-l border-tertiary/20"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom right, rgba(0,0,0,1), rgba(0,0,0,0) 50%)",
+          }}
+        />
 
         <AnimatePresence mode="popLayout">
           <Component {...pageProps} key={router.pathname} />

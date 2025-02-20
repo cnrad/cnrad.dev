@@ -16,7 +16,7 @@
   --color-primary: #000000;
   --color-secondary: #4c4c4c;
   --color-tertiary: #838383;
-  --color-background: #ffffff;
+  --color-background: #fff;
   --color-light: #8b8b8b;
 }
 
@@ -25,7 +25,7 @@
   --color-secondary: #c3c3c3;
   --color-tertiary: #8b8b8b;
   --color-background: #000000;
-  --color-light: #202020;
+  --color-light: #1a1c22;
 }
 
 [data-theme="sunset"] {

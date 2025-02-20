@@ -1,57 +1,122 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
 import { BlogContent } from "@/components/blog/BlogWrapper";
+import { InterfaceDesign } from "@/components/blog/posts/InterfaceDesign";
+import { MeasurableDifference } from "@/components/blog/posts/MeasurableDifference";
+import { TinyWings } from "@/components/blog/posts/TinyWings";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { ComponentPropsWithRef, useRef, useState } from "react";
+
+const POSTS = [
+  {
+    slug: "a-different-approach-to-interface-design",
+    title: "A different approach to interface design",
+    description:
+      "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
+    date: "02/17/25",
+    content: <InterfaceDesign />,
+  },
+  {
+    slug: "measurable-difference",
+    title: "Why is measurable difference so difficult?",
+    description:
+      "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
+    date: "01/24/25",
+    content: <MeasurableDifference />,
+  },
+  {
+    slug: "tiny-wings",
+    title: "Why Tiny Wings is a *perfect* mobile game",
+    description:
+      "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
+    date: "01/24/25",
+    content: <TinyWings />,
+  },
+];
 
 export default function Blog() {
   const [currentPost, setCurrentPost] = useState<string | null>(null);
+
+  type BlogRef = HTMLButtonElement | null;
+  const [blogRefs] = useState<BlogRef[]>([]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const hoveredTab = blogRefs[hoveredIndex ?? -1]?.getBoundingClientRect();
+  const hoverPadding = ["1.5rem", "0.8rem"];
+  const blogPostsContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <PageWrapper>
       <PageContent>
         <div className="flex flex-col gap-6 text-sm h-full">
-          <div className="flex flex-col">
-            <p className="mb-2">
-              i&apos;m not great at writing, but i&apos;m trying to get better.
-              below are some thoughts i have that i care enough about to write
-              about.
-            </p>
-          </div>
+          <p>
+            i don&apos;t think of myself as that great of a writer - but
+            occasionally i&apos;ll write about things i find interesting.
+          </p>
 
-          <div className="flex flex-col gap-3 max-w-sm">
-            <h3 className="font-bold leading-none">Blog</h3>
+          <div className="w-2/3 h-[1px] bg-tertiary brightness-175" />
 
-            <BlogPostItem
-              slug="why-is-measurable-difference-so-difficult"
-              title="Why is measurable difference so difficult?"
-              description="Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of"
-              date="01/24/25"
-              onClick={() =>
-                setCurrentPost("why-is-measurable-difference-so-difficult")
-              }
-            />
+          <motion.div
+            ref={blogPostsContainerRef}
+            className="relative flex flex-col max-w-sm gap-3"
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            {POSTS.map((post, i) => (
+              <BlogPostItem
+                ref={(el) => {
+                  blogRefs[i] = el;
+                }}
+                key={post.slug}
+                slug={post.slug}
+                title={post.title}
+                description={post.description}
+                date={post.date}
+                onClick={() => setCurrentPost(post.slug)}
+                onPointerEnter={() => setHoveredIndex(i)}
+              />
+            ))}
 
-            <BlogPostItem
-              slug="why-is-measurable-difference-so-difficult"
-              title="Why is measurable difference so difficult?"
-              description="Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of"
-              date="01/24/25"
-              onClick={() =>
-                setCurrentPost("why-is-measurable-difference-so-difficult2")
-              }
-            />
-
-            <BlogPostItem
-              slug="this-is-my-first-post"
-              title="This is my first post!"
-              description="Hello there I'm SpongeBob is what I tell people normally hahaha lol anyways"
-              date="01/24/25"
-              onClick={() =>
-                setCurrentPost("why-is-measurable-difference-so-difficult3")
-              }
-            />
-          </div>
+            <AnimatePresence>
+              {hoveredTab ? (
+                <motion.div
+                  className="absolute bg-tertiary/8 rounded-lg -z-1"
+                  initial={{
+                    top: `calc(${
+                      hoveredTab.top -
+                      blogPostsContainerRef.current!.getBoundingClientRect().top
+                    }px - (${hoverPadding[1]} / 2))`,
+                    left: `calc(-${hoverPadding[0]} / 2)`,
+                    width: `calc(${hoveredTab.width}px + ${hoverPadding[0]})`,
+                    height: `calc(${hoveredTab.height}px + ${hoverPadding[1]})`,
+                    opacity: 0,
+                  }}
+                  animate={{
+                    top: `calc(${
+                      hoveredTab.top -
+                      blogPostsContainerRef.current!.getBoundingClientRect().top
+                    }px - (${hoverPadding[1]} / 2))`,
+                    left: `calc(-${hoverPadding[0]} / 2)`,
+                    width: `calc(${hoveredTab.width}px + ${hoverPadding[0]})`,
+                    height: `calc(${hoveredTab.height}px + ${hoverPadding[1]})`,
+                    opacity: 1,
+                  }}
+                  exit={{
+                    top: `calc(${
+                      hoveredTab.top -
+                      blogPostsContainerRef.current!.getBoundingClientRect().top
+                    }px - (${hoverPadding[1]} / 2))`,
+                    left: `calc(-${hoverPadding[0]} / 2)`,
+                    width: `calc(${hoveredTab.width}px + ${hoverPadding[0]})`,
+                    height: `calc(${hoveredTab.height}px + ${hoverPadding[1]})`,
+                    opacity: 0,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                    ease: [0.26, 1, 0.6, 1],
+                  }}
+                />
+              ) : null}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </PageContent>
 
@@ -80,87 +145,7 @@ export default function Blog() {
         <AnimatePresence mode="wait">
           {currentPost ? (
             <BlogContent key={currentPost}>
-              <div>
-                <header className="font-bold text-2xl mt-8">
-                  Why is measurable difference so difficult?
-                </header>
-                <p className="text-secondary text-base">01/24/25</p>
-              </div>
-
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-
-              <img
-                src="/art/light_trail.webp"
-                alt="Placeholder"
-                className="w-full rounded-lg max-h-64 mt-4"
-              />
-
-              <label className="mb-4 text-xs text-secondary">
-                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
-                aut fugit.
-              </label>
-
-              <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
-                sit amet, consectetur, adipisci velit, sed quia non numquam eius
-                modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem. Ut enim ad minima veniam, quis nostrum
-                exercitationem ullam corporis suscipit laboriosam, nisi ut
-                aliquid ex ea commodi consequatur? Quis autem vel eum iure
-                reprehenderit qui in ea voluptate velit esse quam nihil
-                molestiae consequatur, vel illum qui dolorem eum fugiat quo
-                voluptas nulla pariatur?
-              </p>
-
-              <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
-                sit amet, consectetur, adipisci velit, sed quia non numquam eius
-                modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem. Ut enim ad minima veniam, quis nostrum
-                exercitationem ullam corporis suscipit laboriosam, nisi ut
-                aliquid ex ea commodi consequatur? Quis autem vel eum iure
-                reprehenderit qui in ea voluptate velit esse quam nihil
-                molestiae consequatur, vel illum qui dolorem eum fugiat quo
-                voluptas nulla pariatur?
-              </p>
-
-              <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
-                sit amet, consectetur, adipisci velit, sed quia non numquam eius
-                modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem. Ut enim ad minima veniam, quis nostrum
-                exercitationem ullam corporis suscipit laboriosam, nisi ut
-                aliquid ex ea commodi consequatur? Quis autem vel eum iure
-                reprehenderit qui in ea voluptate velit esse quam nihil
-                molestiae consequatur, vel illum qui dolorem eum fugiat quo
-                voluptas nulla pariatur?
-              </p>
+              {POSTS.find((e) => e.slug === currentPost)?.content}
             </BlogContent>
           ) : null}
         </AnimatePresence>
@@ -169,25 +154,30 @@ export default function Blog() {
   );
 }
 
-{
-  /* TODO: <Link href={`/blog/${slug}`} className="flex flex-col group"> */
-}
+// TODO: figure out stupid layout and route shit so i can just use Link
 const BlogPostItem = ({
-  slug,
+  // slug,
   title,
   date,
   description,
   onClick,
+  ...rest
 }: {
   slug: string;
   title: string;
   date: string;
   description: string;
   onClick?: () => void;
-}) => (
-  <div onClick={onClick} className="flex flex-col group cursor-pointer">
+} & ComponentPropsWithRef<"button">) => (
+  <button
+    // href={`/blog/${slug}`}
+    // shallow
+    onClick={onClick}
+    className="flex flex-col group cursor-pointer"
+    {...rest}
+  >
     <h5 className="text-primary font-medium">{title}</h5>
-    <p className="text-secondary truncate">{description}</p>
+    <p className="text-secondary truncate max-w-full">{description}</p>
     <p className="font-light italic text-secondary mt-1">{date}</p>
-  </div>
+  </button>
 );

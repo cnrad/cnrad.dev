@@ -1,9 +1,26 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
-import { SendMessageModal } from "@/components/SendMessageModal";
-import { useState } from "react";
 
-export default function Home() {
+const PROJECTS = {
+  "lanyard-profile-readme": {
+    name: "lanyard-profile-readme",
+    description: "embed discord presence in your github profile",
+    href: "",
+  },
+  "cnrad.dev": {
+    name: "cnrad.dev",
+    description: "my personal website",
+    href: "",
+  },
+};
+
+interface GitHubRepo {
+  stargazers_count: number;
+  name: string;
+  url: string;
+}
+
+export default function Home({ projects }: { projects: GitHubRepo[] }) {
   return (
     <PageWrapper>
       <PageContent>
@@ -11,8 +28,7 @@ export default function Home() {
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
-              making things look good. interested in the why more than the what.
-              fascinated by magic rocks.
+              making things look good. fascinated by magic rocks.
             </p>
             <div className="flex flex-row gap-6 flex-wrap gap-y-1">
               <a
@@ -39,32 +55,34 @@ export default function Home() {
               >
                 linkedin
               </a>
-              <SendMessageModal>
-                <button className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap">
-                  message
-                </button>
-              </SendMessageModal>
+
+              <button className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap">
+                message
+              </button>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <h3 className="font-bold leading-none">philosophy</h3>
             <div className="ml-3">
-              <p>- simpler is better, especially at scale</p>
-              <p>- there is never a right time to take action</p>
+              <p>- ship fast, with intention</p>
+              <p>- great interaction follows intuition</p>
+              <p>- if you&apos;re not learning, you&apos;re doing it wrong</p>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <h3 className="font-bold leading-none">experience</h3>
 
-            <div className="ml-3 flex flex-col gap-1.5 text-primary relative [--index:0]">
+            <div className="ml-3 flex flex-col gap-1.5 text-primary relative">
               <a
                 href="https://cside.dev"
-                className="flex flex-col group hover:[--index:0]"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex flex-col group"
               >
                 <p>
-                  <span className="font-medium group-hover:text-[#2500DC] transition-colors duration-200">
+                  <span className="font-medium group-hover:text-[#2500DC] transition-colors duration-150">
                     c/side
                   </span>{" "}
                   <span className="italic font-normal">(2024 - present)</span>
@@ -74,10 +92,12 @@ export default function Home() {
 
               <a
                 href="https://incard.co"
-                className="flex flex-col group hover:[--index:1]"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex flex-col group"
               >
                 <p>
-                  <span className="font-medium group-hover:text-[#8bd442] transition-colors duration-200">
+                  <span className="font-medium group-hover:text-[#8bd442] transition-colors duration-150">
                     incard
                   </span>{" "}
                   <span className="italic font-normal">(2024, 2025)</span>
@@ -87,14 +107,16 @@ export default function Home() {
 
               <a
                 href="https://dimension.dev"
-                className="flex flex-col group hover:[--index:2]"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex flex-col group"
               >
                 <p>
                   <span
-                    className="font-medium group-hover:text-transparent text-primary transition-colors duration-200"
+                    className="font-medium group-hover:text-transparent text-primary transition-colors duration-150"
                     style={{
                       background:
-                        "linear-gradient(135deg,color(display-p3 .6196078431 .4784313725 1/1) 0%,color(display-p3 .9960784314 .5450980392 .7333333333/1) 33.33%,color(display-p3 1 .7411764706 .4784313725/1) 66.67%,color(display-p3 .9725490196 .9176470588 .7647058824/1) 100%)",
+                        "linear-gradient(135deg, color(display-p3 .6196078431 .4784313725 1/1) 0%,color(display-p3 .9960784314 .5450980392 .7333333333/1) 33.33%,color(display-p3 1 .7411764706 .4784313725/1) 100%)",
                       backgroundClip: "text",
                     }}
                   >
@@ -111,27 +133,48 @@ export default function Home() {
             <h3 className="font-bold leading-none">projects</h3>
 
             <div className="ml-3 flex flex-col gap-1.5">
-              <div className="flex flex-col group cursor-pointer">
-                <p className="font-medium group-hover:text-blue-700">
-                  lanyard-profile-readme
-                </p>
-                <p className="opacity-50">
-                  embed discord presence in your github profile
-                </p>
-                <div className="flex flex-row gap-2"></div>
-              </div>
+              {Object.entries(PROJECTS).map(([name, info]) => {
+                const project = projects.find((e) => e.name === name)!;
 
-              <div className="flex flex-col group cursor-pointer">
-                <p className="font-medium group-hover:text-blue-700">
-                  cnrad.dev
-                </p>
-                <p className="opacity-50">my personal website</p>
-                <div className="flex flex-row gap-2"></div>
-              </div>
+                return (
+                  <a
+                    key={name}
+                    href={project.url}
+                    className="flex flex-col group cursor-pointer"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <p className="flex flex-row gap-1 font-medium group-hover:text-blue-700 transition-colors duration-100">
+                      <span>{name}</span>
+
+                      <span className="ml-0.5 font-light italic items-center text-tertiary group-hover:text-secondary transition-colors duration-100">
+                        [{project.stargazers_count} stars]
+                      </span>
+                    </p>
+                    <p className="opacity-50">{info.description}</p>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
       </PageContent>
     </PageWrapper>
   );
+}
+
+// I miss nextjs 12
+export async function getStaticProps() {
+  const repos = (await fetch(
+    `https://api.github.com/users/cnrad/repos?type=owner&per_page=100`
+  ).then((res) => res.json())) as GitHubRepo[];
+
+  const projects = repos
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .filter((e) => Object.keys(PROJECTS).includes(e.name));
+
+  return {
+    props: { projects },
+    revalidate: 3600,
+  };
 }

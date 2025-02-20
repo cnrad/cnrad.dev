@@ -25,8 +25,8 @@ export default function Art() {
         <div className="flex flex-col gap-6 text-sm h-full">
           <div className="flex flex-col">
             <p className="mb-2">
-              digital abstract expressionist. actively exploring the obscurity
-              of color.
+              digital abstract expressionist. seeking to understand the
+              relationship between color, form, and feeling.
             </p>
             <div className="flex flex-row gap-6">
               <a
@@ -55,23 +55,23 @@ export default function Art() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 max-w-sm">
+          <div className="flex flex-col gap-3 @min-xl:max-w-sm">
             <h3 className="font-bold leading-none">collections</h3>
 
             {COLLECTIONS.map((collection) => (
               <a
                 key={collection.name}
-                className="flex flex-col mb-2 rounded-lg hover:brightness-75 cursor-pointer transition-all duration-200 pt-16 overflow-clip"
+                className="flex flex-col mb-2 rounded-lg hover:brightness-75 cursor-pointer transition-all duration-500 overflow-clip h-40 ![background-size:100%] hover:![background-size:103%]"
                 style={{
                   background: `url(${collection.thumbnail})`,
                   backgroundPosition: "center",
-                  backgroundSize: "cover",
+                  transitionTimingFunction: "cubic-bezier(0.26,1,0.6,1)",
                 }}
                 href={collection.href}
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                <div className="p-5 bg-linear-to-t from-black from-25% to-black/0">
+                <div className="p-5 bg-linear-to-t from-black from-25% to-black/0 mt-auto">
                   <h5 className="text-white font-medium text-lg">
                     {collection.name}
                   </h5>
