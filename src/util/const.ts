@@ -5,11 +5,9 @@ export const PAGE_TRANSITION = {
   animate: {
     opacity: 1,
     filter: "blur(0)",
-    x: 0,
   },
   exit: {
     opacity: 0,
-    x: -4,
     scale: 0.98,
     filter: "blur(4px)",
     transition: {

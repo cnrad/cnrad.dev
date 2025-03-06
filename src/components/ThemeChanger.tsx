@@ -1,5 +1,5 @@
+import { AnimatePresence, MotionProps, motion } from "motion/react";
 import { useTheme } from "next-themes";
-import { SVGProps } from "react";
 
 export const ThemeChanger = () => {
   const { theme, setTheme } = useTheme();
@@ -11,22 +11,42 @@ export const ThemeChanger = () => {
         onClick={() =>
           theme === "dark" ? setTheme("light") : setTheme("dark")
         }
-        className="text-tertiary hover:text-primary size-4 cursor-pointer transition-colors duration-150"
+        className="relative text-tertiary size-4 cursor-pointer transition-colors duration-150 contrast-[1000] invert"
       >
-        {theme === "light" ? (
-          <MoonIcon suppressHydrationWarning />
-        ) : (
-          <SunIcon suppressHydrationWarning />
-        )}
+        <AnimatePresence>
+          {theme === "light" ? (
+            <MoonIcon
+              className="absolute top-0 left-0"
+              initial={{ filter: "blur(1px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              exit={{ filter: "blur(1px)", opacity: 0 }}
+              transition={{
+                duration: 1,
+                ease: "easeOut",
+              }}
+            />
+          ) : (
+            <SunIcon
+              className="absolute top-0 left-0"
+              initial={{ filter: "blur(1px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              exit={{ filter: "blur(1px)", opacity: 0 }}
+              transition={{
+                duration: 1,
+                ease: "easeOut",
+              }}
+            />
+          )}
+        </AnimatePresence>
       </button>
     </div>
   );
 };
 export default ThemeChanger;
 
-const SunIcon = (props: SVGProps<SVGSVGElement>) => {
+const SunIcon = (props: MotionProps & { className: string }) => {
   return (
-    <svg
+    <motion.svg
       stroke="currentColor"
       fill="none"
       strokeWidth="2"
@@ -47,13 +67,13 @@ const SunIcon = (props: SVGProps<SVGSVGElement>) => {
       <line x1="21" y1="12" x2="23" y2="12"></line>
       <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
       <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
+    </motion.svg>
   );
 };
 
-const MoonIcon = (props: SVGProps<SVGSVGElement>) => {
+const MoonIcon = (props: MotionProps & { className: string }) => {
   return (
-    <svg
+    <motion.svg
       stroke="currentColor"
       fill="none"
       strokeWidth="2"
@@ -66,6 +86,6 @@ const MoonIcon = (props: SVGProps<SVGSVGElement>) => {
       {...props}
     >
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </svg>
+    </motion.svg>
   );
 };

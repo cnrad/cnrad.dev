@@ -4,35 +4,56 @@ import { forwardRef } from "react";
 export const BlogContent = forwardRef<HTMLElement, HTMLMotionProps<"article">>(
   function BlogContent({ children, ...props }, ref) {
     return (
-      <motion.article
-        ref={ref}
+      <motion.div
         initial={{
-          y: 15,
           opacity: 0,
         }}
         animate={{
-          y: 0,
           opacity: 1,
         }}
         exit={{
-          y: 0,
           opacity: 0,
-          scale: 0.96,
           transition: {
             duration: 0.35,
             ease: [0.26, 1, 0.6, 1],
           },
         }}
         transition={{
-          duration: 0.5,
+          duration: 0.75,
           ease: [0.26, 1, 0.6, 1],
         }}
-        className="py-14 max-w-2xl text-primary text-sm ml-12 leading-6.5 flex flex-col gap-4 px-4"
-        style={{ scrollbarWidth: "none" }}
+        className="w-full min-h-screen h-min bg-linear-to-r from-transparent to-white to-15%"
         {...props}
       >
-        {children}
-      </motion.article>
+        <motion.article
+          ref={ref}
+          initial={{
+            y: 15,
+            opacity: 0,
+          }}
+          animate={{
+            y: 0,
+            opacity: 1,
+          }}
+          exit={{
+            y: 0,
+            opacity: 0,
+            scale: 0.96,
+            transition: {
+              duration: 0.35,
+              ease: [0.26, 1, 0.6, 1],
+            },
+          }}
+          transition={{
+            duration: 0.35,
+            ease: [0.26, 1, 0.6, 1],
+          }}
+          style={{ scrollbarWidth: "none" }}
+          className="max-w-2xl text-primary text-sm leading-6.5 flex flex-col gap-4 py-14 px-8 mx-auto"
+        >
+          {children}
+        </motion.article>
+      </motion.div>
     );
   }
 );

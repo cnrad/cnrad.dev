@@ -1,15 +1,12 @@
 import { PAGE_TRANSITION } from "@/util/const";
 import { HTMLMotionProps, motion } from "motion/react";
 import { forwardRef } from "react";
-import { Nav } from "./Nav";
 
 export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
   function PageContent({ children, ...props }, ref) {
     return (
-      <motion.div className="flex flex-col w-full @min-xl:max-w-lg h-full @max-sm:p-8 @max-xl:px-12 @max-sm:pt-16 p-14 top-0 @max-xl:relative sticky">
-        <Nav />
-
-        <motion.h1 className="text-2xl mt-6 mb-1 font-medium text-primary">
+      <motion.div className="max-sm:mb-12 max-sm:min-h-min sm:pt-20 flex flex-col w-full @max-lg:overflow-y-auto @max-lg:pb-20 @min-xl:max-w-lg h-full @max-md:p-8 max-sm:!pt-14 p-14 top-0 @max-xl:relative sticky">
+        <motion.h1 className="mt-0 text-2xl sm:mt-4 mb-1 font-medium text-primary">
           Conrad Crawford
         </motion.h1>
 
@@ -24,8 +21,11 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
           {children}
         </motion.div>
 
-        <motion.div className="w-full flex flex-row mt-auto justify-between">
-          <p className="font-medium italic text-tertiary @max-xl:hidden brightness-175">
+        <motion.div
+          layoutId="footer"
+          className="@max-xl:hidden w-full flex flex-row mt-auto justify-between"
+        >
+          <p className="font-medium italic text-stone-200">
             Conrad Crawford, {new Date().getFullYear()}
           </p>
 

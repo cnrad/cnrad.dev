@@ -1,21 +1,9 @@
 export const MeasurableDifference = () => (
   <>
     <div>
-      <header className="font-bold text-2xl mt-8">
-        Why is measurable difference so difficult?
-      </header>
+      <header className="font-bold text-2xl mt-8">Thoughts on writing</header>
       <p className="text-secondary text-base">01/24/25</p>
     </div>
-
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </p>
 
     <img
       src="/art/light_trail.webp"
@@ -24,9 +12,13 @@ export const MeasurableDifference = () => (
     />
 
     <label className="mb-4 text-xs text-secondary">
-      Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-      fugit.
+      This is just a cool image to use for the cover.
     </label>
+
+    <p>
+      I&apos;m not good at it. I've heard somewhere before that "writing is just
+      clearly organized thinking," and maybe that's my issue.
+    </p>
 
     <p>
       Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium

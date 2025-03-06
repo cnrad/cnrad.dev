@@ -187,7 +187,7 @@ const IMAGE_TRANSITIONS = {
 
 export const Gallery = () => {
   return (
-    <div className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14 px-4 @max-xl:pt-0 @max-sm:px-8 @max-xl:px-12">
+    <div className="grid h-auto w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 py-14 px-4 @max-xl:pt-0 @max-md:px-8 @max-xl:px-12">
       <motion.h3
         initial={IMAGE_TRANSITIONS.initial}
         animate={IMAGE_TRANSITIONS.animate}
@@ -231,7 +231,7 @@ const ImageComponent = ({
 }: { piece: (typeof WORKS)[number] } & MotionProps) => {
   return (
     <motion.div
-      className="group relative h-auto w-full cursor-pointer overflow-visible rounded-md"
+      className="group relative h-auto w-full cursor-pointer overflow-visible rounded-md hover:scale-98 transition-transform duration-500 ease-out"
       {...props}
     >
       <div

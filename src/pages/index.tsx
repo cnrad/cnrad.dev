@@ -17,7 +17,7 @@ const PROJECTS = {
 interface GitHubRepo {
   stargazers_count: number;
   name: string;
-  url: string;
+  html_url: string;
 }
 
 export default function Home({ projects }: { projects: GitHubRepo[] }) {
@@ -28,7 +28,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
-              making things look good. fascinated by magic rocks.
+              making things look nice. fascinated by magic rocks.
             </p>
             <div className="flex flex-row gap-6 flex-wrap gap-y-1">
               <a
@@ -139,7 +139,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                 return (
                   <a
                     key={name}
-                    href={project.url}
+                    href={project.html_url}
                     className="flex flex-col group cursor-pointer"
                     target="_blank"
                     rel="noreferrer noopener"

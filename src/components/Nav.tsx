@@ -1,5 +1,4 @@
 import { cn } from "@/util/utils";
-import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,10 +13,7 @@ export const Nav = () => {
   const pathname = usePathname();
 
   return (
-    <motion.div
-      layoutId="nav"
-      className="@max-sm:top-8 @max-sm:fixed font-karla pb-3 w-10 text-sm flex flex-row gap-6 text-tertiary"
-    >
+    <div className="hidden absolute sm:flex left-14 top-14 font-karla pb-3 w-10 text-sm flex-row gap-6 text-tertiary z-[100]">
       {Object.entries(PAGES).map(([name, href]) => (
         <Link
           href={href}
@@ -30,6 +26,6 @@ export const Nav = () => {
           {name}
         </Link>
       ))}
-    </motion.div>
+    </div>
   );
 };

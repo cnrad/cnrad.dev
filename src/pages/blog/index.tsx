@@ -26,7 +26,7 @@ const POSTS = [
   },
   {
     slug: "tiny-wings",
-    title: "Why Tiny Wings is a *perfect* mobile game",
+    title: "A tribute to Tiny Wings",
     description:
       "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
     date: "01/24/25",
@@ -50,7 +50,8 @@ export default function Blog() {
         <div className="flex flex-col gap-6 text-sm h-full">
           <p>
             i don&apos;t think of myself as that great of a writer - but
-            occasionally i&apos;ll write about things i find interesting.
+            occasionally i&apos;ll write about things i find interesting enough
+            to write about.
           </p>
 
           <div className="w-2/3 h-[1px] bg-tertiary brightness-175" />
@@ -120,36 +121,13 @@ export default function Blog() {
         </div>
       </PageContent>
 
-      <motion.div
-        initial={{
-          y: 10,
-          opacity: 0,
-        }}
-        animate={{
-          y: 0,
-          opacity: 1,
-        }}
-        exit={{
-          y: -50,
-          opacity: 0,
-          transition: {
-            duration: 0.35,
-            ease: [0.26, 1, 0.6, 1],
-          },
-        }}
-        transition={{
-          duration: 1,
-          ease: [0.26, 1, 0.6, 1],
-        }}
-      >
-        <AnimatePresence mode="wait">
-          {currentPost ? (
-            <BlogContent key={currentPost}>
-              {POSTS.find((e) => e.slug === currentPost)?.content}
-            </BlogContent>
-          ) : null}
-        </AnimatePresence>
-      </motion.div>
+      <AnimatePresence mode="wait">
+        {currentPost ? (
+          <BlogContent key={currentPost}>
+            {POSTS.find((e) => e.slug === currentPost)?.content}
+          </BlogContent>
+        ) : null}
+      </AnimatePresence>
     </PageWrapper>
   );
 }
@@ -173,7 +151,7 @@ const BlogPostItem = ({
     // href={`/blog/${slug}`}
     // shallow
     onClick={onClick}
-    className="flex flex-col group cursor-pointer"
+    className="flex flex-col text-left group cursor-pointer"
     {...rest}
   >
     <h5 className="text-primary font-medium">{title}</h5>
