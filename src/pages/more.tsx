@@ -9,12 +9,12 @@ export default function Home() {
         <div className="flex flex-col gap-6 text-sm h-full">
           <div className="flex flex-col">
             <p className="mb-2">
-              not everything i do is directly related to computers.
+              you clicked it, you got it. here&apos;s some more:
             </p>
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold leading-none">fun stats</h3>
+            <h3 className="font-bold leading-none">fun facts</h3>
             <div className="ml-3">
               <p>
                 - i&apos;m <CurrentAge /> years old
@@ -33,12 +33,12 @@ export default function Home() {
                 winner in 2022
               </p>
               <p>
-                - i&apos;m pretty good at rudimental drumming/the marching arts
+                - i&apos;m pretty good at rudimental drumming (marching arts)
               </p>
               <p>- i like creating electronic music in my spare time</p>
               <p>
-                - before you see me and ask, i&apos;m 6&apos;7&quot; - no,
-                i&apos;m not lying
+                - before you see me and ask, i&apos;m 6&apos;7&quot; - yes,
+                really
               </p>
             </div>
           </div>

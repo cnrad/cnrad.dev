@@ -1,43 +1,23 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
-import { BlogContent } from "@/components/blog/BlogWrapper";
-import { InterfaceDesign } from "@/components/blog/posts/InterfaceDesign";
-import { MeasurableDifference } from "@/components/blog/posts/MeasurableDifference";
-import { TinyWings } from "@/components/blog/posts/TinyWings";
+import DigitalIsPhysical from "@/components/blog/posts/DigitalIsPhysical";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 
-const POSTS = [
+export const POSTS = [
   {
-    slug: "a-different-approach-to-interface-design",
-    title: "A different approach to interface design",
+    slug: "digital-is-physical",
+    title: "Digital is physical",
     description:
-      "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
-    date: "02/17/25",
-    content: <InterfaceDesign />,
-  },
-  {
-    slug: "measurable-difference",
-    title: "Why is measurable difference so difficult?",
-    description:
-      "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
-    date: "01/24/25",
-    content: <MeasurableDifference />,
-  },
-  {
-    slug: "tiny-wings",
-    title: "A tribute to Tiny Wings",
-    description:
-      "Lorem ipsum about an article here, but it cuts off for some reason I'm not sure of",
-    date: "01/24/25",
-    content: <TinyWings />,
+      "The best digital interactions more often than not mimic real-world interactions.",
+    date: "03/11/25",
+    content: <DigitalIsPhysical />,
   },
 ];
 
 export default function Blog() {
-  const [currentPost, setCurrentPost] = useState<string | null>(null);
-
-  type BlogRef = HTMLButtonElement | null;
+  type BlogRef = HTMLAnchorElement | null;
   const [blogRefs] = useState<BlogRef[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const hoveredTab = blogRefs[hoveredIndex ?? -1]?.getBoundingClientRect();
@@ -49,9 +29,8 @@ export default function Blog() {
       <PageContent>
         <div className="flex flex-col gap-6 text-sm h-full">
           <p>
-            i don&apos;t think of myself as that great of a writer - but
-            occasionally i&apos;ll write about things i find interesting enough
-            to write about.
+            i don&apos;t see myself as that great of a writer - but some things
+            are captivating enough for me to share my thoughts on it.
           </p>
 
           <div className="w-2/3 h-[1px] bg-tertiary brightness-175" />
@@ -71,7 +50,6 @@ export default function Blog() {
                 title={post.title}
                 description={post.description}
                 date={post.date}
-                onClick={() => setCurrentPost(post.slug)}
                 onPointerEnter={() => setHoveredIndex(i)}
               />
             ))}
@@ -120,42 +98,30 @@ export default function Blog() {
           </motion.div>
         </div>
       </PageContent>
-
-      <AnimatePresence mode="wait">
-        {currentPost ? (
-          <BlogContent key={currentPost}>
-            {POSTS.find((e) => e.slug === currentPost)?.content}
-          </BlogContent>
-        ) : null}
-      </AnimatePresence>
     </PageWrapper>
   );
 }
 
-// TODO: figure out stupid layout and route shit so i can just use Link
-const BlogPostItem = ({
-  // slug,
+export const BlogPostItem = ({
+  slug,
   title,
   date,
   description,
-  onClick,
   ...rest
 }: {
   slug: string;
   title: string;
   date: string;
   description: string;
-  onClick?: () => void;
-} & ComponentPropsWithRef<"button">) => (
-  <button
-    // href={`/blog/${slug}`}
-    // shallow
-    onClick={onClick}
+} & ComponentPropsWithRef<"a">) => (
+  <Link
+    href={`/blog/${slug}`}
+    shallow
     className="flex flex-col text-left group cursor-pointer"
     {...rest}
   >
     <h5 className="text-primary font-medium">{title}</h5>
     <p className="text-secondary truncate max-w-full">{description}</p>
     <p className="font-light italic text-secondary mt-1">{date}</p>
-  </button>
+  </Link>
 );

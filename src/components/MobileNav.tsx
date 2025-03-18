@@ -1,7 +1,7 @@
 import { cn } from "@/util/utils";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const PAGES = {
   home: "/",
@@ -11,18 +11,18 @@ const PAGES = {
 } as const;
 
 export const MobileNav = () => {
-  const pathname = usePathname();
+  const { pathname } = useRouter();
 
   return (
     <>
-      <motion.div className="bottom-0 @max-md:px-8 pointer-events-none fixed sm:hidden font-karla px-14 py-4 w-full max-h-20 text-sm text-tertiary z-[100] bg-white shadow-white shadow-[0_0_10px_20px]">
+      <motion.div className="bottom-0 @max-md:px-8 pointer-events-none fixed sm:hidden font-karla px-14 pb-2 w-full max-h-20 text-sm text-tertiary z-[100] bg-white shadow-white shadow-[0_-10px_20px_20px]">
         <div className="w-full flex flex-row gap-6">
           {Object.entries(PAGES).map(([name, href]) => (
             <Link
               href={href}
               key={name}
               className={cn(
-                "pointer-events-auto relative transition-colors duration-100 hover:text-secondary @max-md:text-base py-2 @max-md:px-2",
+                "pointer-events-auto relative transition-all duration-100 hover:text-secondary @max-md:text-base py-2 @max-md:px-2 active:scale-90",
                 {
                   "text-primary font-medium hover:text-primary":
                     href === "/" ? pathname === href : pathname.includes(href),
@@ -31,7 +31,7 @@ export const MobileNav = () => {
             >
               {name}
 
-              <AnimatePresence>
+              <AnimatePresence mode="popLayout">
                 {(
                   href === "/" ? pathname === href : pathname.includes(href)
                 ) ? (
@@ -60,14 +60,6 @@ export const MobileNav = () => {
           ))}
         </div>
       </motion.div>
-
-      <div className="sm:hidden gradient-blur bottom-10 left-0 w-screen h-32 max-h-32">
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
     </>
   );
 };

@@ -74,9 +74,6 @@ export default function App({ Component, pageProps, router }: AppProps) {
       <motion.main
         layout
         className={`${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} antialiased font-sans h-[100dvh] overflow-hidden @container/screen`}
-        style={{
-          overscrollBehaviorY: "none",
-        }}
       >
         <Head>
           <title>Conrad Crawford</title>
@@ -95,9 +92,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
         />
 
         {/* Corner */}
-        <div className="@max-md:hidden absolute top-4 left-4 w-3 h-3 border-b border-r border-tertiary/20 border-dashed ml-[1px] mt-[1px]" />
+        <div className="max-xs:hidden absolute top-4 left-4 w-3 h-3 border-b border-r border-tertiary/20 border-dashed ml-[1px] mt-[1px]" />
         <div
-          className="@max-md:hidden absolute top-7 left-7 w-10 h-10 border-t border-l border-tertiary/20"
+          className="max-xs:hidden absolute top-7 left-7 w-10 h-10 border-t border-l border-tertiary/20"
           style={{
             maskImage:
               "linear-gradient(to bottom right, rgba(0,0,0,1), rgba(0,0,0,0) 50%)",

@@ -1,17 +1,12 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
+import { AnimatePresence, motion } from "motion/react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 
 const PROJECTS = {
-  "lanyard-profile-readme": {
-    name: "lanyard-profile-readme",
-    description: "embed discord presence in your github profile",
-    href: "",
-  },
-  "cnrad.dev": {
-    name: "cnrad.dev",
-    description: "my personal website",
-    href: "",
-  },
+  "lanyard-profile-readme": "embed discord presence in your github profile",
+  "cnrad.dev": "my personal website",
 };
 
 interface GitHubRepo {
@@ -75,12 +70,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
             <h3 className="font-bold leading-none">experience</h3>
 
             <div className="ml-3 flex flex-col gap-1.5 text-primary relative">
-              <a
-                href="https://cside.dev"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex flex-col group"
-              >
+              <LinkPreview preview="/main/cside.webp" href="https://cside.dev">
                 <p>
                   <span className="font-medium group-hover:text-[#2500DC] transition-colors duration-150">
                     c/side
@@ -88,14 +78,9 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                   <span className="italic font-normal">(2024 - present)</span>
                 </p>
                 <p className="text-tertiary">frontend engineer</p>
-              </a>
+              </LinkPreview>
 
-              <a
-                href="https://incard.co"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex flex-col group"
-              >
+              <LinkPreview preview="/main/incard.webp" href="https://incard.co">
                 <p>
                   <span className="font-medium group-hover:text-[#8bd442] transition-colors duration-150">
                     incard
@@ -103,13 +88,11 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                   <span className="italic font-normal">(2024, 2025)</span>
                 </p>
                 <p className="text-tertiary">frontend engineer (contract)</p>
-              </a>
+              </LinkPreview>
 
-              <a
+              <LinkPreview
+                preview="/main/dimension.webp"
                 href="https://dimension.dev"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex flex-col group"
               >
                 <p>
                   <span
@@ -125,7 +108,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                   <span className="italic font-normal">(2023 - 2024)</span>
                 </p>
                 <p className="text-tertiary">full-stack engineer</p>
-              </a>
+              </LinkPreview>
             </div>
           </div>
 
@@ -133,7 +116,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
             <h3 className="font-bold leading-none">projects</h3>
 
             <div className="ml-3 flex flex-col gap-1.5">
-              {Object.entries(PROJECTS).map(([name, info]) => {
+              {Object.entries(PROJECTS).map(([name, description]) => {
                 const project = projects.find((e) => e.name === name)!;
 
                 return (
@@ -151,7 +134,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                         [{project.stargazers_count} stars]
                       </span>
                     </p>
-                    <p className="opacity-50">{info.description}</p>
+                    <p className="opacity-50">{description}</p>
                   </a>
                 );
               })}
@@ -178,3 +161,69 @@ export async function getStaticProps() {
     revalidate: 3600,
   };
 }
+
+const LinkPreview = ({
+  href,
+  preview,
+  children,
+}: {
+  href: string;
+  preview: string;
+  children: React.ReactNode;
+}) => {
+  const [showPreview, setShowPreview] = useState(false);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  return (
+    <div>
+      <AnimatePresence>
+        {showPreview ? (
+          <motion.a
+            initial={{ y: 4, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 4, opacity: 0, transition: { delay: 0.015 } }}
+            href={href}
+            target="_blank"
+            rel="noreferrer noopener"
+            onMouseOver={() => setShowPreview(true)}
+            onMouseLeave={() => setShowPreview(false)}
+            transition={{
+              duration: 0.25,
+              ease: [0.26, 1, 0.6, 1],
+            }}
+            className="group max-sm:hidden fixed border border-black/20 rounded-[8px] z-10 max-w-64 min-w-64 left-54 overflow-clip p-0.5 bg-[#E7E5E4] shadow-lg hover:bg-[#efebe9] transition-colors duration-100"
+            style={{
+              marginTop: `calc(-${
+                linkRef.current?.getBoundingClientRect().height ?? 0
+              }px)`,
+            }}
+          >
+            <Image
+              src={preview}
+              alt={`Screenshot of ${href}'s landing`}
+              width={512}
+              height={272}
+              className="rounded-[6px] bg-tertiary overflow-clip"
+            />
+
+            <p className="w-full text-xs text-center text-tertiary px-1.5 font-medium pt-1 rounded-full group-hover:text-blue-700 transition-colors duration-100">
+              {href.split("://")[1]}
+            </p>
+          </motion.a>
+        ) : null}
+      </AnimatePresence>
+
+      <a
+        ref={linkRef}
+        href={href}
+        target="_blank"
+        rel="noreferrer noopener"
+        onMouseOver={() => setShowPreview(true)}
+        onMouseLeave={() => setShowPreview(false)}
+        className="relative flex flex-col group w-full whitespace-nowrap max-w-44"
+      >
+        {children}
+      </a>
+    </div>
+  );
+};

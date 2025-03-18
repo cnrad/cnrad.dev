@@ -1,6 +1,6 @@
 import { cn } from "@/util/utils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const PAGES = {
   home: "/",
@@ -10,10 +10,13 @@ const PAGES = {
 } as const;
 
 export const Nav = () => {
-  const pathname = usePathname();
+  const { pathname } = useRouter();
 
-  return (
-    <div className="hidden absolute sm:flex left-14 top-14 font-karla pb-3 w-10 text-sm flex-row gap-6 text-tertiary z-[100]">
+  return pathname !== "/blog/[slug]" ? (
+    <div
+      key="NAV"
+      className="hidden absolute sm:flex left-14 top-14 font-karla pb-3 w-10 text-sm flex-row gap-6 text-tertiary z-[100]"
+    >
       {Object.entries(PAGES).map(([name, href]) => (
         <Link
           href={href}
@@ -27,5 +30,5 @@ export const Nav = () => {
         </Link>
       ))}
     </div>
-  );
+  ) : null;
 };

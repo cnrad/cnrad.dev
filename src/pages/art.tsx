@@ -20,7 +20,7 @@ const COLLECTIONS = [
 
 export default function Art() {
   return (
-    <PageWrapper className="@max-xl:pr-0 pr-12 sm:flex-row">
+    <PageWrapper className="@max-xl:pr-0 sm:pr-12">
       <PageContent>
         <div className="flex flex-col gap-6 text-sm h-full">
           <div className="flex flex-col">
@@ -55,7 +55,7 @@ export default function Art() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 ">
+          <div className="flex flex-col gap-3">
             <h3 className="font-bold leading-none">collections</h3>
 
             {COLLECTIONS.map((collection) => (
