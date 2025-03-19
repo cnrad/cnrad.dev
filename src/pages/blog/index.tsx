@@ -1,18 +1,16 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
-import DigitalIsPhysical from "@/components/blog/posts/DigitalIsPhysical";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 
 export const POSTS = [
   {
-    slug: "digital-is-physical",
-    title: "Digital is physical",
+    slug: "interactivity",
+    title: "The Nature of Interactivity",
     description:
       "The best digital interactions more often than not mimic real-world interactions.",
     date: "03/11/25",
-    content: <DigitalIsPhysical />,
   },
 ];
 
@@ -29,8 +27,8 @@ export default function Blog() {
       <PageContent>
         <div className="flex flex-col gap-6 text-sm h-full">
           <p>
-            i don&apos;t see myself as that great of a writer - but some things
-            are captivating enough for me to share my thoughts on it.
+            some things are captivating enough for me to attempt to share my
+            thoughts on it. you&apos;ll find them here.
           </p>
 
           <div className="w-2/3 h-[1px] bg-tertiary brightness-175" />
@@ -116,7 +114,6 @@ export const BlogPostItem = ({
 } & ComponentPropsWithRef<"a">) => (
   <Link
     href={`/blog/${slug}`}
-    shallow
     className="flex flex-col text-left group cursor-pointer"
     {...rest}
   >

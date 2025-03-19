@@ -8,7 +8,6 @@ export const PAGE_TRANSITION = {
   },
   exit: {
     opacity: 0,
-    scale: 0.98,
     filter: "blur(4px)",
     transition: {
       duration: 0.35,

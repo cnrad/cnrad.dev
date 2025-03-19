@@ -223,6 +223,7 @@ const IMAGE_TRANSITIONS = {
 export const Gallery = () => {
   const [cols, setCols] = useState([0, 1, 2]);
 
+  // Masonry
   useEffect(() => {
     const updateCols = () => {
       if (window.innerWidth < 1024) {
@@ -232,7 +233,6 @@ export const Gallery = () => {
       } else {
         setCols([0, 1, 2]);
       }
-      console.log(cols);
     };
 
     window.addEventListener("resize", updateCols);
@@ -339,6 +339,9 @@ const ImageComponent = ({
         priority={true}
         key={piece.name}
         src={piece.src}
+        quality={40}
+        width={piece.src.width / 4}
+        height={piece.src.height / 4}
         alt={piece.name}
         className="z-10 h-fit w-full rounded-md object-cover"
         onClick={() => console.log("eyy")}

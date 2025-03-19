@@ -55,13 +55,13 @@ body {
 
 @keyframes sway {
   0% {
-    transform: rotate(-2deg);
+    transform: rotate(28deg);
   }
   50% {
-    transform: rotate(1deg);
+    transform: rotate(31deg);
   }
   100% {
-    transform: rotate(-2deg);
+    transform: rotate(28deg);
   }
 }
 

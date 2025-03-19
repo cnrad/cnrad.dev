@@ -7,7 +7,7 @@ import { AppProps } from "next/app";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ThemeProvider } from "next-themes";
-import Image from "next/image";
+// import Image from "next/image";
 import { Nav } from "@/components/Nav";
 
 const ysabeau = Ysabeau({
@@ -73,23 +73,50 @@ export default function App({ Component, pageProps, router }: AppProps) {
     <ThemeProvider>
       <motion.main
         layout
-        className={`${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} antialiased font-sans h-[100dvh] overflow-hidden @container/screen`}
+        className={`relative ${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} antialiased font-sans h-[100dvh] overflow-hidden @container/screen`}
       >
         <Head>
           <title>Conrad Crawford</title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 
-        <Image
+        {/* <Image
           src="/shadow.png"
           fill
-          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none select-none opacity-15"
+          className="opacity-15 absolute top-0 left-0 w-full h-full object-cover pointer-events-none select-none z-0"
           alt="A shadow casted by the light coming through a windowpane"
           style={{
             maskImage:
               "linear-gradient(to right, rgba(0,0,0,0) 25%, rgba(0,0,0,1) 75%)",
           }}
-        />
+        /> */}
+
+        <div
+          className="opacity-15 fixed top-0 left-0 w-screen h-screen z-[-3] flex flex-col gap-32 items-center justify-center bg-gradient-to-l to-75% from-[#121212] to-white"
+          style={{
+            maskImage:
+              "linear-gradient(to right, rgba(0,0,0,0) 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)",
+          }}
+        >
+          <div
+            className="ml-[50vw] mt-80 min-h-34 blur-md w-[200vw] bg-background z-[-2]"
+            style={{
+              animation: "sway 7s infinite",
+            }}
+          />
+          <div
+            className="ml-[50vw] mt-48 min-h-30 blur-md w-[200vw] bg-background z-[-2]"
+            style={{
+              animation: "sway 6s infinite",
+            }}
+          />
+          <div
+            className="ml-[50vw] mt-18 min-h-64 blur-md w-[200vw] bg-background z-[-2]"
+            style={{
+              animation: "sway 8s infinite",
+            }}
+          />
+        </div>
 
         {/* Corner */}
         <div className="max-xs:hidden absolute top-4 left-4 w-3 h-3 border-b border-r border-tertiary/20 border-dashed ml-[1px] mt-[1px]" />
