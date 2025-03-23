@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ThemeProvider } from "next-themes";
 // import Image from "next/image";
 import { Nav } from "@/components/Nav";
+import { MobileNav } from "@/components/MobileNav";
 
 const ysabeau = Ysabeau({
   subsets: ["latin"],
@@ -73,7 +74,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
     <ThemeProvider>
       <motion.main
         layout
-        className={`relative ${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} antialiased font-sans h-[100dvh] overflow-hidden @container/screen`}
+        className={`relative ${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} @container/screen h-[100dvh] overflow-hidden font-sans antialiased`}
       >
         <Head>
           <title>Conrad Crawford</title>
@@ -92,26 +93,26 @@ export default function App({ Component, pageProps, router }: AppProps) {
         /> */}
 
         <div
-          className="opacity-15 fixed top-0 left-0 w-screen h-screen z-[-3] flex flex-col gap-32 items-center justify-center bg-gradient-to-l to-75% from-[#121212] to-white"
+          className="fixed top-0 left-0 z-[-3] flex h-screen w-screen flex-col items-center justify-center gap-32 bg-gradient-to-l from-[#121212] to-white to-75% opacity-15"
           style={{
             maskImage:
               "linear-gradient(to right, rgba(0,0,0,0) 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)",
           }}
         >
           <div
-            className="ml-[50vw] mt-80 min-h-34 blur-md w-[200vw] bg-background z-[-2]"
+            className="bg-background z-[-2] mt-80 ml-[50vw] min-h-34 w-[200vw] blur-md"
             style={{
               animation: "sway 7s infinite",
             }}
           />
           <div
-            className="ml-[50vw] mt-48 min-h-30 blur-md w-[200vw] bg-background z-[-2]"
+            className="bg-background z-[-2] mt-48 ml-[50vw] min-h-30 w-[200vw] blur-md"
             style={{
               animation: "sway 6s infinite",
             }}
           />
           <div
-            className="ml-[50vw] mt-18 min-h-64 blur-md w-[200vw] bg-background z-[-2]"
+            className="bg-background z-[-2] mt-18 ml-[50vw] min-h-64 w-[200vw] blur-md"
             style={{
               animation: "sway 8s infinite",
             }}
@@ -119,9 +120,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
         </div>
 
         {/* Corner */}
-        <div className="max-xs:hidden absolute top-4 left-4 w-3 h-3 border-b border-r border-tertiary/20 border-dashed ml-[1px] mt-[1px]" />
+        <div className="max-xs:hidden border-tertiary/20 absolute top-4 left-4 mt-[1px] ml-[1px] h-3 w-3 border-r border-b border-dashed" />
         <div
-          className="max-xs:hidden absolute top-7 left-7 w-10 h-10 border-t border-l border-tertiary/20"
+          className="max-xs:hidden border-tertiary/20 absolute top-7 left-7 h-10 w-10 border-t border-l"
           style={{
             maskImage:
               "linear-gradient(to bottom right, rgba(0,0,0,1), rgba(0,0,0,0) 50%)",
@@ -133,6 +134,8 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <AnimatePresence mode="popLayout">
           <Component {...pageProps} key={router.pathname} />
         </AnimatePresence>
+
+        <MobileNav />
       </motion.main>
     </ThemeProvider>
   );

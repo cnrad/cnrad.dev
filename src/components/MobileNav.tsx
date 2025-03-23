@@ -1,5 +1,5 @@
 import { cn } from "@/util/utils";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -15,49 +15,46 @@ export const MobileNav = () => {
 
   return (
     <>
-      <motion.div className="bottom-0 @max-md:px-8 pointer-events-none fixed sm:hidden font-karla px-14 pb-2 w-full max-h-20 text-sm text-tertiary z-[100] bg-white shadow-white shadow-[0_-10px_20px_20px]">
-        <div className="w-full flex flex-row gap-6">
-          {Object.entries(PAGES).map(([name, href]) => (
-            <Link
-              href={href}
-              key={name}
-              className={cn(
-                "pointer-events-auto relative transition-all duration-100 hover:text-secondary @max-md:text-base py-2 @max-md:px-2 active:scale-90",
-                {
-                  "text-primary font-medium hover:text-primary":
-                    href === "/" ? pathname === href : pathname.includes(href),
-                }
-              )}
-            >
-              {name}
+      <motion.div
+        layout
+        className="font-karla text-tertiary border-tertiary/15 pointer-events-none fixed bottom-6 left-1/2 z-1000 w-min -translate-x-1/2 rounded-full border bg-white p-1.5 text-sm shadow-xl shadow-black/5 sm:hidden"
+      >
+        <div className="flex w-full flex-row items-center justify-center gap-4">
+          {Object.entries(PAGES).map(([name, href]) => {
+            const isActive =
+              href === "/" ? pathname === href : pathname.includes(href);
 
-              <AnimatePresence mode="popLayout">
-                {(
-                  href === "/" ? pathname === href : pathname.includes(href)
-                ) ? (
-                  <motion.span
-                    initial={{
-                      opacity: 0,
-                      y: 4,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      y: 4,
-                    }}
-                    transition={{
-                      duration: 0.2,
-                      ease: [0.26, 1, 0.6, 1],
-                    }}
-                    className="rounded-full bg-primary w-4 h-0.5 max-h-0.5 min-h-0.5 absolute -bottom-0 left-1/2 -translate-x-1/2"
-                  />
-                ) : null}
-              </AnimatePresence>
-            </Link>
-          ))}
+            return (
+              <>
+                <Link
+                  href={href}
+                  key={name}
+                  className={cn(
+                    "hover:text-secondary pointer-events-auto relative px-3 py-1.5 transition-all duration-100 active:scale-90",
+                    {
+                      "text-primary hover:text-primary font-medium": isActive,
+                    },
+                  )}
+                >
+                  {name}
+
+                  {isActive ? (
+                    <motion.span
+                      layoutId="highlight"
+                      style={{
+                        position: "absolute",
+                      }}
+                      transition={{
+                        duration: 0.35,
+                        ease: [0.26, 1, 0.6, 1],
+                      }}
+                      className="to-tertiary/15 top-1/2 left-1/2 h-full w-full -translate-1/2 rounded-full bg-radial from-transparent from-25%"
+                    />
+                  ) : null}
+                </Link>
+              </>
+            );
+          })}
         </div>
       </motion.div>
     </>

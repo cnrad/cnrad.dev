@@ -5,8 +5,8 @@ import { forwardRef } from "react";
 export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
   function PageContent({ children, ...props }, ref) {
     return (
-      <motion.div className="min-md:min-w-md max-sm:min-h-min sm:pt-20 flex flex-col w-full max-sm:overflow-y-auto max-md:pb-20 min-sm:max-w-lg h-full max-xs:p-8 max-sm:!pt-14 max-sm:pb-8 p-14 top-0 max-sm:relative sticky">
-        <motion.h1 className="mt-0 text-2xl sm:mt-4 mb-1 font-medium text-primary">
+      <motion.div className="max-xs:p-8 sticky top-0 flex h-full w-full flex-col p-14 max-sm:relative max-sm:min-h-min max-sm:overflow-y-auto max-sm:!pt-10 max-sm:pb-8 min-sm:max-w-lg sm:pt-20 min-md:min-w-md">
+        <motion.h1 className="text-primary xs:mt-4 mt-0 mb-1 text-2xl font-medium">
           Conrad Crawford
         </motion.h1>
 
@@ -23,13 +23,13 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
 
         <motion.div
           layoutId="footer"
-          className="max-sm:hidden w-full flex flex-row mt-auto justify-between"
+          className="mt-auto flex w-full flex-row justify-between max-sm:hidden"
         >
-          <p className="font-medium italic text-stone-200">
+          <p className="font-medium text-stone-200 italic">
             Conrad Crawford, {new Date().getFullYear()}
           </p>
         </motion.div>
       </motion.div>
     );
-  }
+  },
 );

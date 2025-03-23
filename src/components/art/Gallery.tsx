@@ -114,6 +114,7 @@ const WORKS = [
     date: "06.18.23",
     src: wallpaper_wednesday_unsplash,
     unsplash: "https://unsplash.com/photos/08pUkir23Z4",
+    featured: true,
   },
   {
     name: "Rik Style",
@@ -235,47 +236,55 @@ export const Gallery = () => {
       }
     };
 
+    updateCols(); // run initially
+
     window.addEventListener("resize", updateCols);
 
     return () => window.removeEventListener("resize", updateCols);
-  });
+  }, []);
 
   return (
-    <div className="grid h-auto w-full grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 pb-14 sm:py-14 px-8 xs:px-14 sm:px-4 min-xl:px-14">
-      <motion.h3
-        initial={IMAGE_TRANSITIONS.initial}
-        animate={IMAGE_TRANSITIONS.animate}
-        exit={IMAGE_TRANSITIONS.exit}
-        transition={{
-          duration: 1,
-          ease: [0.26, 1, 0.6, 1],
-        }}
-        className="font-bold leading-none text-sm min-sm:hidden"
-      >
-        individuals
-      </motion.h3>
+    <div className="flex flex-col gap-2 pb-14">
+      <div className="xs:px-14 grid h-auto w-full grid-cols-1 gap-4 px-8 sm:px-4 sm:py-14 lg:grid-cols-2 xl:grid-cols-3 min-xl:px-14">
+        <motion.h3
+          initial={IMAGE_TRANSITIONS.initial}
+          animate={IMAGE_TRANSITIONS.animate}
+          exit={IMAGE_TRANSITIONS.exit}
+          transition={{
+            duration: 1,
+            ease: [0.26, 1, 0.6, 1],
+          }}
+          className="text-sm leading-none font-bold min-sm:hidden"
+        >
+          individuals
+        </motion.h3>
 
-      {cols.map((i, _, arr) => (
-        <div key={i} className="relative flex h-auto w-full flex-col gap-4">
-          {WORKS.slice(
-            i * (WORKS.length / arr.length),
-            i * (WORKS.length / arr.length) + WORKS.length / arr.length
-          ).map((piece, i) => (
-            <ImageComponent
-              key={piece.name}
-              piece={piece}
-              initial={IMAGE_TRANSITIONS.initial}
-              animate={IMAGE_TRANSITIONS.animate}
-              exit={IMAGE_TRANSITIONS.exit}
-              transition={{
-                delay: i / 14,
-                duration: 1,
-                ease: [0.26, 1, 0.6, 1],
-              }}
-            />
-          ))}
-        </div>
-      ))}
+        {cols.map((i, _, arr) => (
+          <div key={i} className="relative flex h-auto w-full flex-col gap-4">
+            {WORKS.slice(
+              i * (WORKS.length / arr.length),
+              i * (WORKS.length / arr.length) + WORKS.length / arr.length,
+            ).map((piece, i) => (
+              <ImageComponent
+                key={piece.name}
+                piece={piece}
+                initial={IMAGE_TRANSITIONS.initial}
+                animate={IMAGE_TRANSITIONS.animate}
+                exit={IMAGE_TRANSITIONS.exit}
+                transition={{
+                  delay: i / 14,
+                  duration: 1,
+                  ease: [0.26, 1, 0.6, 1],
+                }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      <p className="text-tertiary xs:px-14 px-8 text-xs brightness-125 max-sm:pt-4 sm:px-4">
+        All works © Conrad Crawford. <br /> Do not reproduce without the
+        expressed written consent of Conrad Crawford.
+      </p>
     </div>
   );
 };
@@ -286,7 +295,7 @@ const ImageComponent = ({
 }: { piece: (typeof WORKS)[number] } & MotionProps) => {
   return (
     <motion.div
-      className="group relative h-auto w-full overflow-visible rounded-md hover:scale-98 transition-transform duration-400 ease-out bg-tertiary/25"
+      className="group bg-tertiary/25 relative h-auto w-full overflow-visible rounded-md transition-transform duration-400 ease-out hover:scale-98"
       {...props}
     >
       <div
@@ -295,7 +304,7 @@ const ImageComponent = ({
       />
 
       <div className="absolute bottom-0 z-10 flex min-h-16 w-full flex-col items-center justify-center gap-1 bg-transparent py-4 opacity-0 transition-all duration-200 group-hover:opacity-100">
-        <p className="text-sm font-semibold text-white/85">
+        <p className="cursor-default text-sm font-semibold text-white/85">
           {piece.name} {piece.featured ? "*" : null}
         </p>
         <a
@@ -339,9 +348,9 @@ const ImageComponent = ({
         priority={true}
         key={piece.name}
         src={piece.src}
-        quality={40}
-        width={piece.src.width / 4}
-        height={piece.src.height / 4}
+        quality={50}
+        width={piece.src.width / 8}
+        height={piece.src.height / 8}
         alt={piece.name}
         className="z-10 h-fit w-full rounded-md object-cover"
         onClick={() => console.log("eyy")}

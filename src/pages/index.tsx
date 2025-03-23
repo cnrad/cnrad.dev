@@ -19,15 +19,15 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
   return (
     <PageWrapper>
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full text-primary">
+        <div className="text-primary flex h-full flex-col gap-6 text-sm">
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
               making things look nice. fascinated by magic rocks.
             </p>
-            <div className="flex flex-row gap-6 flex-wrap gap-y-1">
+            <div className="flex flex-row flex-wrap gap-6 gap-y-1">
               <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
                 href="https://github.com/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -35,7 +35,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                 github
               </a>
               <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
                 href="https://x.com/notcnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -43,7 +43,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                 twitter (x)
               </a>
               <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
                 href="https://linkedin.com/in/cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -51,14 +51,14 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                 linkedin
               </a>
 
-              <button className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap">
+              <button className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100">
                 message
               </button>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold leading-none">philosophy</h3>
+            <h3 className="leading-none font-bold">philosophy</h3>
             <div className="ml-3">
               <p>- ship fast, with intention</p>
               <p>- great interaction follows intuition</p>
@@ -67,25 +67,25 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold leading-none">experience</h3>
+            <h3 className="leading-none font-bold">experience</h3>
 
-            <div className="ml-3 flex flex-col gap-1.5 text-primary relative">
+            <div className="text-primary relative ml-3 flex flex-col gap-1.5">
               <LinkPreview preview="/main/cside.webp" href="https://cside.dev">
                 <p>
-                  <span className="font-medium group-hover:text-[#2500DC] transition-colors duration-150">
+                  <span className="font-medium transition-colors duration-150 group-hover:text-[#2500DC]">
                     c/side
                   </span>{" "}
-                  <span className="italic font-normal">(2024 - present)</span>
+                  <span className="font-normal italic">(2024 - present)</span>
                 </p>
                 <p className="text-tertiary">frontend engineer</p>
               </LinkPreview>
 
               <LinkPreview preview="/main/incard.webp" href="https://incard.co">
                 <p>
-                  <span className="font-medium group-hover:text-[#8bd442] transition-colors duration-150">
+                  <span className="font-medium transition-colors duration-150 group-hover:text-[#8bd442]">
                     incard
                   </span>{" "}
-                  <span className="italic font-normal">(2024, 2025)</span>
+                  <span className="font-normal italic">(2024, 2025)</span>
                 </p>
                 <p className="text-tertiary">frontend engineer (contract)</p>
               </LinkPreview>
@@ -96,7 +96,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
               >
                 <p>
                   <span
-                    className="font-medium group-hover:text-transparent text-primary transition-colors duration-150"
+                    className="text-primary font-medium transition-colors duration-150 group-hover:text-transparent"
                     style={{
                       background:
                         "linear-gradient(135deg, color(display-p3 .6196078431 .4784313725 1/1) 0%,color(display-p3 .9960784314 .5450980392 .7333333333/1) 33.33%,color(display-p3 1 .7411764706 .4784313725/1) 100%)",
@@ -105,7 +105,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                   >
                     dimension
                   </span>{" "}
-                  <span className="italic font-normal">(2023 - 2024)</span>
+                  <span className="font-normal italic">(2023 - 2024)</span>
                 </p>
                 <p className="text-tertiary">full-stack engineer</p>
               </LinkPreview>
@@ -113,7 +113,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold leading-none">projects</h3>
+            <h3 className="leading-none font-bold">projects</h3>
 
             <div className="ml-3 flex flex-col gap-1.5">
               {Object.entries(PROJECTS).map(([name, description]) => {
@@ -123,14 +123,14 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                   <a
                     key={name}
                     href={project.html_url}
-                    className="flex flex-col group cursor-pointer"
+                    className="group flex cursor-pointer flex-col"
                     target="_blank"
                     rel="noreferrer noopener"
                   >
-                    <p className="flex flex-row gap-1 font-medium group-hover:text-blue-700 transition-colors duration-100">
+                    <p className="flex flex-row gap-1 font-medium transition-colors duration-100 group-hover:text-blue-700">
                       <span>{name}</span>
 
-                      <span className="ml-0.5 font-light italic items-center text-tertiary group-hover:text-secondary transition-colors duration-100">
+                      <span className="text-tertiary group-hover:text-secondary ml-0.5 items-center font-light italic transition-colors duration-100">
                         [{project.stargazers_count} stars]
                       </span>
                     </p>
@@ -149,7 +149,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
 // I miss nextjs 12
 export async function getStaticProps() {
   const repos = (await fetch(
-    `https://api.github.com/users/cnrad/repos?type=owner&per_page=100`
+    `https://api.github.com/users/cnrad/repos?type=owner&per_page=100`,
   ).then((res) => res.json())) as GitHubRepo[];
 
   const projects = repos
@@ -179,9 +179,9 @@ const LinkPreview = ({
       <AnimatePresence>
         {showPreview ? (
           <motion.a
-            initial={{ y: 4, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 4, opacity: 0, transition: { delay: 0.015 } }}
+            initial={{ x: 4, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 4, opacity: 0, transition: { delay: 0.015 } }}
             href={href}
             target="_blank"
             rel="noreferrer noopener"
@@ -191,7 +191,7 @@ const LinkPreview = ({
               duration: 0.25,
               ease: [0.26, 1, 0.6, 1],
             }}
-            className="group max-sm:hidden fixed border border-black/20 rounded-[8px] z-10 max-w-64 min-w-64 left-54 overflow-clip p-0.5 bg-[#E7E5E4] shadow-lg hover:bg-[#efebe9] transition-colors duration-100"
+            className="group fixed left-54 z-10 max-w-64 min-w-64 overflow-clip rounded-[8px] border border-black/20 bg-[#E7E5E4] p-0.5 shadow-lg transition-colors duration-100 hover:bg-[#efebe9] max-sm:hidden"
             style={{
               marginTop: `calc(-${
                 linkRef.current?.getBoundingClientRect().height ?? 0
@@ -203,10 +203,10 @@ const LinkPreview = ({
               alt={`Screenshot of ${href}'s landing`}
               width={512}
               height={272}
-              className="rounded-[6px] bg-tertiary overflow-clip"
+              className="bg-tertiary overflow-clip rounded-[6px]"
             />
 
-            <p className="w-full text-xs text-center text-tertiary px-1.5 font-medium pt-1 rounded-full group-hover:text-blue-700 transition-colors duration-100">
+            <p className="text-tertiary w-full rounded-full px-1.5 pt-1 text-center text-xs font-medium transition-colors duration-100 group-hover:text-blue-700">
               {href.split("://")[1]}
             </p>
           </motion.a>
@@ -220,7 +220,7 @@ const LinkPreview = ({
         rel="noreferrer noopener"
         onMouseOver={() => setShowPreview(true)}
         onMouseLeave={() => setShowPreview(false)}
-        className="relative flex flex-col group w-full whitespace-nowrap max-w-44"
+        className="group relative flex w-full max-w-44 flex-col whitespace-nowrap"
       >
         {children}
       </a>

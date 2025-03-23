@@ -20,9 +20,9 @@ const COLLECTIONS = [
 
 export default function Art() {
   return (
-    <PageWrapper className="@max-xl:pr-0 sm:pr-12">
+    <PageWrapper className="sm:pr-12 @max-xl:pr-0">
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full">
+        <div className="flex h-full flex-col gap-6 text-sm">
           <div className="flex flex-col">
             <p className="mb-2">
               digital abstract expressionist. seeking to understand the
@@ -30,7 +30,7 @@ export default function Art() {
             </p>
             <div className="flex flex-row gap-6">
               <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
                 href="https://unsplash.com/@cnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export default function Art() {
                 unsplash
               </a>
               <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
                 href="https://x.com/notcnrad"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -46,7 +46,7 @@ export default function Art() {
                 twitter (x)
               </a>
               <a
-                className="cursor-pointer text-tertiary hover:text-primary transition-colors duration-100 whitespace-nowrap"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -56,12 +56,12 @@ export default function Art() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="font-bold leading-none">collections</h3>
+            <h3 className="leading-none font-bold">collections</h3>
 
             {COLLECTIONS.map((collection) => (
               <a
                 key={collection.name}
-                className="flex flex-col mb-2 rounded-lg hover:brightness-75 cursor-pointer transition-all duration-500 overflow-clip h-40 ![background-size:100%] hover:![background-size:103%]"
+                className="mb-2 flex h-40 cursor-pointer flex-col overflow-clip rounded-lg ![background-size:100%] transition-all duration-500 hover:![background-size:103%] hover:brightness-75"
                 style={{
                   background: `url(${collection.thumbnail})`,
                   backgroundPosition: "center",
@@ -71,8 +71,8 @@ export default function Art() {
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                <div className="p-5 bg-linear-to-t from-black from-25% to-black/0 mt-auto">
-                  <h5 className="text-white font-medium text-lg">
+                <div className="mt-auto bg-linear-to-t from-black from-25% to-black/0 p-5">
+                  <h5 className="text-lg font-medium text-white">
                     {collection.name}
                   </h5>
                   <p className="text-white opacity-75">
