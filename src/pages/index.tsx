@@ -16,10 +16,18 @@ interface GitHubRepo {
 }
 
 export default function Home({ projects }: { projects: GitHubRepo[] }) {
+  const [messageState, setMessageState] = useState<{
+    open: boolean;
+    message: string;
+  }>({
+    open: false,
+    message: "",
+  });
+
   return (
     <PageWrapper>
       <PageContent>
-        <div className="text-primary flex h-full flex-col gap-6 text-sm">
+        <div className="text-primary flex h-full flex-col gap-6 text-sm max-md:pb-20">
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
@@ -51,7 +59,12 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                 linkedin
               </a>
 
-              <button className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100">
+              <button
+                onClick={() =>
+                  setMessageState((p) => ({ ...p, open: !p.open }))
+                }
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
+              >
                 message
               </button>
             </div>
@@ -62,7 +75,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
             <div className="ml-3">
               <p>- ship fast, with intention</p>
               <p>- great interaction follows intuition</p>
-              <p>- if you&apos;re not learning, you&apos;re doing it wrong</p>
+              <p>- habitualize excellence</p>
             </div>
           </div>
 
@@ -158,7 +171,7 @@ export async function getStaticProps() {
 
   return {
     props: { projects },
-    revalidate: 3600,
+    revalidate: 3600, // every hour
   };
 }
 
@@ -179,9 +192,15 @@ const LinkPreview = ({
       <AnimatePresence>
         {showPreview ? (
           <motion.a
-            initial={{ x: 4, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 4, opacity: 0, transition: { delay: 0.015 } }}
+            initial={{ scale: 0.98, x: -4, opacity: 0 }}
+            animate={{ scale: 1, x: 0, opacity: 1 }}
+            exit={{
+              scale: 0.98,
+
+              x: -4,
+              opacity: 0,
+              transition: { delay: 0.015 },
+            }}
             href={href}
             target="_blank"
             rel="noreferrer noopener"

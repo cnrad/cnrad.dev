@@ -1,6 +1,7 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Gallery } from "@/components/art/Gallery";
+import { Suspense } from "react";
 
 const COLLECTIONS = [
   {
@@ -21,7 +22,7 @@ const COLLECTIONS = [
 export default function Art() {
   return (
     <PageWrapper className="sm:pr-12 @max-xl:pr-0">
-      <PageContent>
+      <PageContent className="min-sm:max-w-md">
         <div className="flex h-full flex-col gap-6 text-sm">
           <div className="flex flex-col">
             <p className="mb-2">

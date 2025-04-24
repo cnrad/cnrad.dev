@@ -4,15 +4,14 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 
-export const POSTS = [
-  {
-    slug: "interactivity",
-    title: "The Nature of Interactivity",
-    description:
-      "The best digital interactions more often than not mimic real-world interactions.",
-    date: "03/11/25",
-  },
-];
+interface BlogItem {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+}
+
+export const POSTS: BlogItem[] = [];
 
 export default function Blog() {
   type BlogRef = HTMLAnchorElement | null;
@@ -25,37 +24,43 @@ export default function Blog() {
   return (
     <PageWrapper>
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full">
+        <div className="flex h-full flex-col gap-6 text-sm">
           <p>
             some things are captivating enough for me to attempt to share my
             thoughts on it. you&apos;ll find them here.
           </p>
 
-          <div className="w-2/3 h-[1px] bg-tertiary brightness-175" />
+          <div className="bg-tertiary h-[1px] w-2/3 brightness-175" />
 
           <motion.div
             ref={blogPostsContainerRef}
-            className="relative flex flex-col max-w-sm gap-3"
+            className="relative flex max-w-sm flex-col gap-3"
             onMouseLeave={() => setHoveredIndex(null)}
           >
-            {POSTS.map((post, i) => (
-              <BlogPostItem
-                ref={(el) => {
-                  blogRefs[i] = el;
-                }}
-                key={post.slug}
-                slug={post.slug}
-                title={post.title}
-                description={post.description}
-                date={post.date}
-                onPointerEnter={() => setHoveredIndex(i)}
-              />
-            ))}
+            {POSTS.length > 0 ? (
+              POSTS.map((post, i) => (
+                <BlogPostItem
+                  ref={(el) => {
+                    blogRefs[i] = el;
+                  }}
+                  key={post.slug}
+                  slug={post.slug}
+                  title={post.title}
+                  description={post.description}
+                  date={post.date}
+                  onPointerEnter={() => setHoveredIndex(i)}
+                />
+              ))
+            ) : (
+              <div className="bg-tertiary/10 border-tertiary/15 text-tertiary w-full rounded-lg border py-9 text-center">
+                Nothing here quite yet...
+              </div>
+            )}
 
             <AnimatePresence>
               {hoveredTab ? (
                 <motion.div
-                  className="absolute bg-tertiary/8 rounded-lg -z-1"
+                  className="bg-tertiary/8 absolute -z-1 rounded-lg"
                   initial={{
                     top: `calc(${
                       hoveredTab.top -
@@ -114,11 +119,11 @@ export const BlogPostItem = ({
 } & ComponentPropsWithRef<"a">) => (
   <Link
     href={`/blog/${slug}`}
-    className="flex flex-col text-left group cursor-pointer"
+    className="group flex cursor-pointer flex-col text-left"
     {...rest}
   >
     <h5 className="text-primary font-medium">{title}</h5>
-    <p className="text-secondary truncate max-w-full">{description}</p>
-    <p className="font-light italic text-secondary mt-1">{date}</p>
+    <p className="text-secondary max-w-full truncate">{description}</p>
+    <p className="text-secondary mt-1 font-light italic">{date}</p>
   </Link>
 );

@@ -17,7 +17,7 @@ export const MobileNav = () => {
     <>
       <motion.div
         layout
-        className="font-karla text-tertiary border-tertiary/15 pointer-events-none fixed bottom-6 left-1/2 z-1000 w-min -translate-x-1/2 rounded-full border bg-white p-1.5 text-sm shadow-xl shadow-black/5 sm:hidden"
+        className="font-karla text-tertiary border-tertiary/15 pointer-events-none fixed bottom-6 left-1/2 z-100 w-min -translate-x-1/2 rounded-full border bg-white p-1.5 text-sm shadow-xl shadow-black/5 sm:hidden"
       >
         <div className="flex w-full flex-row items-center justify-center gap-4">
           {Object.entries(PAGES).map(([name, href]) => {
@@ -48,7 +48,7 @@ export const MobileNav = () => {
                         duration: 0.35,
                         ease: [0.26, 1, 0.6, 1],
                       }}
-                      className="to-tertiary/15 top-1/2 left-1/2 h-full w-full -translate-1/2 rounded-full bg-radial from-transparent from-25%"
+                      className="bg-tertiary/5 border-secondary/5 top-1/2 left-1/2 h-full w-full -translate-1/2 rounded-full border"
                     />
                   ) : null}
                 </Link>

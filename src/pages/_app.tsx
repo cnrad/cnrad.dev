@@ -10,6 +10,7 @@ import { ThemeProvider } from "next-themes";
 // import Image from "next/image";
 import { Nav } from "@/components/Nav";
 import { MobileNav } from "@/components/MobileNav";
+import { WORKS } from "@/components/art/Gallery";
 
 const ysabeau = Ysabeau({
   subsets: ["latin"],
@@ -74,24 +75,24 @@ export default function App({ Component, pageProps, router }: AppProps) {
     <ThemeProvider>
       <motion.main
         layout
-        className={`relative ${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} @container/screen h-[100dvh] overflow-hidden font-sans antialiased`}
+        className={`${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} @container/screen relative h-[100dvh] overflow-hidden font-sans antialiased max-md:overflow-y-auto`}
       >
         <Head>
           <title>Conrad Crawford</title>
           <link rel="shortcut icon" href="/favicon.ico" />
+
+          {WORKS.map((w) => (
+            <link
+              key={w.name}
+              rel="preload"
+              as="image"
+              href={w.src}
+              fetchPriority="high"
+            />
+          ))}
         </Head>
 
-        {/* <Image
-          src="/shadow.png"
-          fill
-          className="opacity-15 absolute top-0 left-0 w-full h-full object-cover pointer-events-none select-none z-0"
-          alt="A shadow casted by the light coming through a windowpane"
-          style={{
-            maskImage:
-              "linear-gradient(to right, rgba(0,0,0,0) 25%, rgba(0,0,0,1) 75%)",
-          }}
-        /> */}
-
+        {/* Sun rays */}
         <div
           className="fixed top-0 left-0 z-[-3] flex h-screen w-screen flex-col items-center justify-center gap-32 bg-gradient-to-l from-[#121212] to-white to-75% opacity-15"
           style={{

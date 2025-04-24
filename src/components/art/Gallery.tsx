@@ -1,69 +1,41 @@
 import { MotionProps, motion } from "motion/react";
-import Image, { StaticImageData } from "next/image";
-// yeah I wish this was neater too
-import streams from "../../../public/art/streams.webp";
-import ultrawide_minimalism_1 from "../../../public/art/ultrawide_minimalism_1.webp";
-import ultrawide_minimalism_2 from "../../../public/art/ultrawide_minimalism_2.webp";
-import themomentoureyesfirstmet from "../../../public/art/themomentoureyesfirstmet.webp";
-import arcus from "../../../public/art/arcus.webp";
-import arcus_background from "../../../public/art/arcus_background.webp";
-import fluctus from "../../../public/art/fluctus.webp";
-import dawnofanewtomorrow from "../../../public/art/dawnofanewtomorrow.webp";
-import neo_hop from "../../../public/art/neo_hop.webp";
-import neo from "../../../public/art/neo.webp";
-import light_trail_2 from "../../../public/art/light_trail_2.webp";
-import light_trail from "../../../public/art/light_trail.webp";
-import planet from "../../../public/art/planet.webp";
-import wallpaper_wednesday_unsplash from "../../../public/art/wallpaper_wednesday_unsplash.webp";
-import rik_style from "../../../public/art/rik_style.webp";
-import spectrum from "../../../public/art/spectrum.webp";
-import togentlyfallfurtheraway from "../../../public/art/togentlyfallfurtheraway.webp";
-import wwdcexploration1 from "../../../public/art/wwdcexploration1.webp";
-import wwdcexploration2 from "../../../public/art/wwdcexploration2.webp";
-import wwdcexploration3 from "../../../public/art/wwdcexploration3.webp";
-import wallpaper_wednesday_42323_1 from "../../../public/art/wallpaper_wednesday_42323_1.webp";
-import wallpaper_wednesday_42323_2 from "../../../public/art/wallpaper_wednesday_42323_2.webp";
-import wallpaper_wednesday_42323_3 from "../../../public/art/wallpaper_wednesday_42323_3.webp";
-import wallpaper_wednesday_42323_4 from "../../../public/art/wallpaper_wednesday_42323_4.webp";
-import wallpaper_wednesday_42323_5 from "../../../public/art/wallpaper_wednesday_42323_5.webp";
-import dimension from "../../../public/art/dimension.webp";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const WORKS = [
+export const WORKS = [
   {
     name: "Ultrawide Minimalism (1)",
     date: "06.03.24",
-    src: ultrawide_minimalism_1,
+    src: "/art/min/ultrawide_minimalism_1.webp",
     post: "https://x.com/notcnrad/status/1797489177782845750",
   },
   {
     name: "Ultrawide Minimalism (2)",
     date: "06.03.24",
-    src: ultrawide_minimalism_2,
+    src: "/art/min/ultrawide_minimalism_2.webp",
     post: "https://x.com/notcnrad/status/1797489177782845750",
   },
   {
     name: "Streams",
     date: "11.07.24",
-    src: streams,
+    src: "/art/min/streams.webp",
     unsplash: "https://unsplash.com/photos/Q6gZw7Hnl5w",
     post: "https://x.com/notcnrad/status/1857255860071759885",
   },
   {
     name: "The Moment Our Eyes First Met",
     date: "04.08.23",
-    src: themomentoureyesfirstmet,
+    src: "/art/min/themomentoureyesfirstmet.webp",
   },
   {
     name: "Arcus Exploration",
     date: "06.20.23",
-    src: arcus,
+    src: "/art/min/arcus.webp",
     post: "https://x.com/notcnrad/status/1671238076180430851",
   },
   {
     name: "Arcus Exploration 2",
     date: "06.21.23",
-    src: arcus_background,
+    src: "/art/min/arcus_background.webp",
     unsplash:
       "https://unsplash.com/photos/a-dark-background-with-a-pattern-of-wavy-lines-EcWBgAdRqrQ",
     post: "https://x.com/notcnrad/status/1671634017446141956",
@@ -71,40 +43,40 @@ const WORKS = [
   {
     name: "Fluctus",
     date: "01.08.24",
-    src: fluctus,
+    src: "/art/min/fluctus.webp",
   },
   {
     name: "Dawn of a New Tomorrow",
     date: "09.11.23",
-    src: dawnofanewtomorrow,
+    src: "/art/min/dawnofanewtomorrow.webp",
     post: "https://x.com/notcnrad/status/1701223417372971378",
   },
   {
     name: "Neo (Commission - Hop Inc.)",
     date: "01.08.24",
-    src: neo_hop,
+    src: "/art/min/neo_hop.webp",
     post: "https://x.com/notcnrad/status/1641602543703736324",
   },
   {
     name: "Neo",
     date: "03.29.23",
-    src: neo,
+    src: "/art/min/neo.webp",
     post: "https://x.com/notcnrad/status/1640931894933028870",
   },
   {
     name: "Light Trail 1",
     date: "01.08.24",
-    src: light_trail_2,
+    src: "/art/min/light_trail_2.webp",
   },
   {
     name: "Light Trail 2",
     date: "01.08.24",
-    src: light_trail,
+    src: "/art/min/light_trail.webp",
   },
   {
     name: "Planet",
     date: "05.09.23",
-    src: planet,
+    src: "/art/min/planet.webp",
     unsplash:
       "https://unsplash.com/photos/a-red-planet-with-a-black-background-LipGKRm7dBM",
     post: "https://x.com/notcnrad/status/1655962324015124483",
@@ -112,33 +84,33 @@ const WORKS = [
   {
     name: "Canalis",
     date: "06.18.23",
-    src: wallpaper_wednesday_unsplash,
+    src: "/art/min/wallpaper_wednesday_unsplash.webp",
     unsplash: "https://unsplash.com/photos/08pUkir23Z4",
     featured: true,
   },
   {
     name: "Rik Style",
     date: "01.08.24",
-    src: rik_style,
+    src: "/art/min/rik_style.webp",
     unsplash:
       "https://unsplash.com/photos/a-purple-abstract-background-with-lines-and-curves-1uyWq9xVwcE",
   },
   {
     name: "Spectrum",
     date: "01.08.24",
-    src: spectrum,
+    src: "/art/min/spectrum.webp",
     unsplash:
       "https://unsplash.com/photos/a-black-background-with-a-multicolored-wave-of-light-cRoeAzZTWSc",
   },
   {
     name: "To Gently Fall Further Away",
     date: "01.08.24",
-    src: togentlyfallfurtheraway,
+    src: "/art/min/togentlyfallfurtheraway.webp",
   },
   {
     name: "WWDC Exploration 1",
     date: "06.05.23",
-    src: wwdcexploration1,
+    src: "/art/min/wwdcexploration1.webp",
     unsplash:
       "https://unsplash.com/photos/a-blue-abstract-background-with-curved-shapes-k3s7LZzX5xU",
     featured: true,
@@ -147,7 +119,7 @@ const WORKS = [
   {
     name: "WWDC Exploration 2",
     date: "06.05.23",
-    src: wwdcexploration2,
+    src: "/art/min/wwdcexploration2.webp",
     unsplash:
       "https://unsplash.com/photos/a-close-up-of-a-cell-phone-with-a-red-background-gg5lVy-Qlz8",
     post: "https://x.com/notcnrad/status/1665776662871527425",
@@ -155,7 +127,7 @@ const WORKS = [
   {
     name: "WWDC Exploration 3",
     date: "06.05.23",
-    src: wwdcexploration3,
+    src: "/art/min/wwdcexploration3.webp",
     unsplash:
       "https://unsplash.com/photos/a-close-up-of-a-cell-phone-with-a-green-and-blue-design-jm7hfafFt0g",
     post: "https://x.com/notcnrad/status/1665776662871527425",
@@ -163,31 +135,31 @@ const WORKS = [
   {
     name: "Wallpaper Wednesday 1",
     date: "04.23.23",
-    src: wallpaper_wednesday_42323_1,
+    src: "/art/min/wallpaper_wednesday_42323_1.webp",
     unsplash: "https://unsplash.com/photos/Utx0LfuC5Mk",
   },
   {
     name: "Wallpaper Wednesday 2",
     date: "04.23.23",
-    src: wallpaper_wednesday_42323_2,
+    src: "/art/min/wallpaper_wednesday_42323_2.webp",
     unsplash: "https://unsplash.com/photos/xzOSH_cUHFo",
   },
   {
     name: "Wallpaper Wednesday 3",
     date: "04.23.23",
-    src: wallpaper_wednesday_42323_3,
+    src: "/art/min/wallpaper_wednesday_42323_3.webp",
     unsplash: "https://unsplash.com/photos/mzzpvI2Z5r8",
   },
   {
     name: "Wallpaper Wednesday 4",
     date: "04.23.23",
-    src: wallpaper_wednesday_42323_4,
+    src: "/art/min/wallpaper_wednesday_42323_4.webp",
     unsplash: "https://unsplash.com/photos/SClBP10L2WI",
   },
   {
     name: "Wallpaper Wednesday 5",
     date: "04.23.23",
-    src: wallpaper_wednesday_42323_5,
+    src: "/art/min/wallpaper_wednesday_42323_5.webp",
     unsplash:
       "https://unsplash.com/photos/a-black-and-white-photo-of-a-curved-object-3q9dlyY8CbI",
     featured: true,
@@ -196,12 +168,12 @@ const WORKS = [
     name: "Dimension",
     date: "01.31.24",
     post: "https://x.com/notcnrad/status/1752759331970285987",
-    src: dimension,
+    src: "/art/min/dimension.webp",
   },
 ] as Array<{
   name: string;
   date: string;
-  src: StaticImageData;
+  src: string;
   post?: string;
   unsplash?: string;
   featured?: boolean;
@@ -243,49 +215,57 @@ export const Gallery = () => {
     return () => window.removeEventListener("resize", updateCols);
   }, []);
 
-  return (
-    <div className="flex flex-col gap-2 pb-14">
-      <div className="xs:px-14 grid h-auto w-full grid-cols-1 gap-4 px-8 sm:px-4 sm:py-14 lg:grid-cols-2 xl:grid-cols-3 min-xl:px-14">
-        <motion.h3
-          initial={IMAGE_TRANSITIONS.initial}
-          animate={IMAGE_TRANSITIONS.animate}
-          exit={IMAGE_TRANSITIONS.exit}
-          transition={{
-            duration: 1,
-            ease: [0.26, 1, 0.6, 1],
-          }}
-          className="text-sm leading-none font-bold min-sm:hidden"
-        >
-          individuals
-        </motion.h3>
+  const columns = useMemo(
+    () =>
+      cols.map((i, _, arr) => (
+        <div key={i} className="relative flex h-auto w-full flex-col gap-4">
+          {WORKS.slice(
+            i * (WORKS.length / arr.length),
+            i * (WORKS.length / arr.length) + WORKS.length / arr.length,
+          ).map((piece, i) => (
+            <ImageComponent
+              key={piece.name}
+              piece={piece}
+              initial={IMAGE_TRANSITIONS.initial}
+              animate={IMAGE_TRANSITIONS.animate}
+              exit={IMAGE_TRANSITIONS.exit}
+              transition={{
+                delay: i / 14,
+                duration: 1,
+                ease: [0.26, 1, 0.6, 1],
+              }}
+            />
+          ))}
+        </div>
+      )),
+    [cols],
+  );
 
-        {cols.map((i, _, arr) => (
-          <div key={i} className="relative flex h-auto w-full flex-col gap-4">
-            {WORKS.slice(
-              i * (WORKS.length / arr.length),
-              i * (WORKS.length / arr.length) + WORKS.length / arr.length,
-            ).map((piece, i) => (
-              <ImageComponent
-                key={piece.name}
-                piece={piece}
-                initial={IMAGE_TRANSITIONS.initial}
-                animate={IMAGE_TRANSITIONS.animate}
-                exit={IMAGE_TRANSITIONS.exit}
-                transition={{
-                  delay: i / 14,
-                  duration: 1,
-                  ease: [0.26, 1, 0.6, 1],
-                }}
-              />
-            ))}
-          </div>
-        ))}
+  return (
+    <>
+      <div className="flex flex-col gap-2 pb-14">
+        <div className="xs:px-14 grid h-auto w-full grid-cols-1 gap-4 px-8 sm:px-4 sm:py-14 lg:grid-cols-2 xl:grid-cols-3 min-xl:px-14">
+          <motion.h3
+            initial={IMAGE_TRANSITIONS.initial}
+            animate={IMAGE_TRANSITIONS.animate}
+            exit={IMAGE_TRANSITIONS.exit}
+            transition={{
+              duration: 1,
+              ease: [0.26, 1, 0.6, 1],
+            }}
+            className="text-sm leading-none font-bold min-sm:hidden"
+          >
+            individuals
+          </motion.h3>
+
+          {columns}
+        </div>
+        <p className="text-tertiary xs:px-14 px-8 text-center text-xs brightness-125 max-sm:pt-4 sm:px-4">
+          All works © Conrad Crawford. <br /> Do not reproduce without the
+          expressed written consent of Conrad Crawford.
+        </p>
       </div>
-      <p className="text-tertiary xs:px-14 px-8 text-xs brightness-125 max-sm:pt-4 sm:px-4">
-        All works © Conrad Crawford. <br /> Do not reproduce without the
-        expressed written consent of Conrad Crawford.
-      </p>
-    </div>
+    </>
   );
 };
 
@@ -344,16 +324,13 @@ const ImageComponent = ({
         ) : null}
       </div>
 
-      <Image
-        priority={true}
+      {/* eslint-disable @next/next/no-img-element */}
+      <img
         key={piece.name}
         src={piece.src}
-        quality={50}
-        width={piece.src.width / 8}
-        height={piece.src.height / 8}
         alt={piece.name}
-        className="z-10 h-fit w-full rounded-md object-cover"
-        onClick={() => console.log("eyy")}
+        fetchPriority="high"
+        className="z-10 w-full rounded-md object-cover"
       />
     </motion.div>
   );

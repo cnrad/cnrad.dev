@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <PageWrapper>
       <PageContent>
-        <div className="flex flex-col gap-6 text-sm h-full">
+        <div className="flex h-full flex-col gap-6 text-sm">
           <div className="flex flex-col">
             <p className="mb-2">
               you clicked it, you got it. here&apos;s some more:
@@ -14,28 +14,25 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold leading-none">fun facts</h3>
+            <h3 className="leading-none font-bold">fun facts</h3>
             <div className="ml-3">
               <p>
                 - i&apos;m <CurrentAge /> years old
               </p>
-              <p>- my net views (across tv, tiktok, etc.) is ~80,000,000</p>
               <p>
                 - i was a{" "}
                 <a
                   href="https://developer.apple.com/swift-student-challenge/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium underline underline-offset-2 hover:text-secondary"
+                  className="hover:text-secondary font-medium underline underline-offset-2"
                 >
                   swift student challenge
                 </a>{" "}
                 winner in 2022
               </p>
-              <p>
-                - i&apos;m pretty good at rudimental drumming (marching arts)
-              </p>
-              <p>- i like creating electronic music in my spare time</p>
+              <p>- i&apos;m pretty good at rudimental drumming</p>
+              <p>- avid listener of electronic music</p>
               <p>
                 - before you see me and ask, i&apos;m 6&apos;7&quot; - yes,
                 really
@@ -44,7 +41,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold leading-none">other links</h3>
+            <h3 className="leading-none font-bold">other links</h3>
             <div className="ml-3">
               <p>
                 <a
