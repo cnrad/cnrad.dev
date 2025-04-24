@@ -66,9 +66,6 @@ export default function App({ Component, pageProps, router }: AppProps) {
       return;
     }
 
-    if (window.innerWidth < 640)
-      document.querySelector("main")?.scrollTo({ top: 0, behavior: "instant" }); // scroll to top on mobile
-
     const click = new Audio("/pop.mp3");
     click.volume = 0.5;
     void click.play().catch(() => null);
@@ -77,7 +74,18 @@ export default function App({ Component, pageProps, router }: AppProps) {
   return (
     <ThemeProvider>
       <motion.main
-        layout
+        initial={{
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 1,
+          ease: [0.26, 1, 0.6, 1],
+        }}
         className={`${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} @container/screen relative h-[100dvh] overflow-hidden font-sans antialiased max-md:overflow-y-auto`}
       >
         <Head>
@@ -90,14 +98,24 @@ export default function App({ Component, pageProps, router }: AppProps) {
               rel="preload"
               as="image"
               href={w.src}
-              fetchPriority="high"
+              fetchPriority="auto"
             />
           ))}
         </Head>
 
         {/* Sun rays */}
-        <div
-          className="fixed top-0 left-0 z-[-3] flex h-screen w-screen flex-col items-center justify-center gap-32 bg-gradient-to-l from-[#121212] to-white to-75% opacity-15"
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 0.2,
+          }}
+          transition={{
+            duration: 2,
+            ease: [0.26, 1, 0.6, 1],
+          }}
+          className="fixed top-0 left-0 z-[-3] flex h-screen w-screen flex-col items-center justify-center gap-32 bg-gradient-to-l from-[#121212] to-white to-75%"
           style={{
             maskImage:
               "linear-gradient(to right, rgba(0,0,0,0) 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)",
@@ -121,17 +139,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
               animation: "sway 8s infinite",
             }}
           />
-        </div>
-
-        {/* Corner */}
-        <div className="max-xs:hidden border-tertiary/20 absolute top-4 left-4 mt-[1px] ml-[1px] h-3 w-3 border-r border-b border-dashed" />
-        <div
-          className="max-xs:hidden border-tertiary/20 absolute top-7 left-7 h-10 w-10 border-t border-l"
-          style={{
-            maskImage:
-              "linear-gradient(to bottom right, rgba(0,0,0,1), rgba(0,0,0,0) 50%)",
-          }}
-        />
+        </motion.div>
 
         <Nav />
 

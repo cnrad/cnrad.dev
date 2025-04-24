@@ -244,7 +244,7 @@ export const Gallery = () => {
   return (
     <>
       <div className="flex flex-col gap-2 pb-14">
-        <div className="xs:px-14 grid h-auto w-full grid-cols-1 gap-4 px-8 sm:px-4 sm:py-14 lg:grid-cols-2 xl:grid-cols-3 min-xl:px-14">
+        <div className="xs:px-10 grid h-auto w-full grid-cols-1 gap-4 px-8 sm:px-4 sm:py-10 lg:grid-cols-2 xl:grid-cols-3 min-xl:px-10">
           <motion.h3
             initial={IMAGE_TRANSITIONS.initial}
             animate={IMAGE_TRANSITIONS.animate}

@@ -35,7 +35,7 @@ export const BlogWrapper = ({
       <Link
         href="/blog"
         shallow={true}
-        className="hover:text-primary text-tertiary relative top-10 cursor-pointer text-sm transition-colors duration-100 max-md:ml-8 md:sticky md:top-14 md:left-0"
+        className="hover:text-primary text-tertiary relative top-10 cursor-pointer text-sm transition-colors duration-100 max-md:ml-8 md:sticky md:top-10 md:left-0"
       >
         Back
       </Link>
@@ -45,7 +45,7 @@ export const BlogWrapper = ({
       {/* Scroller  */}
       <motion.div
         ref={constraintsRef}
-        className="fixed top-14 right-14 hidden h-[50vh] w-32 rounded-lg border border-gray-200 bg-gradient-to-b from-gray-100 to-gray-200 p-0.5"
+        className="fixed top-10 right-10 hidden h-[50vh] w-32 rounded-lg border border-gray-200 bg-gradient-to-b from-gray-100 to-gray-200 p-0.5"
       >
         <motion.div
           drag="y"

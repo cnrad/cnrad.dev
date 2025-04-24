@@ -1,6 +1,5 @@
 import { cn } from "@/util/utils";
 import { motion } from "motion/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 const PAGES = {
@@ -11,7 +10,8 @@ const PAGES = {
 } as const;
 
 export const MobileNav = () => {
-  const { pathname } = useRouter();
+  const router = useRouter();
+  const { pathname } = router;
 
   return (
     <>
@@ -26,11 +26,17 @@ export const MobileNav = () => {
 
             return (
               <>
-                <Link
+                <button
                   key={name}
-                  href={href}
+                  onTouchStart={() => router.prefetch(href)}
+                  onClick={() => {
+                    document
+                      .querySelector("main")
+                      ?.scrollTo({ top: 0, behavior: "instant" });
+                    router.push(href);
+                  }}
                   className={cn(
-                    "hover:text-secondary pointer-events-auto relative px-3 py-1.5 transition-all duration-100 active:scale-90",
+                    "hover:text-secondary pointer-events-auto relative px-3 py-1.5 transition-all duration-100 [-webkit-touch-callout:none] select-none active:scale-90",
                     {
                       "text-primary hover:text-primary font-medium": isActive,
                     },
@@ -51,7 +57,7 @@ export const MobileNav = () => {
                       className="bg-tertiary/5 border-secondary/5 top-1/2 left-1/2 h-full w-full -translate-1/2 rounded-full border"
                     />
                   ) : null}
-                </Link>
+                </button>
               </>
             );
           })}

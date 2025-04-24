@@ -15,7 +15,7 @@ export const Nav = () => {
   return pathname !== "/blog/[slug]" ? (
     <div
       key="NAV"
-      className="font-karla text-tertiary absolute top-14 left-14 z-[100] hidden w-10 flex-row gap-6 pb-3 text-sm sm:flex"
+      className="font-karla text-tertiary absolute top-10 left-10 z-[100] hidden w-10 flex-row gap-6 pb-3 text-sm sm:flex"
     >
       {Object.entries(PAGES).map(([name, href]) => (
         <Link

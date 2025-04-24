@@ -2,13 +2,20 @@ import { PAGE_TRANSITION } from "@/util/const";
 import { cn } from "@/util/utils";
 import { HTMLMotionProps, motion } from "motion/react";
 import { forwardRef } from "react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
   function PageContent({ children, ...props }, ref) {
+    const date = dayjs().tz("America/New_York");
+
     return (
       <motion.div
         className={cn(
-          "max-xs:p-8 sticky top-0 flex w-full flex-col p-14 max-sm:relative max-sm:min-h-min max-sm:overflow-y-auto max-sm:!pt-10 max-sm:pb-8 sm:h-full min-sm:max-w-lg sm:pt-20 min-md:min-w-md",
+          "max-xs:p-8 sticky top-0 flex w-full flex-col p-10 max-sm:relative max-sm:min-h-min max-sm:overflow-y-auto max-sm:!pt-10 max-sm:pb-8 sm:h-full min-sm:max-w-lg sm:pt-16 min-md:min-w-md",
           props.className,
         )}
       >
@@ -36,8 +43,10 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
           layout="position"
           className="mt-auto flex w-full flex-row justify-between max-sm:hidden"
         >
-          <p className="font-medium text-stone-200 italic">
-            Conrad Crawford, {new Date().getFullYear()}
+          <p className="text-primary flex cursor-default flex-row items-center gap-1.5 text-sm">
+            <span className="font-medium">{date.format("h:mm A")}</span>
+            <span className="bg-primary block size-[3px] rounded-full" />
+            <span className="text-tertiary">{date.format("MMM D, YYYY")}</span>
           </p>
         </motion.footer>
       </motion.div>
