@@ -17,7 +17,7 @@ export const MobileNav = () => {
     <>
       <motion.div
         layout
-        className="font-karla text-tertiary border-tertiary/15 pointer-events-none fixed bottom-6 left-1/2 z-100 w-min -translate-x-1/2 rounded-full border bg-white p-1.5 text-sm shadow-xl shadow-black/5 sm:hidden"
+        className="font-karla text-tertiary border-tertiary/15 pointer-events-none fixed bottom-4 left-1/2 z-100 w-min -translate-x-1/2 rounded-full border bg-white p-1.5 text-sm shadow-xl shadow-black/5 sm:hidden"
       >
         <div className="flex w-full flex-row items-center justify-center gap-4">
           {Object.entries(PAGES).map(([name, href]) => {
@@ -27,8 +27,8 @@ export const MobileNav = () => {
             return (
               <>
                 <Link
-                  href={href}
                   key={name}
+                  href={href}
                   className={cn(
                     "hover:text-secondary pointer-events-auto relative px-3 py-1.5 transition-all duration-100 active:scale-90",
                     {

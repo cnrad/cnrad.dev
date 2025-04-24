@@ -14,7 +14,7 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
       >
         <motion.h1
           layoutId="header"
-          layout="preserve-aspect"
+          layout="position"
           className="text-primary xs:mt-4 mt-0 mb-1 text-2xl font-medium"
         >
           Conrad Crawford
@@ -33,7 +33,7 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
 
         <motion.footer
           layoutId="footer"
-          layout="preserve-aspect"
+          layout="position"
           className="mt-auto flex w-full flex-row justify-between max-sm:hidden"
         >
           <p className="font-medium text-stone-200 italic">

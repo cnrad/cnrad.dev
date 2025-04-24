@@ -66,6 +66,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
       return;
     }
 
+    if (window.innerWidth < 640)
+      document.querySelector("main")?.scrollTo({ top: 0, behavior: "instant" }); // scroll to top on mobile
+
     const click = new Audio("/pop.mp3");
     click.volume = 0.5;
     void click.play().catch(() => null);
