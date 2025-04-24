@@ -1,7 +1,6 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Gallery } from "@/components/art/Gallery";
-import { Suspense } from "react";
 
 const COLLECTIONS = [
   {

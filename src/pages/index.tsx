@@ -16,13 +16,13 @@ interface GitHubRepo {
 }
 
 export default function Home({ projects }: { projects: GitHubRepo[] }) {
-  const [messageState, setMessageState] = useState<{
-    open: boolean;
-    message: string;
-  }>({
-    open: false,
-    message: "",
-  });
+  // const [messageState, setMessageState] = useState<{
+  //   open: boolean;
+  //   message: string;
+  // }>({
+  //   open: false,
+  //   message: "",
+  // });
 
   return (
     <PageWrapper>
@@ -59,14 +59,17 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
                 linkedin
               </a>
 
-              <button
-                onClick={() =>
-                  setMessageState((p) => ({ ...p, open: !p.open }))
-                }
+              <a
+                // onClick={() =>
+                //   setMessageState((p) => ({ ...p, open: !p.open }))
+                // }
+                href="mailto:hello@cnrad.dev"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
               >
                 message
-              </button>
+              </a>
             </div>
           </div>
 
