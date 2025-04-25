@@ -25,40 +25,38 @@ export const MobileNav = () => {
               href === "/" ? pathname === href : pathname.includes(href);
 
             return (
-              <>
-                <button
-                  key={name}
-                  onTouchStart={() => router.prefetch(href)}
-                  onClick={() => {
-                    document
-                      .querySelector("main")
-                      ?.scrollTo({ top: 0, behavior: "instant" });
-                    router.push(href);
-                  }}
-                  className={cn(
-                    "hover:text-secondary pointer-events-auto relative px-3 py-1.5 transition-all duration-100 [-webkit-touch-callout:none] select-none active:scale-90",
-                    {
-                      "text-primary hover:text-primary font-medium": isActive,
-                    },
-                  )}
-                >
-                  {name}
+              <button
+                key={name}
+                onTouchStart={() => router.prefetch(href)}
+                onTouchEnd={() => {
+                  document
+                    .querySelector("main")
+                    ?.scrollTo({ top: 0, behavior: "instant" });
+                  router.push(href);
+                }}
+                className={cn(
+                  "hover:text-secondary pointer-events-auto relative px-3 py-1.5 transition-all duration-100 [-webkit-touch-callout:none] select-none active:scale-90",
+                  {
+                    "text-primary hover:text-primary font-medium": isActive,
+                  },
+                )}
+              >
+                {name}
 
-                  {isActive ? (
-                    <motion.span
-                      layoutId="highlight"
-                      style={{
-                        position: "absolute",
-                      }}
-                      transition={{
-                        duration: 0.35,
-                        ease: [0.26, 1, 0.6, 1],
-                      }}
-                      className="bg-tertiary/5 border-secondary/5 top-1/2 left-1/2 h-full w-full -translate-1/2 rounded-full border"
-                    />
-                  ) : null}
-                </button>
-              </>
+                {isActive ? (
+                  <motion.span
+                    layoutId="highlight"
+                    style={{
+                      position: "absolute",
+                    }}
+                    transition={{
+                      duration: 0.35,
+                      ease: [0.26, 1, 0.6, 1],
+                    }}
+                    className="bg-tertiary/5 border-secondary/5 top-1/2 left-1/2 h-full w-full -translate-1/2 rounded-full border"
+                  />
+                ) : null}
+              </button>
             );
           })}
         </div>

@@ -5,6 +5,7 @@ import { forwardRef, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { Tooltip } from "./Tooltip";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -53,11 +54,18 @@ export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
           layout="position"
           className="mt-auto flex w-full flex-row justify-between max-sm:hidden"
         >
-          <p className="text-primary flex cursor-default flex-row items-center gap-1.5 text-sm">
-            <span className="font-medium">{date.format("h:mm A")}</span>
-            <span className="bg-primary block size-[3px] rounded-full" />
-            <span className="text-tertiary">{date.format("MMM D, YYYY")}</span>
-          </p>
+          <Tooltip
+            content={`This is my time. I'm probably ${date.hour() > 1 && date.hour() < 10 ? "sleeping" : "awake"}.`}
+            className="whitespace-nowrap"
+          >
+            <p className="text-primary flex cursor-default flex-row items-center gap-1.5 text-sm">
+              <span className="font-medium">{date.format("h:mm A")}</span>
+              <span className="bg-primary block size-[3px] rounded-full" />
+              <span className="text-tertiary">
+                {date.format("MMM D, YYYY")}
+              </span>
+            </p>
+          </Tooltip>
         </motion.footer>
       </motion.div>
     );
