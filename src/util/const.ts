@@ -1,6 +1,7 @@
 export const PAGE_TRANSITION = {
   initial: {
     opacity: 0,
+    filter: "blur(4px)",
   },
   animate: {
     opacity: 1,
