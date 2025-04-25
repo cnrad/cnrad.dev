@@ -10,7 +10,6 @@ import { ThemeProvider } from "next-themes";
 // import Image from "next/image";
 import { Nav } from "@/components/Nav";
 import { MobileNav } from "@/components/MobileNav";
-import { WORKS } from "@/components/art/Gallery";
 
 const ysabeau = Ysabeau({
   subsets: ["latin"],
