@@ -75,21 +75,26 @@ export default function App({ Component, pageProps, router }: AppProps) {
       <motion.main
         initial={{
           opacity: 0,
-          y: 10,
+          scale: 0.98,
+          filter: "blur(4px)",
         }}
         animate={{
           opacity: 1,
-          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
         }}
         transition={{
           duration: 1,
           ease: [0.26, 1, 0.6, 1],
         }}
+        layout
         className={`${helveticaNeue.variable} ${ysabeau.variable} ${karla.variable} @container/screen relative h-[100dvh] overflow-hidden font-sans antialiased max-md:overflow-y-auto`}
       >
         <Head>
           <title>Conrad Crawford</title>
           <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="prefetch" href="/art/figura_thumbnail.webp" />
+          <link rel="prefetch" href="/art/spherus_thumbnail.webp" />
         </Head>
 
         {/* Sun rays */}

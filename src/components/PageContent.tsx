@@ -1,7 +1,7 @@
 import { PAGE_TRANSITION } from "@/util/const";
 import { cn } from "@/util/utils";
 import { HTMLMotionProps, motion } from "motion/react";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -10,7 +10,17 @@ dayjs.extend(timezone);
 
 export const PageContent = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
   function PageContent({ children, ...props }, ref) {
-    const date = dayjs().tz("America/New_York");
+    const [date, setDate] = useState(() => dayjs().tz("America/New_York"));
+
+    useEffect(() => {
+      const update = () => {
+        setDate(dayjs().tz("America/New_York"));
+      };
+
+      const id = setInterval(update, 60 * 1000);
+
+      return () => clearInterval(id);
+    }, []);
 
     return (
       <motion.div
