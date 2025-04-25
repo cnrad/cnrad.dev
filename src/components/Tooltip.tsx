@@ -31,7 +31,7 @@ export const Tooltip = forwardRef<
               ease: [0.26, 1, 0.6, 1],
             }}
             className={cn(
-              "group border-primary/10 fixed left-10 z-10 w-min overflow-clip rounded-[8px] border bg-white p-0.5 shadow-sm transition-colors duration-100 max-sm:hidden",
+              "group border-primary/10 fixed left-10 z-10 w-min overflow-clip rounded-md border bg-stone-50 p-0.5 transition-colors duration-100 max-sm:hidden",
               className,
             )}
             style={{
