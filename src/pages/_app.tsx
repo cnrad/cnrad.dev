@@ -91,16 +91,6 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <Head>
           <title>Conrad Crawford</title>
           <link rel="shortcut icon" href="/favicon.ico" />
-
-          {WORKS.map((w) => (
-            <link
-              key={w.name}
-              rel="preload"
-              as="image"
-              href={w.src}
-              fetchPriority="auto"
-            />
-          ))}
         </Head>
 
         {/* Sun rays */}

@@ -330,7 +330,7 @@ const ImageComponent = ({
         src={piece.src}
         alt={piece.name}
         fetchPriority="high"
-        className="z-10 w-full rounded-md object-cover"
+        className="bg-tertiary/25 z-10 min-h-20 w-full rounded-md object-cover"
       />
     </motion.div>
   );

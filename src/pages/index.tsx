@@ -16,18 +16,10 @@ interface GitHubRepo {
 }
 
 export default function Home({ projects }: { projects: GitHubRepo[] }) {
-  // const [messageState, setMessageState] = useState<{
-  //   open: boolean;
-  //   message: string;
-  // }>({
-  //   open: false,
-  //   message: "",
-  // });
-
   return (
     <PageWrapper>
       <PageContent>
-        <div className="text-primary flex h-full flex-col gap-6 text-sm max-md:pb-20">
+        <div className="text-primary flex h-full flex-col gap-6 text-sm max-md:pb-14">
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
@@ -60,15 +52,13 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
               </a>
 
               <a
-                // onClick={() =>
-                //   setMessageState((p) => ({ ...p, open: !p.open }))
-                // }
                 href="mailto:hello@cnrad.dev"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
               >
                 message
+                {/* Open up popover with 2 options - chat, or mail - clicking chat opens a modal */}
               </a>
             </div>
           </div>

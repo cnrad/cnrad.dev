@@ -30,7 +30,7 @@ export default function Blog() {
             thoughts on it. you&apos;ll find them here.
           </p>
 
-          <div className="bg-tertiary h-[1px] w-2/3 brightness-175" />
+          <div className="bg-tertiary h-[1px] w-full max-w-sm brightness-175" />
 
           <motion.div
             ref={blogPostsContainerRef}
@@ -52,9 +52,11 @@ export default function Blog() {
                 />
               ))
             ) : (
-              <div className="bg-tertiary/10 border-tertiary/15 text-tertiary w-full rounded-lg border py-9 text-center">
-                Nothing here quite yet...
-              </div>
+              <>
+                <div className="bg-tertiary/10 border-tertiary/15 text-tertiary flex h-24 w-full items-center justify-center rounded-lg border border-dashed">
+                  Nothing here... yet.
+                </div>
+              </>
             )}
 
             <AnimatePresence>
