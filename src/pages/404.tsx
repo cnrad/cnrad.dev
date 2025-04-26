@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <PageWrapper>
       <PageContent>
-        <p className="text-sm">not sure how you got here...</p>
+        <p className="text-sm">404 - have a moment to yourself.</p>
       </PageContent>
 
       <motion.div
