@@ -334,8 +334,10 @@ const ImageComponent = ({
       {...props}
     >
       <div
-        className="absolute bottom-0 z-5 min-h-[min(100%,10rem)] w-full rounded-md transition-all duration-200 group-hover:bg-black/15 group-hover:backdrop-blur-md"
-        style={{ mask: "linear-gradient(transparent, black, black)" }}
+        className="absolute bottom-0 z-5 min-h-[min(100%,10rem)] w-full rounded-md transition-all duration-200 [-webkit-mask:linear-gradient(transparent,black,black)] group-hover:bg-black/15 group-hover:backdrop-blur-md"
+        style={{
+          mask: "linear-gradient(transparent, black, black)",
+        }}
       />
 
       <div className="absolute bottom-0 z-10 flex min-h-16 w-full flex-col items-center justify-center gap-1 bg-transparent py-4 opacity-0 transition-all duration-200 group-hover:opacity-100">
@@ -386,7 +388,6 @@ const ImageComponent = ({
         alt={piece.name}
         width={piece.src.width}
         height={piece.src.height}
-        fetchPriority="high"
         className="bg-tertiary/25 z-10 w-full rounded-md object-cover"
       />
     </motion.div>

@@ -59,27 +59,31 @@ export default function Art() {
             <h3 className="leading-none font-bold">collections</h3>
 
             {COLLECTIONS.map((collection) => (
-              <a
+              <div
                 key={collection.name}
-                className="mb-2 flex h-40 cursor-pointer flex-col overflow-clip rounded-lg ![background-size:100%] transition-all duration-500 hover:![background-size:103%] hover:brightness-75"
-                style={{
-                  background: `url(${collection.thumbnail})`,
-                  backgroundPosition: "center",
-                  transitionTimingFunction: "cubic-bezier(0.26,1,0.6,1)",
-                }}
-                href={collection.href}
-                target="_blank"
-                rel="noreferrer noopener"
+                className="h-40 overflow-clip rounded-lg bg-black"
               >
-                <div className="mt-auto bg-linear-to-t from-black from-25% to-black/0 p-5">
-                  <h5 className="text-lg font-medium text-white">
-                    {collection.name}
-                  </h5>
-                  <p className="text-white opacity-75">
-                    {collection.description}
-                  </p>
-                </div>
-              </a>
+                <a
+                  className="mb-2 flex h-full cursor-pointer flex-col ![background-size:100%] transition-all duration-500 hover:![background-size:103%] hover:brightness-75"
+                  style={{
+                    background: `url(${collection.thumbnail})`,
+                    backgroundPosition: "center",
+                    transitionTimingFunction: "cubic-bezier(0.26,1,0.6,1)",
+                  }}
+                  href={collection.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <div className="mt-auto bg-linear-to-t from-black from-25% to-black/0 p-5">
+                    <h5 className="text-lg font-medium text-white">
+                      {collection.name}
+                    </h5>
+                    <p className="text-white opacity-75">
+                      {collection.description}
+                    </p>
+                  </div>
+                </a>
+              </div>
             ))}
           </div>
         </div>

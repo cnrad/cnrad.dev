@@ -10,7 +10,7 @@ export const PageWrapper = ({
   return (
     <motion.div
       className={cn(
-        "absolute top-0 left-0 flex h-full w-full flex-col items-start overflow-y-auto max-sm:h-min sm:flex-row",
+        "absolute top-0 left-0 flex h-auto w-full flex-col items-start overflow-y-auto sm:h-screen sm:flex-row",
         className,
       )}
       {...props}
