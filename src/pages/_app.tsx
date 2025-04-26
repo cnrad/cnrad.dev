@@ -73,11 +73,16 @@ export default function App({ Component, pageProps, router }: AppProps) {
     <>
       <Head>
         <title>Conrad Crawford</title>
+        <meta
+          name="description"
+          content="software engineer with a knack for making things look nice."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="prefetch" fetchPriority="high" href="/main/cside.webp" />
         <link rel="prefetch" fetchPriority="high" href="/main/dimension.webp" />
         <link rel="prefetch" fetchPriority="high" href="/main/incard.webp" />
-
         <link rel="prefetch" href="/art/figura_thumbnail.webp" />
         <link rel="prefetch" href="/art/spherus_thumbnail.webp" />
       </Head>

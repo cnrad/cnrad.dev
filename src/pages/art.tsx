@@ -47,6 +47,7 @@ export default function Art() {
               </a>
               <a
                 className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
+                href="mailto:hello@cnrad.dev"
                 target="_blank"
                 rel="noopener noreferrer"
               >

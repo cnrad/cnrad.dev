@@ -32,7 +32,7 @@ export default function Home() {
                 winner in 2022
               </p>
               <p>- i&apos;m pretty good at rudimental drumming</p>
-              <p>- avid listener of electronic music</p>
+              <p>- i&apos;m an avid listener of electronic music</p>
               <p>
                 - before you see me and ask, i&apos;m 6&apos;7&quot; - yes,
                 really
