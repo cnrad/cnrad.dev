@@ -1,19 +1,39 @@
-import { motion } from "framer-motion";
+import { PageContent } from "@/components/PageContent";
+import { PageWrapper } from "@/components/PageWrapper";
+import { motion } from "motion/react";
 
-const NotFound = () => {
-    return (
-        <motion.div
-            key="talk"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ ease: "easeOut", duration: 0.25 }}
-            className="mt-36 mb-80 w-full"
+export default function NotFound() {
+  return (
+    <PageWrapper>
+      <PageContent>
+        <p className="text-sm">404 - have a moment to yourself.</p>
+      </PageContent>
+
+      <motion.div
+        className="fixed right-18 bottom-0 flex h-full w-min flex-col items-end justify-end"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{
+          opacity: 0,
+          y: 20,
+          transition: {
+            duration: 0.25,
+          },
+        }}
+        transition={{
+          duration: 1,
+          ease: [0.26, 1, 0.6, 1],
+        }}
+      >
+        <h1
+          className="text-tertiary/15 text-[24rem] leading-[24rem] font-black"
+          style={{
+            filter: "drop-shadow(0 4px 2px var(--color-background))",
+          }}
         >
-            <h1 className="text-black dark:text-white font-bold text-3xl mb-3 mt-8">Hmm... Thinking... 🤔</h1>
-            <p className="text-black dark:text-gray-200 mb-6">It appears that what you're looking for isn't here.</p>
-        </motion.div>
-    );
-};
-
-export default NotFound;
+          404
+        </h1>
+      </motion.div>
+    </PageWrapper>
+  );
+}

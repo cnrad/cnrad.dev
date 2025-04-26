@@ -1,128 +1,241 @@
-import { motion } from "framer-motion";
-import {
-    SiVisualstudiocode,
-    SiRust,
-    SiGit,
-    SiDocker,
-    SiNextdotjs as SiNextJs,
-    SiNodedotjs as SiNodeJs,
-    SiPostgresql,
-    SiReact,
-    SiRedis,
-    SiStyledcomponents as SiStyledComponents,
-    SiTailwindcss as SiTailwindCSS,
-    SiTypescript,
-    SiYarn,
-    SiSwift,
-    SiJavascript,
-    SiPython,
-    SiPrisma,
-} from "react-icons/si";
-import { TechItem } from "../components/TechItem";
-import RepoItem from "../components/RepoItem";
+import { PageContent } from "@/components/PageContent";
+import { PageWrapper } from "@/components/PageWrapper";
+import { AnimatePresence, motion } from "motion/react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 
-interface AppProps {
-    stats: Record<string, number>;
-    topRepos: Record<any, any>;
-}
-
-const Index = ({ stats, topRepos }: AppProps) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ ease: "easeOut", duration: 0.15 }}
-            className="mt-24 w-full mb-32"
-        >
-            <h1 className="mt-36 font-bold text-4xl md:text-5xl mb-4">Hey, I'm Conrad 👋</h1>
-            <p className="text-gray-800 dark:text-gray-300 leading-6 tracking-wide mb-12">
-                I'm a self-taught software engineer from the United States. I'm currently pursuing full-stack web
-                development to create stunning user experiences on the front-end, and scalable and secure infrastructure
-                on the backend.
-            </p>
-
-            <h2 className="font-medium text-3xl mb-4">What I Do 💭</h2>
-            <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-12">
-                I'm passionate about everything in technology; from designing and developing software, to understanding
-                how the many moving parts of the internet work together, to cybersecurity, programming, and so much
-                more. I strive to learn more about these things every day, and utilize my knowledge to further
-                understand <i>how</i> or <i>why</i> the technology around us works.
-            </p>
-
-            <h2 className="font-medium text-3xl mb-4">Technologies 💻</h2>
-            <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                I use a variety of tools to streamline my development process and increase the quality of both my code,
-                and my projects. Below is a list of technologies and languages I've had experience with in the past, or
-                use currently.
-            </p>
-            <div className="w-full flex flex-wrap flex-row justify-center p-1 border border-slate-800 rounded-md bg-white/10 dark:bg-black/10 mb-12">
-                <TechItem icon={SiTypescript} name="TypeScript" />
-                <TechItem icon={SiVisualstudiocode} name="VSCode" />
-                <TechItem icon={SiReact} name="React.js" />
-                <TechItem icon={SiNodeJs} name="Node.js" />
-                <TechItem icon={SiJavascript} name="JavaScript" />
-                <TechItem icon={SiYarn} name="Yarn" />
-                <TechItem icon={SiNextJs} name="Next.js" />
-                <TechItem icon={SiTailwindCSS} name="TailwindCSS" />
-                <TechItem icon={SiStyledComponents} name="styled-components" />
-                <TechItem icon={SiPrisma} name="Prisma" />
-                <TechItem icon={SiRedis} name="Redis" />
-                <TechItem icon={SiPostgresql} name="Postgres" />
-                <TechItem icon={SiGit} name="Git" />
-                <TechItem icon={SiPython} name="Python" />
-                <TechItem icon={SiRust} name="Rust" />
-                <TechItem icon={SiDocker} name="Docker" />
-                <TechItem icon={SiSwift} name="Swift" />
-            </div>
-
-            <h2 className="font-medium text-3xl mb-4">Projects 🛠️</h2>
-            <p className="text-gray-800 dark:text-gray-300 leading-6 font-light tracking-wide mb-6">
-                In my free time, I enjoy creating open source projects on{" "}
-                <a
-                    href="https://github.com/cnrad"
-                    rel="noreferrer"
-                    className="font-semibold text-violet-500 hover:underline"
-                >
-                    GitHub
-                </a>
-                , so I can learn from others and share what I know. In total, all of my open sourced projects have earnt
-                me <span className="font-bold text-black dark:text-slate-200">{stats.stars}</span> stars on GitHub, and{" "}
-                <span className="font-bold text-black dark:text-slate-200">{stats.forks}</span> forks. Below are some of
-                my most popular repositories.
-            </p>
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 mb-12 gap-2">
-                {topRepos.map((repo: Record<string, any>) => {
-                    return (
-                        <RepoItem
-                            key={repo.name}
-                            name={repo.name}
-                            description={repo.description}
-                            stars={repo.stargazers_count}
-                            forks={repo.forks_count}
-                            language={repo.language}
-                        />
-                    );
-                })}
-            </div>
-        </motion.div>
-    );
+const PROJECTS = {
+  "lanyard-profile-readme": "embed discord presence in your github profile",
+  "cnrad.dev": "my personal website",
 };
 
-export async function getStaticProps() {
-    const stats = await fetch(`https://api.github-star-counter.workers.dev/user/cnrad`).then(res => res.json());
-    const repos = await fetch(`https://api.github.com/users/cnrad/repos?type=owner&per_page=100`).then(res =>
-        res.json()
-    );
-
-    const topRepos = repos
-        .sort((a: Record<string, any>, b: Record<string, any>) => b.stargazers_count - a.stargazers_count)
-        .slice(0, 4);
-
-    return {
-        props: { stats, topRepos },
-        revalidate: 3600,
-    };
+interface GitHubRepo {
+  stargazers_count: number;
+  name: string;
+  html_url: string;
 }
 
-export default Index;
+export default function Home({ projects }: { projects: GitHubRepo[] }) {
+  return (
+    <PageWrapper>
+      <PageContent>
+        <div className="text-primary flex h-full flex-col gap-6 text-sm max-md:pb-14">
+          <div className="flex flex-col">
+            <p className="mb-2">
+              self-taught, frontend-focused software engineer with a knack for
+              making things look nice. fascinated by magic rocks.
+            </p>
+            <div className="flex flex-row flex-wrap gap-6 gap-y-1">
+              <a
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
+                href="https://github.com/cnrad"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                github
+              </a>
+              <a
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
+                href="https://x.com/notcnrad"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                twitter (x)
+              </a>
+              <a
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
+                href="https://linkedin.com/in/cnrad"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                linkedin
+              </a>
+
+              <a
+                href="mailto:hello@cnrad.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-tertiary hover:text-primary cursor-pointer whitespace-nowrap transition-colors duration-100"
+              >
+                message
+                {/* Open up popover with 2 options - chat, or mail - clicking chat opens a modal */}
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="leading-none font-bold">philosophy</h3>
+            <div className="ml-3">
+              <p>- ship fast, with intention</p>
+              <p>- great interaction follows intuition</p>
+              <p>- habitualize excellence</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="leading-none font-bold">experience</h3>
+
+            <div className="text-primary relative ml-3 flex flex-col gap-1.5">
+              <LinkPreview preview="/main/cside.webp" href="https://cside.dev">
+                <p>
+                  <span className="font-medium transition-colors duration-150 group-hover:text-[#2500DC]">
+                    c/side
+                  </span>{" "}
+                  <span className="font-normal italic">(2024 - present)</span>
+                </p>
+                <p className="text-tertiary">frontend engineer</p>
+              </LinkPreview>
+
+              <LinkPreview preview="/main/incard.webp" href="https://incard.co">
+                <p>
+                  <span className="font-medium transition-colors duration-150 group-hover:text-[#8bd442]">
+                    incard
+                  </span>{" "}
+                  <span className="font-normal italic">(2024, 2025)</span>
+                </p>
+                <p className="text-tertiary">frontend engineer (contract)</p>
+              </LinkPreview>
+
+              <LinkPreview
+                preview="/main/dimension.webp"
+                href="https://dimension.dev"
+              >
+                <p>
+                  <span
+                    className="text-primary font-medium transition-colors duration-150 group-hover:text-transparent"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, color(display-p3 .6196078431 .4784313725 1/1) 0%,color(display-p3 .9960784314 .5450980392 .7333333333/1) 33.33%,color(display-p3 1 .7411764706 .4784313725/1) 100%)",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    dimension
+                  </span>{" "}
+                  <span className="font-normal italic">(2023 - 2024)</span>
+                </p>
+                <p className="text-tertiary">full-stack engineer</p>
+              </LinkPreview>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="leading-none font-bold">projects</h3>
+
+            <div className="ml-3 flex flex-col gap-1.5">
+              {Object.entries(PROJECTS).map(([name, description]) => {
+                const project = projects.find((e) => e.name === name)!;
+
+                return (
+                  <a
+                    key={name}
+                    href={project.html_url}
+                    className="group flex cursor-pointer flex-col"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <p className="flex flex-row gap-1 font-medium transition-colors duration-100 group-hover:text-blue-700">
+                      <span>{name}</span>
+
+                      <span className="text-tertiary group-hover:text-secondary ml-0.5 items-center font-light italic transition-colors duration-100">
+                        [{project.stargazers_count} stars]
+                      </span>
+                    </p>
+                    <p className="opacity-50">{description}</p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </PageContent>
+    </PageWrapper>
+  );
+}
+
+// I miss nextjs 12
+export async function getStaticProps() {
+  const repos = (await fetch(
+    `https://api.github.com/users/cnrad/repos?type=owner&per_page=100`,
+  ).then((res) => res.json())) as GitHubRepo[];
+
+  const projects = repos
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .filter((e) => Object.keys(PROJECTS).includes(e.name));
+
+  return {
+    props: { projects },
+    revalidate: 3600, // every hour
+  };
+}
+
+const LinkPreview = ({
+  href,
+  preview,
+  children,
+}: {
+  href: string;
+  preview: string;
+  children: React.ReactNode;
+}) => {
+  const [showPreview, setShowPreview] = useState(false);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  return (
+    <div>
+      <AnimatePresence>
+        {showPreview ? (
+          <motion.a
+            initial={{ scale: 0.98, x: -4, opacity: 0 }}
+            animate={{ scale: 1, x: 0, opacity: 1 }}
+            exit={{
+              scale: 0.98,
+
+              x: -4,
+              opacity: 0,
+              transition: { delay: 0.015 },
+            }}
+            href={href}
+            target="_blank"
+            rel="noreferrer noopener"
+            onMouseOver={() => setShowPreview(true)}
+            onMouseLeave={() => setShowPreview(false)}
+            transition={{
+              duration: 0.25,
+              ease: [0.26, 1, 0.6, 1],
+            }}
+            className="group fixed left-54 z-10 max-w-64 min-w-64 overflow-clip rounded-[8px] border border-black/20 bg-[#E7E5E4] p-0.5 shadow-lg transition-colors duration-100 hover:bg-[#efebe9] max-sm:hidden"
+            style={{
+              marginTop: `calc(-${
+                linkRef.current?.getBoundingClientRect().height ?? 0
+              }px)`,
+            }}
+          >
+            <Image
+              src={preview}
+              alt={`Screenshot of ${href}'s landing`}
+              width={512}
+              height={272}
+              className="bg-tertiary overflow-clip rounded-[6px]"
+            />
+
+            <p className="text-tertiary w-full rounded-full px-1.5 pt-1 text-center text-xs font-medium transition-colors duration-100 group-hover:text-blue-700">
+              {href.split("://")[1]}
+            </p>
+          </motion.a>
+        ) : null}
+      </AnimatePresence>
+
+      <a
+        ref={linkRef}
+        href={href}
+        target="_blank"
+        rel="noreferrer noopener"
+        onMouseOver={() => setShowPreview(true)}
+        onMouseLeave={() => setShowPreview(false)}
+        className="group relative flex w-full max-w-44 flex-col whitespace-nowrap"
+      >
+        {children}
+      </a>
+    </div>
+  );
+};
