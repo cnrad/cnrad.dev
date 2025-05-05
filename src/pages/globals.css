@@ -22,6 +22,10 @@
   --color-light: #8b8b8b;
 }
 
+::selection {
+  background: #d1d1d1;
+}
+
 /* [data-theme="dark"] {
   --color-primary: #ffffff;
   --color-secondary: #c3c3c3;

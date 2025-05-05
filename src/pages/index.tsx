@@ -1,8 +1,11 @@
 import { PageContent } from "@/components/PageContent";
 import { PageWrapper } from "@/components/PageWrapper";
 import { AnimatePresence, motion } from "motion/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ACTIVITY_TRANSITION, DISCORD_ID } from "@/util/const";
+import { LanyardData } from "@/util/lanyard";
+import { Tooltip } from "@/components/Tooltip";
 
 const PROJECTS = {
   "lanyard-profile-readme": "embed discord presence in your github profile",
@@ -16,6 +19,23 @@ interface GitHubRepo {
 }
 
 export default function Home({ projects }: { projects: GitHubRepo[] }) {
+  const [activity, setActivity] = useState<LanyardData | null>(null);
+
+  useEffect(() => {
+    const update = () =>
+      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success) setActivity(data.data);
+        });
+
+    const task = setInterval(update, 30 * 1000); // every 30 seconds
+
+    update(); // initial
+
+    return () => clearInterval(task);
+  }, []);
+
   return (
     <PageWrapper>
       <PageContent>
@@ -148,6 +168,60 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
           </div>
         </div>
       </PageContent>
+
+      {activity?.listening_to_spotify ? (
+        <motion.div
+          initial={ACTIVITY_TRANSITION.initial}
+          animate={ACTIVITY_TRANSITION.animate}
+          exit={ACTIVITY_TRANSITION.exit}
+          transition={{ duration: 1.5, ease: [0.26, 1, 0.6, 1] }}
+          className="absolute right-10 bottom-10 mt-auto w-auto flex-col items-end justify-end max-sm:hidden"
+        >
+          <div className="flex flex-row items-center gap-2">
+            <div className="relative size-1.5 overflow-visible">
+              <span className="absolute size-[5px] rounded-full bg-green-600" />
+              <span className="absolute size-[5px] animate-ping rounded-full bg-[color(display-p3_0.385_0.8_0.414_/_1)] [animation-duration:2s]" />
+            </div>
+
+            <div className="text-secondary mt-0.5 flex flex-row gap-1 text-end text-sm">
+              Listening to{" "}
+              <span className="relative w-min whitespace-nowrap">
+                <Tooltip
+                  className="absolute -top-18 left-1/2 !ml-0 -translate-x-1/2 overflow-visible border-none p-0"
+                  content={
+                    <div className="relative h-24 w-24 overflow-visible">
+                      {/* eslint-disable @next/next/no-img-element */}
+                      <img
+                        src={activity.spotify.album_art_url}
+                        width={96}
+                        height={96}
+                        alt={activity.spotify.album}
+                        fetchPriority="high"
+                        className="absolute rounded-md shadow-md select-none"
+                        draggable={false}
+                        rounded-md
+                      />
+                    </div>
+                  }
+                >
+                  <a
+                    href={`https://open.spotify.com/track/${activity.spotify.track_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary cursor-alias rounded-[5px] font-medium"
+                  >
+                    {activity.spotify.song}
+                  </a>
+                </Tooltip>
+              </span>{" "}
+              by{" "}
+              <span className="text-primary font-medium">
+                {activity.spotify.artist}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      ) : null}
     </PageWrapper>
   );
 }
