@@ -34,8 +34,7 @@ export default function Home() {
               <p>- i&apos;m pretty good at rudimental drumming</p>
               <p>- i&apos;m an avid listener of electronic music</p>
               <p>
-                - before you see me and ask, i&apos;m 6&apos;7&quot; - yes,
-                really
+                - in case you see me and feel the need to ask, i&apos;m 6&apos;7&quot;
               </p>
             </div>
           </div>
