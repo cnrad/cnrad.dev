@@ -29,7 +29,40 @@ import wallpaper_wednesday_42323_4 from "../../../public/art/min/wallpaper_wedne
 import wallpaper_wednesday_42323_5 from "../../../public/art/min/wallpaper_wednesday_42323_5.webp";
 import dimension from "../../../public/art/min/dimension.webp";
 
+import aurora_1 from "../../../public/art/min/aurora_1.webp";
+import aurora_2 from "../../../public/art/min/aurora_2.webp";
+import aurora_3 from "../../../public/art/min/aurora_3.webp";
+import aurora_4 from "../../../public/art/min/aurora_4.webp";
+
 export const WORKS = [
+  {
+    name: "Aurora (4)",
+    date: "10.25.25",
+    href: "/art/min/aurora_4.webp",
+    src: aurora_4,
+    post: "https://x.com/notcnrad/status/1982189530711990357",
+  },
+  {
+    name: "Aurora (3)",
+    date: "10.25.25",
+    href: "/art/min/aurora_3.webp",
+    src: aurora_3,
+    post: "https://x.com/notcnrad/status/1982189530711990357",
+  },
+  {
+    name: "Aurora (2)",
+    date: "10.25.25",
+    href: "/art/min/aurora_2.webp",
+    src: aurora_2,
+    post: "https://x.com/notcnrad/status/1982189530711990357",
+  },
+  {
+    name: "Aurora (1)",
+    date: "10.25.25",
+    href: "/art/min/aurora_1.webp",
+    src: aurora_1,
+    post: "https://x.com/notcnrad/status/1982189530711990357",
+  },
   {
     name: "Ultrawide Minimalism (1)",
     date: "06.03.24",
