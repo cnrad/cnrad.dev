@@ -43,7 +43,7 @@ export default function Home({ projects }: { projects: GitHubRepo[] }) {
           <div className="flex flex-col">
             <p className="mb-2">
               self-taught, frontend-focused software engineer with a knack for
-              making things look nice. fascinated by magic rocks.
+              making things look nice.
             </p>
             <div className="flex flex-row flex-wrap gap-6 gap-y-1">
               <a
