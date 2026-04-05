@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Open Sans", sans-serif;
+}
+
+html {
+  overscroll-behavior: none;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  background-color: #090909;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Underline styles */
+.animate-link {
+  position: relative;
+}
+
+/* Fade in */
+.animate-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.5;
+  transition:
+    opacity 250ms,
+    width 250ms;
+}
+
+.animate-link:hover::after,
+.animate-link:focus::after {
+  opacity: 1;
+  width: 100%;
+  transition:
+    opacity 100ms,
+    width 100ms;
+}
+
+@media (dynamic-range: high) {
+  .vivid-text {
+    /* Use a high-brightness HDR color */
+    color: color(display-p3 1 1 1);
+  }
+}
