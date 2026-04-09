@@ -7,6 +7,7 @@ export type CraftItem = {
   date: string;
   href: string;
   src: string;
+  aspect: number;
 };
 
 export function CraftCard({
@@ -56,7 +57,7 @@ export function CraftCard({
           initial={false}
           animate={{ width: isMobile ? "100%" : isHovered ? "100%" : "50%" }}
           transition={{ duration: 0.35, ease: EASE }}
-          style={{ marginLeft: "auto", display: "block" }}
+          style={{ marginLeft: "auto", display: "block", aspectRatio: item.aspect }}
         />
       </div>
     </a>

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { WORKS, type ArtPiece } from "../../data/art";
 import { cn } from "../../lib/utils";
 import { EASE } from "../../lib/constants";
-import { BlurImage, thumbUrl } from "./BlurImage";
+import { BlurImage, thumbUrl, carouselUrl } from "./BlurImage";
 import { LevitatedCard } from "./LevitatedCard";
 
 const preloadCache = new Set<string>();
@@ -22,7 +22,7 @@ function preloadAround(index: number) {
     const piece =
       WORKS[(((index + off) % WORKS.length) + WORKS.length) % WORKS.length]!;
     preloadImage(thumbUrl(piece.href));
-    preloadImage(piece.href);
+    preloadImage(carouselUrl(piece.href));
   }
 }
 
@@ -311,7 +311,7 @@ export function ArtCarousel() {
                 >
                   <div className="relative h-full w-full overflow-hidden rounded-xl">
                     <BlurImage
-                      src={piece.href}
+                      src={carouselUrl(piece.href)}
                       alt={piece.name}
                       className="block h-full w-full rounded-xl object-cover"
                     />
