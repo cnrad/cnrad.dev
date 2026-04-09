@@ -1,14 +1,33 @@
-import { useNavigate, useParams } from "react-router";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useRef, useState, memo } from "react";
 import { WORKS, COLLECTIONS, type ArtPiece } from "../data/art";
+import { cn } from "../lib/utils";
 
 function thumbUrl(href: string) {
   return href.replace("/art/min/", "/art/thumb/");
 }
 
 const loadedSrcs = new Set<string>();
+const preloadCache = new Set<string>();
+
+function preloadImage(src: string) {
+  if (preloadCache.has(src)) return;
+  preloadCache.add(src);
+  const img = new Image();
+  img.src = src;
+}
+
+const PRELOAD_AHEAD = 3;
+
+function preloadAround(index: number) {
+  for (let off = -PRELOAD_AHEAD; off <= PRELOAD_AHEAD; off++) {
+    const piece =
+      WORKS[(((index + off) % WORKS.length) + WORKS.length) % WORKS.length]!;
+    preloadImage(thumbUrl(piece.href));
+    preloadImage(piece.href);
+  }
+}
 
 const BlurImage = memo(function BlurImage({
   src,
@@ -32,7 +51,6 @@ const BlurImage = memo(function BlurImage({
 
   return (
     <div className="relative h-full w-full">
-      {/* Tiny blurred placeholder — always visible underneath */}
       <img
         src={thumbUrl(src)}
         alt=""
@@ -41,7 +59,6 @@ const BlurImage = memo(function BlurImage({
         className={`${className} absolute inset-0`}
         style={{ filter: "blur(20px)", transform: "scale(1.1)" }}
       />
-      {/* Full image fades in on top */}
       <img
         ref={imgRef}
         src={src}
@@ -62,184 +79,17 @@ const FOCUSED_WIDTH = 350;
 const FOCUSED_HEIGHT = 263; // 4:3 aspect
 const UNFOCUSED_WIDTH = 238;
 const UNFOCUSED_HEIGHT = 179;
-const ANGLED_WIDTH = UNFOCUSED_WIDTH / 3; // ~1/3 width when at 70deg
-const ROTATION_Y = 70; // degrees for side cards
-const SIDE_GAP = 4; // tiny gap between stacked side cards
+const ANGLED_WIDTH = UNFOCUSED_WIDTH / 3;
+const ROTATION_Y = 70;
+const SIDE_GAP = 4;
 const N = WORKS.length;
 
-/** Wraps any integer index into [0, N) */
 function mod(i: number) {
   return ((i % N) + N) % N;
 }
 
-/**
- * Returns the shortest signed offset from `from` to `to` on a ring of size N.
- * Result is in (-N/2, N/2].
- */
-function ringOffset(from: number, to: number) {
-  const raw = mod(to) - mod(from);
-  if (raw > N / 2) return raw - N;
-  if (raw <= -N / 2) return raw + N;
-  return raw;
-}
-
-function ArtViewer({
-  piece,
-  onClose,
-  onPrev,
-  onNext,
-}: {
-  piece: ArtPiece;
-  onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-}) {
-  const dialogRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
-
-  useEffect(() => {
-    dialogRef.current?.focus();
-  }, [piece.slug]);
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onPrev();
-      if (e.key === "ArrowRight") onNext();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, onPrev, onNext]);
-
-  return createPortal(
-    <>
-      <motion.div
-        className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.25 }}
-        onClick={onClose}
-        aria-hidden
-      />
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={piece.name}
-        tabIndex={-1}
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center p-8 outline-none"
-        onClick={onClose}
-      >
-        <motion.div
-          className="relative flex flex-col items-center"
-          onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.92 }}
-          transition={{ duration: 0.3, ease: [0.26, 1, 0.6, 1] }}
-        >
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute -top-10 right-0 rounded-full p-1.5 text-white/50 transition hover:text-white"
-            aria-label="Close"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={piece.slug}
-              src={piece.href}
-              alt={piece.name}
-              className="max-h-[75vh] max-w-[90vw] rounded-xl object-contain"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-            />
-          </AnimatePresence>
-
-          <motion.div
-            className="mt-3 flex w-full max-w-lg items-center gap-3 rounded-xl border border-neutral-200/20 bg-black/25 px-2 py-2 backdrop-blur-md"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, delay: 0.1 }}
-          >
-            <button
-              onClick={onPrev}
-              aria-label="Previous artwork"
-              className="shrink-0 rounded-lg p-1.5 text-white/60 transition hover:bg-white/5 hover:text-white"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
-            <div className="min-w-0 flex-1 text-center">
-              <p className="truncate text-sm font-medium text-white/90">
-                {piece.name}
-              </p>
-              <p className="text-xs text-white/40">{piece.date}</p>
-            </div>
-            <button
-              onClick={onNext}
-              aria-label="Next artwork"
-              className="shrink-0 rounded-lg p-1.5 text-white/60 transition hover:bg-white/5 hover:text-white"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </button>
-          </motion.div>
-        </motion.div>
-      </div>
-    </>,
-    document.body,
-  );
-}
-
-// How many slots to render on each side of the focused card
-// Only render enough cards to fill the visible area — no need for all N
 const VISIBLE_SIDE = Math.min(Math.ceil(N / 2), 12);
 
-/** Compute x position for a card at a given offset from center */
 function offsetToX(offset: number) {
   if (offset === 0) return 0;
   const halfFocused = FOCUSED_WIDTH / 2;
@@ -263,49 +113,175 @@ function offsetToX(offset: number) {
   }
 }
 
+const EASE = [0.26, 1, 0.6, 1] as const;
+
+/** Compute a target rect that fits the image's natural aspect ratio centered in the viewport */
+function computeTargetRect(piece: ArtPiece) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const aspect = piece.width / piece.height;
+
+  // Cap by 80% of viewport width and 80% of viewport height, preserving aspect.
+  const maxW = vw * 0.8;
+  const maxH = vh * 0.8;
+
+  let tw = Math.min(piece.width, maxW);
+  let th = tw / aspect;
+
+  if (th > maxH) {
+    th = maxH;
+    tw = th * aspect;
+  }
+
+  return {
+    width: tw,
+    height: th,
+    left: (vw - tw) / 2,
+    top: (vh - th) / 2,
+  };
+}
+
+function LevitatedCard({
+  piece,
+  cardRect,
+  onClose,
+}: {
+  piece: ArtPiece;
+  cardRect: DOMRect;
+  onClose: () => void;
+}) {
+  const target = computeTargetRect(piece);
+
+  // Lock scroll while levitated
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return createPortal(
+    <>
+      {/* Full-page backdrop */}
+      <motion.div
+        className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        onClick={onClose}
+      />
+
+      {/* Levitated image */}
+      <motion.div
+        className="fixed z-50 cursor-default overflow-hidden rounded-xl outline -outline-offset-1 outline-white/10"
+        initial={{
+          top: cardRect.top,
+          left: cardRect.left,
+          width: cardRect.width,
+          height: cardRect.height,
+        }}
+        animate={{
+          top: target.top,
+          left: target.left,
+          width: target.width,
+          height: target.height,
+        }}
+        exit={{
+          top: cardRect.top,
+          left: cardRect.left,
+          width: cardRect.width,
+          height: cardRect.height,
+          opacity: 0,
+          transition: {
+            duration: 0.5,
+            ease: EASE,
+            // Fade out only after the image has returned to its card slot.
+            opacity: { duration: 0.15, delay: 0.5, ease: "linear" },
+          },
+        }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        <img
+          src={piece.href}
+          alt={piece.name}
+          draggable={false}
+          className="h-full w-full object-cover"
+        />
+      </motion.div>
+
+      {/* Caption */}
+      <motion.div
+        className="fixed z-50 flex items-center justify-center gap-3 text-sm pointer-events-none"
+        style={{
+          left: target.left,
+          width: target.width,
+          top: target.top + target.height + 16,
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3, delay: 0.15 }}
+      >
+        <p className="font-medium text-neutral-200">{piece.name}</p>
+        <p className="text-neutral-500">{piece.date}</p>
+      </motion.div>
+    </>,
+    document.body,
+  );
+}
+
 export function Art() {
-  const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const [expanded, setExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const slotRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const isDragging = useRef(false);
   const [isPointerDown, setIsPointerDown] = useState(false);
   const dragAccumulated = useRef(0);
   const dragThreshold = 80;
+  const [cardRect, setCardRect] = useState<DOMRect | null>(null);
 
   const goNext = useCallback(() => setFocusedIndex((i) => i + 1), []);
   const goPrev = useCallback(() => setFocusedIndex((i) => i - 1), []);
 
-  // Build virtual slots: a window of offsets centered on focusedIndex
-  // Each slot is keyed by its offset so it never teleports
+  // Preload focused + nearby images eagerly
+  useEffect(() => {
+    preloadAround(focusedIndex);
+  }, [focusedIndex]);
+
   const slots: { offset: number; virtualIndex: number; piece: ArtPiece }[] = [];
   for (let off = -VISIBLE_SIDE; off <= VISIBLE_SIDE; off++) {
     const vi = focusedIndex + off;
     slots.push({ offset: off, virtualIndex: vi, piece: WORKS[mod(vi)]! });
   }
 
-  // Keyboard navigation
+  // Keyboard navigation (only when not expanded — LevitatedCard handles its own keys)
   useEffect(() => {
+    if (expanded) return;
     function onKey(e: KeyboardEvent) {
-      if (slug) return;
       if (e.key === "ArrowLeft") goPrev();
       if (e.key === "ArrowRight") goNext();
-      if (e.key === "Enter") navigate(`/art/${WORKS[mod(focusedIndex)]!.slug}`);
+      if (e.key === "Enter") {
+        const el = slotRefs.current.get(focusedIndex);
+        setCardRect(el?.getBoundingClientRect() ?? null);
+        setExpanded(true);
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [slug, focusedIndex, navigate, goPrev, goNext]);
+  }, [goPrev, goNext, expanded, focusedIndex]);
 
-  // When viewer opens via URL, sync focused index
-  useEffect(() => {
-    if (slug) {
-      const idx = WORKS.findIndex((w) => w.slug === slug);
-      if (idx >= 0) setFocusedIndex(idx);
-    }
-  }, [slug]);
-
-  // Drag / swipe handling (mouse + touch)
+  // Drag / swipe handling
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
@@ -315,14 +291,15 @@ export function Art() {
     let accumulated = 0;
 
     function onDown(e: PointerEvent) {
-      if (slug) return;
       pointerId = e.pointerId;
       startX = e.clientX;
       accumulated = 0;
       isDragging.current = false;
       dragAccumulated.current = 0;
       setIsPointerDown(true);
-      el!.setPointerCapture(e.pointerId);
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     }
 
     function onMove(e: PointerEvent) {
@@ -343,31 +320,35 @@ export function Art() {
       if (e.pointerId !== pointerId) return;
       pointerId = null;
       setIsPointerDown(false);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
     }
 
     el.addEventListener("pointerdown", onDown);
-    el.addEventListener("pointermove", onMove);
-    el.addEventListener("pointerup", onUp);
-    el.addEventListener("pointercancel", onUp);
 
     return () => {
       el.removeEventListener("pointerdown", onDown);
-      el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerup", onUp);
-      el.removeEventListener("pointercancel", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
     };
-  }, [slug]);
+  }, []);
 
-  const handleCardClick = (offset: number, piece: ArtPiece) => {
+  const handleCardClick = (
+    offset: number,
+    e: React.MouseEvent<HTMLDivElement>,
+  ) => {
     if (isDragging.current) return;
     if (offset === 0) {
-      navigate(`/art/${piece.slug}`);
+      setCardRect(e.currentTarget.getBoundingClientRect());
+      setExpanded(true);
     } else {
       setFocusedIndex((i) => i + offset);
     }
   };
 
-  // Horizontal scroll navigates carousel; temporarily pauses Lenis while active
+  // Horizontal scroll
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
@@ -386,12 +367,10 @@ export function Art() {
     }
 
     function onWheel(e: WheelEvent) {
-      if (slug) return;
-
+      if (expanded) return;
       const absX = Math.abs(e.deltaX);
       const absY = Math.abs(e.deltaY);
 
-      // Start horizontal lock if x-dominant
       if (absX > absY && absX > 2) {
         if (!isHorizontalLocked) {
           isHorizontalLocked = true;
@@ -403,7 +382,6 @@ export function Art() {
 
       if (!isHorizontalLocked) return;
 
-      // While locked, prevent all scrolling (including vertical)
       e.preventDefault();
       accumulated += e.deltaX;
       if (accumulated > threshold) {
@@ -420,20 +398,28 @@ export function Art() {
       if (lockTimeout) clearTimeout(lockTimeout);
       if (isHorizontalLocked) lenis?.start();
     };
-  }, [slug, goNext, goPrev]);
+  }, [goNext, goPrev, expanded]);
 
-  const focusedReal = mod(focusedIndex);
-  const openPiece = slug ? WORKS.find((w) => w.slug === slug) : null;
+  // Close expanded when navigating
+  const prevFocusedIndex = useRef(focusedIndex);
+  useEffect(() => {
+    if (focusedIndex !== prevFocusedIndex.current) {
+      setExpanded(false);
+      prevFocusedIndex.current = focusedIndex;
+    }
+  }, [focusedIndex]);
+
+  const focusedPiece = WORKS[mod(focusedIndex)]!;
 
   return (
     <>
-      {/* Viewport-wide wrapper with fade masks on sides */}
+      {/* Viewport-wide wrapper */}
       <div
         ref={wrapperRef}
         className="relative"
         style={{
-          width: "100vw",
-          marginLeft: "calc(-50vw + 50%)",
+          width: "min(100vw, 1200px)",
+          marginLeft: "calc(-1 * (min(100vw, 1200px) - 100%) / 2)",
           touchAction: "pan-y",
           cursor: isPointerDown ? "grabbing" : "grab",
         }}
@@ -466,8 +452,6 @@ export function Art() {
                   ? ROTATION_Y
                   : -ROTATION_Y;
               const zIndex = N - absOffset;
-              // Eagerly load nearby images, lazy load distant ones
-              const isNearby = absOffset <= 5;
 
               const w = isFocused ? FOCUSED_WIDTH : UNFOCUSED_WIDTH;
               const h = isFocused ? FOCUSED_HEIGHT : UNFOCUSED_HEIGHT;
@@ -475,6 +459,10 @@ export function Art() {
               return (
                 <motion.div
                   key={virtualIndex}
+                  ref={(el) => {
+                    if (el) slotRefs.current.set(virtualIndex, el);
+                    else slotRefs.current.delete(virtualIndex);
+                  }}
                   className="absolute select-none"
                   style={{
                     top: "50%",
@@ -493,17 +481,22 @@ export function Art() {
                     rotateY,
                     filter: isFocused ? "brightness(1)" : "brightness(0.4)",
                   }}
-                  transition={{ duration: 0.5, ease: [0.26, 1, 0.6, 1] }}
-                  onClick={() => handleCardClick(offset, piece)}
+                  transition={{ duration: 0.5, ease: EASE }}
+                  onClick={(e) => handleCardClick(offset, e)}
                 >
-                  <div className="relative h-full w-full overflow-hidden rounded-xl ">
+                  <div className="relative h-full w-full overflow-hidden rounded-xl">
                     <BlurImage
                       src={piece.href}
                       alt={piece.name}
                       className="block h-full w-full rounded-xl object-cover"
                     />
                     <motion.div
-                      className="absolute inset-0 flex flex-col justify-end rounded-xl bg-linear-to-t from-black/70 via-transparent to-transparent p-4 outline -outline-offset-1 outline-neutral-400/10"
+                      className={cn(
+                        "absolute inset-0 flex flex-col justify-end rounded-xl bg-linear-to-t from-black/70 via-transparent to-transparent p-4 outline -outline-offset-1 outline-neutral-400/10 transition-[outline] duration-150 ease-out",
+                        {
+                          "hover:outline-neutral-400/20": offset === 0,
+                        },
+                      )}
                       initial={false}
                       animate={{ opacity: isFocused ? 1 : 0 }}
                       transition={{ duration: 0.3 }}
@@ -521,6 +514,18 @@ export function Art() {
           </div>
         </div>
       </div>
+
+      {/* Levitated card — portaled to body so it escapes all stacking contexts */}
+      <AnimatePresence>
+        {expanded && cardRect && (
+          <LevitatedCard
+            key={focusedPiece.slug}
+            piece={focusedPiece}
+            cardRect={cardRect}
+            onClose={() => setExpanded(false)}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="my-8 flex flex-col gap-3">
         <h3 className="text-sm font-semibold text-neutral-400">collections</h3>
@@ -546,25 +551,10 @@ export function Art() {
         ))}
       </div>
 
-      <AnimatePresence>
-        {openPiece && (
-          <ArtViewer
-            key="viewer"
-            piece={openPiece}
-            onClose={() => navigate("/art")}
-            onPrev={() => {
-              const prev = mod(focusedReal - 1);
-              setFocusedIndex(prev);
-              navigate(`/art/${WORKS[prev]!.slug}`, { replace: true });
-            }}
-            onNext={() => {
-              const next = mod(focusedReal + 1);
-              setFocusedIndex(next);
-              navigate(`/art/${WORKS[next]!.slug}`, { replace: true });
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <p className="text-xs text-white/40 text-center">
+        All works © Conrad Crawford. Do not reproduce without the expressed
+        written consent of Conrad Crawford.
+      </p>
     </>
   );
 }

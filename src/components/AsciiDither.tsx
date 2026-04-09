@@ -14,8 +14,14 @@ function createNoise() {
   for (let i = 0; i < 512; i++) perm[i] = p[i & 255]!;
 
   const grad: [number, number][] = [
-    [1, 1], [-1, 1], [1, -1], [-1, -1],
-    [1, 0], [-1, 0], [0, 1], [0, -1],
+    [1, 1],
+    [-1, 1],
+    [1, -1],
+    [-1, -1],
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
   ];
 
   function dot(gi: number, x: number, y: number) {
@@ -47,14 +53,20 @@ function createNoise() {
     return lerp(
       lerp(dot(aa, xf, yf), dot(ba, xf - 1, yf), u),
       lerp(dot(ab, xf, yf - 1), dot(bb, xf - 1, yf - 1), u),
-      v
+      v,
     );
   };
 }
 
 const CHARS = " .,:;+*?%#@";
 
-export function AsciiDither({ className }: { className?: string }) {
+export function AsciiDither({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -173,14 +185,18 @@ export function AsciiDither({ className }: { className?: string }) {
 
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseleave", onMouseLeave);
-    canvas.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      if (!touch) return;
-      const rect = canvas!.getBoundingClientRect();
-      prevMouseX = touch.clientX - rect.left;
-      prevMouseY = touch.clientY - rect.top;
-    }, { passive: false });
+    canvas.addEventListener(
+      "touchstart",
+      (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        if (!touch) return;
+        const rect = canvas!.getBoundingClientRect();
+        prevMouseX = touch.clientX - rect.left;
+        prevMouseY = touch.clientY - rect.top;
+      },
+      { passive: false },
+    );
     canvas.addEventListener("touchmove", onTouchMove, { passive: false });
     canvas.addEventListener("touchend", onTouchEnd);
     canvas.addEventListener("touchcancel", onTouchEnd);
@@ -205,10 +221,26 @@ export function AsciiDither({ className }: { className?: string }) {
           let sy = fieldY[idx]!;
           let count = 1;
 
-          if (c > 0) { sx += fieldX[idx - 1]! * diffusion; sy += fieldY[idx - 1]! * diffusion; count += diffusion; }
-          if (c < cols - 1) { sx += fieldX[idx + 1]! * diffusion; sy += fieldY[idx + 1]! * diffusion; count += diffusion; }
-          if (r > 0) { sx += fieldX[idx - cols]! * diffusion; sy += fieldY[idx - cols]! * diffusion; count += diffusion; }
-          if (r < rows - 1) { sx += fieldX[idx + cols]! * diffusion; sy += fieldY[idx + cols]! * diffusion; count += diffusion; }
+          if (c > 0) {
+            sx += fieldX[idx - 1]! * diffusion;
+            sy += fieldY[idx - 1]! * diffusion;
+            count += diffusion;
+          }
+          if (c < cols - 1) {
+            sx += fieldX[idx + 1]! * diffusion;
+            sy += fieldY[idx + 1]! * diffusion;
+            count += diffusion;
+          }
+          if (r > 0) {
+            sx += fieldX[idx - cols]! * diffusion;
+            sy += fieldY[idx - cols]! * diffusion;
+            count += diffusion;
+          }
+          if (r < rows - 1) {
+            sx += fieldX[idx + cols]! * diffusion;
+            sy += fieldY[idx + cols]! * diffusion;
+            count += diffusion;
+          }
 
           tmpX[idx] = (sx / count) * dissipation;
           tmpY[idx] = (sy / count) * dissipation;
@@ -238,13 +270,22 @@ export function AsciiDither({ className }: { className?: string }) {
           const drawY = baseY + fy;
 
           // Expanded bounds — allow drawing into the overflow area
-          if (drawX < -cellSize || drawX > canvasW + cellSize || drawY < -cellSize || drawY > canvasH + cellSize) continue;
+          if (
+            drawX < -cellSize ||
+            drawX > canvasW + cellSize ||
+            drawY < -cellSize ||
+            drawY > canvasH + cellSize
+          )
+            continue;
 
           // Flowing noise
           const nx = col * 0.06;
           const ny = row * 0.06;
           const n1 = noise(nx + t * 0.3, ny + t * 0.2);
-          const n2 = noise(nx * 1.8 + t * -0.15 + 100, ny * 1.8 + t * 0.25 + 100);
+          const n2 = noise(
+            nx * 1.8 + t * -0.15 + 100,
+            ny * 1.8 + t * 0.25 + 100,
+          );
           const n3 = noise(nx * 0.5 + t * 0.1 + 200, ny * 0.5 - t * 0.15 + 200);
 
           let val = n1 * 0.5 + n2 * 0.3 + n3 * 0.2;
@@ -261,8 +302,7 @@ export function AsciiDither({ className }: { className?: string }) {
 
           if (char === " ") continue;
 
-          const brightness = Math.floor(80 + val * 175);
-          ctx!.fillStyle = `rgb(${brightness},${brightness},${brightness})`;
+          ctx!.fillStyle = `rgba(255,255,255,${0.3 + val * 0.7})`;
           ctx!.fillText(char, drawX, drawY);
         }
       }
@@ -287,6 +327,7 @@ export function AsciiDither({ className }: { className?: string }) {
     <canvas
       ref={canvasRef}
       className={`touch-none ${className ?? ""}`}
+      style={style}
     />
   );
 }

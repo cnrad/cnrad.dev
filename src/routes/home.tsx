@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 const EXPERIENCE = [
   {
     name: "cside",
-    role: "frontend-focused engineer working on making the web secure again.",
+    role: "frontend-focused engineer making the web secure again.",
     period: "2024 - present",
     href: "https://cside.dev",
     preview: "/main/cside.webp",
@@ -13,8 +13,8 @@ const EXPERIENCE = [
   },
   {
     name: "incard",
-    role: "contracted frontend engineer, landing rebrand",
-    period: "2024, 2025",
+    role: "landing rebrand + design system",
+    period: "2024, 2025, 2026",
     href: "https://incard.co",
     preview: "/main/incard.webp",
     logo: "/misc/incard-logo.svg",
@@ -22,7 +22,7 @@ const EXPERIENCE = [
   },
   {
     name: "dimension",
-    role: "full-stack engineer, utilizing ai to make deep work easier",
+    role: "full-stack engineer",
     period: "2023 - 2024",
     href: "https://dimension.dev",
     preview: "/main/dimension.webp",
@@ -58,7 +58,7 @@ export function Home() {
   }, [hoveredIndex]);
 
   return (
-    <div className="flex flex-col gap-2 text-sm text-neutral-400 mt-4 leading-6 group">
+    <div className="flex flex-col gap-2 text-sm text-neutral-400 mt-4 group">
       {EXPERIENCE.map((item) => (
         <a
           key={item.name}
@@ -89,8 +89,8 @@ export function Home() {
         </a>
       ))}
 
-      <p className="text-neutral-400 my-3">
-        i'm also part of{" "}
+      <p className="text-neutral-400 my-2">
+        i also provide microgrants ($100-$500) to ambitious young builders at{" "}
         <a
           href="https://bagel.fund/"
           target="_blank"
@@ -99,7 +99,7 @@ export function Home() {
         >
           Bagel Fund
         </a>
-        , providing microgrants ($100-$500) to ambitious young builders.
+        .
       </p>
     </div>
   );

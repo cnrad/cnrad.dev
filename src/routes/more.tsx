@@ -31,7 +31,7 @@ export function More() {
   const age = useAge();
 
   return (
-    <div className="flex w-full flex-col gap-8 text-sm text-neutral-400 cursor-default mt-4 leading-6 -mb-24">
+    <div className="flex w-full flex-col gap-8 text-sm text-neutral-400 cursor-default mt-4 -mb-24">
       <p>
         i'm{" "}
         <span className="font-semibold text-neutral-200">
@@ -98,7 +98,15 @@ export function More() {
         </div>
       </div>
 
-      <AsciiDither className="mt-8 h-52 w-screen self-center opacity-20 mask-t-from-0%" />
+      <AsciiDither
+        className="mt-8 h-40 w-screen self-center opacity-100"
+        style={{
+          maskImage:
+            "radial-gradient(ellipse 50% 100% at 50% 100%, black 0%, transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 50% 100% at 50% 100%, black 0%, transparent 100%)",
+        }}
+      />
     </div>
   );
 }

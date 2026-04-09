@@ -42,9 +42,9 @@ const transition = {
 const pageDescriptions: Record<string, string> = {
   "/": "software used to feel like magic. somewhere along the way, that magic was lost in the monetization of the digital world and constant shipping at the expense of quality. i bring that magic back, in hopes of making software *feel* great again.",
   "/art":
-    "there's something to be said for objects with fancy colors. i create digital abstract art that explores the interplay of color, light, and form, all of which are powerful motivators of emotion.",
+    "i dabble with creating digital abstract art in hopes of expressing *something*.",
   "/craft":
-    "the possibilities of human computer interaction are essentially limitless. i explore these possibilities through the beauty of the web (some call it design engineering). it's fun to imagine what the future of software might look like - but it's more fun to build.",
+    "the possibilities of human computer interaction are essentially limitless. i explore these possibilities through the beauty of the web (some call it design engineering). it's quite fun to imagine what the future of software could look like - it's more fun to build.",
   "/more":
     "here's some more about my background and what i do outside of tech. feel free to reach out about anything - whether you want to put me on to some new music, or just want to chat.",
 };
@@ -138,7 +138,6 @@ function useIsScrollable() {
       subtree: true,
       attributes: true,
     });
-    // Also check on scroll in case of lazy-loaded content
     window.addEventListener("scroll", check, { passive: true });
     return () => {
       window.removeEventListener("resize", check);
@@ -153,13 +152,31 @@ function useIsScrollable() {
 export function Layout() {
   const location = useLocation();
   const noiseUrl = useNoiseDataUrl();
-  const isScrollable = useIsScrollable();
   const basePath = "/" + (location.pathname.split("/")[1] ?? "");
+  const isScrollable = useIsScrollable();
+
+  // Smoothly scroll to the top whenever the base route changes, so that
+  // navigating to a shorter page doesn't snap upward.
+  const prevBasePath = useRef(basePath);
+  useEffect(() => {
+    if (prevBasePath.current === basePath) return;
+    prevBasePath.current = basePath;
+    if (window.scrollY === 0) return;
+
+    const lenis = (window as any).__lenis as
+      | { scrollTo: (target: number, opts?: { duration?: number }) => void }
+      | undefined;
+    if (lenis?.scrollTo) {
+      lenis.scrollTo(0, { duration: 0.8 });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [basePath]);
   const description = pageDescriptions[basePath] ?? pageDescriptions["/"]!;
-  // 14px text (text-sm) with leading-6 (line-height: 24px)
+  // 14px text (text-sm) with leading-5.5 (line-height: 22px)
   const { containerRef, maxHeight } = useMaxParagraphHeight(
     "14px Open Sans",
-    24,
+    22,
   );
 
   return (
@@ -176,9 +193,11 @@ export function Layout() {
       )}
 
       {/* Bottom progressive blur */}
-      <div
-        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 h-24 transition-opacity duration-300"
-        style={{ opacity: isScrollable ? 1 : 0 }}
+      <motion.div
+        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 h-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
       >
         {[
           { blur: "1px", maskStart: 0, maskEnd: 25 },
@@ -196,7 +215,7 @@ export function Layout() {
             }}
           />
         ))}
-      </div>
+      </motion.div>
 
       {/* Content */}
       <motion.div
@@ -253,14 +272,11 @@ export function Layout() {
         </motion.p>
         <motion.div
           ref={containerRef}
-          className="mt-4"
+          className="mt-4 w-full"
           variants={{ initial: {}, animate: {} }}
           style={{ height: maxHeight }}
         >
-          <TextMorph
-            text={description}
-            className="text-sm text-neutral-400 leading-6"
-          />
+          <TextMorph text={description} className="text-sm text-neutral-400" />
         </motion.div>
         <motion.div
           variants={fadeUp}
