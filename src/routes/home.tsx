@@ -1,6 +1,3 @@
-import { useState, useRef, useLayoutEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-
 const EXPERIENCE = [
   {
     name: "cside",
@@ -32,31 +29,6 @@ const EXPERIENCE = [
 ];
 
 export function Home() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const prevHoveredIndex = useRef<number | null>(null);
-  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  function getRect(index: number) {
-    const el = itemRefs.current[index];
-    const container = containerRef.current;
-    if (!el || !container) return { top: 0, height: 0 };
-    const containerRect = container.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    return { top: elRect.top - containerRect.top, height: elRect.height };
-  }
-
-  // Whether the highlight is freshly appearing (no previous hover)
-  const isFreshMount =
-    hoveredIndex !== null && prevHoveredIndex.current === null;
-  const rect =
-    hoveredIndex !== null ? getRect(hoveredIndex) : { top: 0, height: 0 };
-
-  // Track previous hover state
-  useLayoutEffect(() => {
-    prevHoveredIndex.current = hoveredIndex;
-  }, [hoveredIndex]);
-
   return (
     <div className="flex flex-col gap-2 text-sm text-neutral-400 mt-4 group">
       {EXPERIENCE.map((item) => (
