@@ -50,7 +50,7 @@ export function More() {
           </a>
           <span className="pointer-events-none brightness-75 absolute bottom-full left-0 z-50 px-1 w-full origin-top scale-98 translate-y-1 opacity-0 transition-all duration-200 ease-out group-hover/drum:translate-y-0 group-hover/drum:scale-100 group-hover/drum:opacity-100">
             <video
-              src="/misc/IMG_7106.mov"
+              src="/misc/drumming.mp4"
               autoPlay
               loop
               muted

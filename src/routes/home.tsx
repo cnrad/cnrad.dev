@@ -10,7 +10,7 @@ const EXPERIENCE = [
   },
   {
     name: "incard",
-    role: "landing rebrand + design system",
+    role: "landing rebrand(s) + design system",
     period: "2024, 2025, 2026",
     href: "https://incard.co",
     preview: "/main/incard.webp",
