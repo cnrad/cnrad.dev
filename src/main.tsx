@@ -5,20 +5,26 @@ import Lenis from "lenis";
 import { router } from "./router";
 import "./app.css";
 
-const lenis = new Lenis({
-  lerp: 0.12,
-  smoothWheel: true,
-  wheelMultiplier: 0.8,
-});
+// Only initialize Lenis on non-touch devices. On mobile, Lenis hijacks the
+// document scroll and prevents Safari's liquid glass toolbar from letting
+// content extend behind it. Native scroll is also smoother on touch anyway.
+const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
-// Expose for components that need to temporarily disable smooth scrolling
-(window as any).__lenis = lenis;
+if (!isTouch) {
+  const lenis = new Lenis({
+    lerp: 0.12,
+    smoothWheel: true,
+    wheelMultiplier: 0.8,
+  });
 
-function raf(time: number) {
-  lenis.raf(time);
+  (window as any).__lenis = lenis;
+
+  function raf(time: number) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
   requestAnimationFrame(raf);
 }
-requestAnimationFrame(raf);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

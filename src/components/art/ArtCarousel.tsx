@@ -5,6 +5,7 @@ import { cn } from "../../lib/utils";
 import { EASE } from "../../lib/constants";
 import { BlurImage, thumbUrl, carouselUrl } from "./BlurImage";
 import { LevitatedCard } from "./LevitatedCard";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const preloadCache = new Set<string>();
 
@@ -64,6 +65,18 @@ function offsetToX(offset: number) {
   }
 }
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return mobile;
+}
+
 export function ArtCarousel() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -75,6 +88,7 @@ export function ArtCarousel() {
   const dragAccumulated = useRef(0);
   const dragThreshold = 80;
   const [cardRect, setCardRect] = useState<DOMRect | null>(null);
+  const isMobile = useIsMobile();
 
   const goNext = useCallback(() => setFocusedIndex((i) => i + 1), []);
   const goPrev = useCallback(() => setFocusedIndex((i) => i - 1), []);
@@ -106,8 +120,9 @@ export function ArtCarousel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [goPrev, goNext, expanded, focusedIndex]);
 
-  // Drag / swipe handling
+  // Drag / swipe handling (desktop only)
   useEffect(() => {
+    if (isMobile) return;
     const el = wrapperRef.current;
     if (!el) return;
 
@@ -158,7 +173,7 @@ export function ArtCarousel() {
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
     };
-  }, []);
+  }, [isMobile]);
 
   const handleCardClick = (
     offset: number,
@@ -241,26 +256,34 @@ export function ArtCarousel() {
       {/* Viewport-wide wrapper */}
       <div
         ref={wrapperRef}
-        className="relative"
+        className={cn("relative", isMobile && "overflow-hidden")}
         style={{
-          width: "min(100vw, 1200px)",
-          marginLeft: "calc(-1 * (min(100vw, 1200px) - 100%) / 2)",
+          width: isMobile ? "100vw" : "min(100vw, 1200px)",
+          marginLeft: isMobile
+            ? "calc(-1.5rem - env(safe-area-inset-left))"
+            : "calc(-1 * (min(100vw, 1200px) - 100%) / 2)",
           touchAction: "pan-y",
-          cursor: isPointerDown ? "grabbing" : "grab",
+          cursor: isMobile ? "default" : isPointerDown ? "grabbing" : "grab",
         }}
       >
         <div
-          style={{
-            maskImage:
-              "linear-gradient(to right, transparent, transparent 10%, black 35%, black 65%, transparent 90%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent, transparent 10%, black 35%, black 65%, transparent 90%, transparent)",
-          }}
-          className="max-md:mask-none!"
+          style={
+            isMobile
+              ? undefined
+              : {
+                  maskImage:
+                    "linear-gradient(to right, transparent, transparent 10%, black 35%, black 65%, transparent 90%, transparent)",
+                  WebkitMaskImage:
+                    "linear-gradient(to right, transparent, transparent 10%, black 35%, black 65%, transparent 90%, transparent)",
+                }
+          }
         >
           <div
             ref={containerRef}
-            className="relative mx-auto w-full overflow-visible"
+            className={cn(
+              "relative mx-auto w-full",
+              isMobile ? "overflow-hidden" : "overflow-visible",
+            )}
             style={{
               height: FOCUSED_HEIGHT + 60,
               perspective: 1200,
@@ -339,6 +362,26 @@ export function ArtCarousel() {
           </div>
         </div>
       </div>
+
+      {/* Mobile navigation buttons */}
+      {isMobile ? (
+        <div className="flex items-center justify-between w-full mt-2">
+          <button
+            onClick={goPrev}
+            className="hit-area-2 flex items-center justify-center size-8 rounded-full bg-neutral-800/60 text-neutral-400 active:bg-neutral-700/60 active:text-neutral-200 transition-colors"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+          <button
+            onClick={goNext}
+            className="hit-area-2 flex items-center justify-center size-8 rounded-full bg-neutral-800/60 text-neutral-400 active:bg-neutral-700/60 active:text-neutral-200 transition-colors"
+            aria-label="Next"
+          >
+            <ChevronRight className="size-4" />
+          </button>
+        </div>
+      ) : null}
 
       {/* Levitated card — portaled to body so it escapes all stacking contexts */}
       <AnimatePresence>

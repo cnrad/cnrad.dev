@@ -1,11 +1,51 @@
 import { useEffect, useRef, useState, useLayoutEffect, useCallback } from "react";
+import { Link } from "react-router";
 
-type WordState = {
+type WordMeta = {
   text: string;
+  italic?: boolean;
+  href?: string;
+};
+
+type WordState = WordMeta & {
   blur: number;
   opacity: number;
   y: number;
 };
+
+function parseMarkdownLite(input: string): WordMeta[] {
+  const words: WordMeta[] = [];
+  const regex = /\*([^*]+)\*|\[([^\]]+)\]\(([^)]+)\)/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(input)) !== null) {
+    if (match.index > lastIndex) {
+      for (const w of input.slice(lastIndex, match.index).split(" "))
+        if (w) words.push({ text: w });
+    }
+    if (match[1] !== undefined) {
+      for (const w of match[1].split(" "))
+        if (w) words.push({ text: w, italic: true });
+    } else if (match[2] !== undefined) {
+      for (const w of match[2].split(" "))
+        if (w) words.push({ text: w, href: match[3] });
+    }
+    lastIndex = regex.lastIndex;
+    const trailing = input.slice(lastIndex).match(/^[.,;:!?)]+/);
+    if (trailing && words.length > 0) {
+      words[words.length - 1]!.text += trailing[0];
+      lastIndex += trailing[0].length;
+    }
+  }
+
+  if (lastIndex < input.length) {
+    for (const w of input.slice(lastIndex).split(" "))
+      if (w) words.push({ text: w });
+  }
+
+  return words;
+}
 
 export function TextMorph({
   text,
@@ -15,7 +55,7 @@ export function TextMorph({
   className?: string;
 }) {
   const [newWords, setNewWords] = useState<WordState[]>(() =>
-    text.split(" ").map((w) => ({ text: w, blur: 4, opacity: 0, y: 6 })),
+    parseMarkdownLite(text).map((w) => ({ ...w, blur: 4, opacity: 0, y: 6 })),
   );
   const [oldSnapshot, setOldSnapshot] = useState<{
     html: string;
@@ -60,7 +100,7 @@ export function TextMorph({
     // Need a frame for refs to populate
     requestAnimationFrame(() => {
       const wordLines = getWordLines();
-      const words = text.split(" ");
+      const words = parseMarkdownLite(text);
       const maxBlur = 4;
       const maxY = 6;
       const lineDelay = 80; // ms between lines
@@ -77,20 +117,20 @@ export function TextMorph({
           const lineElapsed = elapsed - line * lineDelay;
 
           if (lineElapsed < 0) {
-            result.push({ text: words[i]!, blur: maxBlur, opacity: 0, y: maxY });
+            result.push({ ...words[i]!, blur: maxBlur, opacity: 0, y: maxY });
             allDone = false;
           } else if (lineElapsed < lineDuration) {
             const t = lineElapsed / lineDuration;
             const ease = 1 - Math.pow(1 - t, 3); // cubic ease out
             result.push({
-              text: words[i]!,
+              ...words[i]!,
               blur: (1 - ease) * maxBlur,
               opacity: ease,
               y: (1 - ease) * maxY,
             });
             allDone = false;
           } else {
-            result.push({ text: words[i]!, blur: 0, opacity: 1, y: 0 });
+            result.push({ ...words[i]!, blur: 0, opacity: 1, y: 0 });
           }
         }
 
@@ -111,7 +151,7 @@ export function TextMorph({
     prevText.current = text;
     cancelAnimationFrame(rafRef.current);
 
-    const toWords = text.split(" ");
+    const toWords = parseMarkdownLite(text);
 
     // Capture the current rendered paragraph as a frozen snapshot
     if (paragraphRef.current) {
@@ -137,19 +177,19 @@ export function TextMorph({
         const wordElapsed = elapsed - i * staggerMs;
 
         if (wordElapsed < 0) {
-          result.push({ text: toWords[i]!, blur: maxBlur, opacity: 0, y: 0 });
+          result.push({ ...toWords[i]!, blur: maxBlur, opacity: 0, y: 0 });
           allDone = false;
         } else if (wordElapsed < blurDownMs) {
           const t = wordElapsed / blurDownMs;
           result.push({
-            text: toWords[i]!,
+            ...toWords[i]!,
             blur: (1 - t) * maxBlur,
             opacity: t,
             y: 0,
           });
           allDone = false;
         } else {
-          result.push({ text: toWords[i]!, blur: 0, opacity: 1, y: 0 });
+          result.push({ ...toWords[i]!, blur: 0, opacity: 1, y: 0 });
         }
       }
 
@@ -187,23 +227,68 @@ export function TextMorph({
         className={className}
         style={{ overflowWrap: "break-word" }}
       >
-        {newWords.map(({ text: word, blur, opacity, y }, i) => (
-          <span key={i}>
-            {i > 0 && " "}
-            <span
-              ref={(el) => { wordRefs.current[i] = el; }}
-              className="inline-block"
-              style={{
-                filter: blur > 0.1 ? `blur(${blur}px)` : "none",
-                opacity,
-                transform: y > 0.1 ? `translateY(${y}px)` : "none",
-                willChange: blur > 0.1 || y > 0.1 ? "filter, opacity, transform" : "auto",
-              }}
-            >
-              {word}
-            </span>
-          </span>
-        ))}
+        {(() => {
+          const elements: React.ReactNode[] = [];
+          let i = 0;
+          while (i < newWords.length) {
+            const w = newWords[i]!;
+            if (!w.href) {
+              elements.push(
+                <span key={i}>
+                  {i > 0 && " "}
+                  <span
+                    ref={(el) => { wordRefs.current[i] = el; }}
+                    className="inline-block"
+                    style={{
+                      filter: w.blur > 0.1 ? `blur(${w.blur}px)` : "none",
+                      opacity: w.opacity,
+                      transform: w.y > 0.1 ? `translateY(${w.y}px)` : "none",
+                      willChange: w.blur > 0.1 || w.y > 0.1 ? "filter, opacity, transform" : "auto",
+                      fontStyle: w.italic ? "italic" : undefined,
+                    }}
+                  >
+                    {w.text}
+                  </span>
+                </span>
+              );
+              i++;
+            } else {
+              const groupStart = i;
+              const href = w.href;
+              const groupWords: typeof newWords = [];
+              while (i < newWords.length && newWords[i]!.href === href) {
+                groupWords.push(newWords[i]!);
+                i++;
+              }
+              elements.push(
+                <span key={groupStart}>
+                  {groupStart > 0 && " "}
+                  <Link to={href} className="animate-link text-white">
+                    {groupWords.map((gw, gi) => (
+                      <span key={groupStart + gi}>
+                        {gi > 0 && " "}
+                        <span
+                          ref={(el) => { wordRefs.current[groupStart + gi] = el; }}
+                          className="inline-block"
+                          style={{
+                            filter: gw.blur > 0.1 ? `blur(${gw.blur}px)` : "none",
+                            opacity: gw.opacity,
+                            transform: gw.y > 0.1 ? `translateY(${gw.y}px)` : "none",
+                            willChange: gw.blur > 0.1 || gw.y > 0.1 ? "filter, opacity, transform" : "auto",
+                            fontStyle: gw.italic ? "italic" : undefined,
+                          }}
+                        >
+                          {gw.text}
+                        </span>
+                      </span>
+                    ))}
+                  </Link>
+                </span>
+              );
+            }
+          }
+          return elements;
+        })()}
       </p>
     </div>
   );

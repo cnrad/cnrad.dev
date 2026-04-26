@@ -5,13 +5,61 @@
 }
 
 html {
-  overscroll-behavior: none;
-  overflow-x: hidden;
   scrollbar-width: none;
   background-color: #090909;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body {
+  overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  html {
+    overscroll-behavior: none;
+  }
+}
+
+@keyframes marqueeEdgeShow {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes marqueeEdgeHide {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes routeFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.stagger-children > * {
+  animation: routeFadeUp 0.4s ease-out backwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(n + 10) { animation-delay: 450ms; }
 
 /* Underline styles */
 .animate-link {
@@ -46,5 +94,61 @@ html {
   .vivid-text {
     /* Use a high-brightness HDR color */
     color: color(display-p3 1 1 1);
+  }
+}
+
+/* hit-area: expand interactive hit areas without changing layout */
+/* https://ui.shadcn.com/docs/registry/hit-area */
+
+@utility hit-area-debug {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    @apply border border-dashed border-blue-500;
+    @apply bg-blue-500/10;
+  }
+  &:hover::before {
+    @apply border border-dashed border-green-500;
+    @apply bg-green-500/10;
+  }
+}
+
+@utility hit-area {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-* {
+  position: relative;
+  --hit-area-t: --spacing(--value(number) * -1);
+  --hit-area-t: calc(--value([*]) * -1);
+  --hit-area-b: --spacing(--value(number) * -1);
+  --hit-area-b: calc(--value([*]) * -1);
+  --hit-area-l: --spacing(--value(number) * -1);
+  --hit-area-l: calc(--value([*]) * -1);
+  --hit-area-r: --spacing(--value(number) * -1);
+  --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
   }
 }

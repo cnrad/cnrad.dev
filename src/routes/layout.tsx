@@ -1,17 +1,32 @@
 import { Outlet, useLocation, Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useState, useRef, useCallback, type ComponentType } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  type ComponentType,
+} from "react";
 import { useOutlet } from "react-router";
 import { prepare, layout } from "@chenglou/pretext";
 import { SignatureReveal } from "../components/SignatureReveal";
 import { TextMorph } from "../components/TextMorph";
 import { GithubIcon, XTwitterIcon, LinkedInIcon } from "../icons";
+import { SpotifyPresence } from "../components/SpotifyPresence";
 import { EASE } from "../lib/constants";
 
-const SOCIAL_LINKS: { href: string; icon: ComponentType<{ className?: string }>; label: string }[] = [
+const SOCIAL_LINKS: {
+  href: string;
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+}[] = [
   { href: "https://github.com/cnrad", icon: GithubIcon, label: "GitHub" },
   { href: "https://x.com/notcnrad", icon: XTwitterIcon, label: "X / Twitter" },
-  { href: "https://linkedin.com/in/cnrad", icon: LinkedInIcon, label: "LinkedIn" },
+  {
+    href: "https://linkedin.com/in/cnrad",
+    icon: LinkedInIcon,
+    label: "LinkedIn",
+  },
 ];
 
 const fadeUp = {
@@ -25,16 +40,22 @@ const transition = {
 };
 
 const pageDescriptions: Record<string, string> = {
-  "/": "software used to feel like magic. somewhere along the way, that magic was lost in the monetization of the digital world and constant shipping at the expense of quality. i bring that magic back, in hopes of making software *feel* great again.",
-  "/art":
-    "i dabble with creating digital abstract art in hopes of expressing *something*.",
+  "/": "everybody remembers how magical computers used to feel. more software was created with the primary purpose of revenue, and the bar for quality became less and less. i bring that magic back, in hopes of making software *feel* great again.",
   "/craft":
-    "the possibilities of human computer interaction are essentially limitless. i explore these possibilities through the beauty of the web (some call it design engineering). it's quite fun to imagine what the future of software could look like - it's more fun to build.",
+    "the possibilities of human computer interaction are limitless and fascinating. i explore them through the beauty of the web (some call it design engineering). imagine what the future of software could look like, and go build it.",
+  "/art":
+    "i create and share works of digital abstract expressionism, with 5m+ views and multiple features on [unsplash](https://unsplash.com/@cnrad). if you're interested in commissioning any work, [contact me](/more).",
   "/more":
     "here's some more about my background and what i do outside of tech. feel free to reach out about anything - whether you want to put me on to some new music, or just want to chat.",
 };
 
-const allDescriptions = Object.values(pageDescriptions);
+function stripMarkdownLite(s: string): string {
+  return s
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+}
+
+const allDescriptions = Object.values(pageDescriptions).map(stripMarkdownLite);
 const navItems = ["work", "craft", "art", "more"];
 
 function useMaxParagraphHeight(font: string, lineHeight: number) {
@@ -65,9 +86,7 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
   return { containerRef, maxHeight };
 }
 
-function useNoiseDataUrl(size = 128) {
-  const [url, setUrl] = useState<string | null>(null);
-
+function useBodyNoise(size = 128) {
   useEffect(() => {
     const canvas = document.createElement("canvas");
     canvas.width = size;
@@ -75,18 +94,25 @@ function useNoiseDataUrl(size = 128) {
     const ctx = canvas.getContext("2d")!;
     const imageData = ctx.createImageData(size, size);
     const data = imageData.data;
+    // Alpha ~4 matches the previous (alpha 18 * opacity 0.2) composite
     for (let i = 0; i < data.length; i += 4) {
       const v = Math.random() * 255;
       data[i] = v;
       data[i + 1] = v;
       data[i + 2] = v;
-      data[i + 3] = 18;
+      data[i + 3] = 4;
     }
     ctx.putImageData(imageData, 0, 0);
-    setUrl(canvas.toDataURL("image/png"));
+    const url = canvas.toDataURL("image/png");
+    const prevImage = document.body.style.backgroundImage;
+    const prevRepeat = document.body.style.backgroundRepeat;
+    document.body.style.backgroundImage = `url(${url})`;
+    document.body.style.backgroundRepeat = "repeat";
+    return () => {
+      document.body.style.backgroundImage = prevImage;
+      document.body.style.backgroundRepeat = prevRepeat;
+    };
   }, [size]);
-
-  return url;
 }
 
 /**
@@ -134,9 +160,8 @@ function useIsScrollable() {
 
 export function Layout() {
   const location = useLocation();
-  const noiseUrl = useNoiseDataUrl();
+  useBodyNoise();
   const basePath = "/" + (location.pathname.split("/")[1] ?? "");
-  const isScrollable = useIsScrollable();
 
   const prevBasePath = useRef(basePath);
   useEffect(() => {
@@ -160,21 +185,10 @@ export function Layout() {
   );
 
   return (
-    <div className="relative min-h-screen text-white px-6 md:px-10">
-      {/* Noise overlay */}
-      {noiseUrl && (
-        <div
-          className="pointer-events-none fixed inset-0 z-[1] opacity-20"
-          style={{
-            backgroundImage: `url(${noiseUrl})`,
-            backgroundRepeat: "repeat",
-          }}
-        />
-      )}
-
-      {/* Bottom progressive blur */}
+    <div className="relative text-white px-6 md:px-10 md:min-h-screen">
+      {/* Bottom progressive blur — desktop only; breaks iOS 26 liquid glass */}
       <motion.div
-        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 h-20"
+        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 h-20 max-md:hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -199,16 +213,25 @@ export function Layout() {
 
       {/* Content */}
       <motion.div
-        className="relative mx-auto flex min-h-screen max-w-2xl flex-col items-start justify-start py-16 z-10 pb-20"
+        className="relative mx-auto flex max-w-2xl flex-col items-start justify-start py-16 z-10 pb-20"
+        style={{
+          paddingTop: "calc(4rem + env(safe-area-inset-top))",
+          paddingBottom: "calc(5rem + env(safe-area-inset-bottom) + 1.5rem)",
+        }}
         initial="initial"
         animate="animate"
         transition={{ staggerChildren: 0.25 }}
       >
-        <motion.div variants={fadeUp} transition={transition} className="mt-10">
+        <motion.div
+          variants={fadeUp}
+          transition={transition}
+          className="mt-10 flex flex-row items-center justify-between w-full"
+        >
           <SignatureReveal
             src="/signature.svg"
-            className="mb-4 h-20 object-cover -mx-6 hover:drop-shadow-[0_0_2px_#fff] transition-all duration-200 ease-out"
+            className="mb-4 h-20 object-cover -mx-6"
           />
+          <SpotifyPresence />
         </motion.div>
         <motion.div
           className="text-2xl font-semibold flex flex-row justify-between items-start w-full"
@@ -224,7 +247,7 @@ export function Layout() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="opacity-50 hover:opacity-100 transition-opacity duration-150 ease-out"
+                className="opacity-50 hover:opacity-100 transition-opacity duration-150 ease-out hit-area-1"
               >
                 <Icon className="size-6 md:size-4" />
               </a>
@@ -244,7 +267,10 @@ export function Layout() {
           variants={{ initial: {}, animate: {} }}
           style={{ height: maxHeight }}
         >
-          <TextMorph text={description} className="text-sm text-neutral-400" />
+          <TextMorph
+            text={description}
+            className="text-sm text-neutral-400 leading-5.5"
+          />
         </motion.div>
         <motion.div
           variants={fadeUp}
@@ -274,9 +300,9 @@ export function Layout() {
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname.split("/").slice(0, 2).join("/")}
-              className="w-full origin-top"
-              initial={{ opacity: 0, y: 2, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              className="w-full origin-top stagger-children"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0, y: 2, filter: "blur(4px)" }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >

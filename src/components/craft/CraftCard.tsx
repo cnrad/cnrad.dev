@@ -34,7 +34,7 @@ export function CraftCard({
       href={item.href}
       rel="noopener noreferrer"
       target="_blank"
-      className="flex flex-col gap-2 py-3 opacity-100 transition-opacity duration-300 ease-out md:group-hover:opacity-40 md:hover:!opacity-100 md:flex-row md:items-start md:gap-4"
+      className="flex flex-col gap-2 py-3 opacity-100 transition-opacity duration-300 ease-out md:group-hover:opacity-40 md:hover:opacity-100! md:flex-row md:items-start md:gap-4"
       onMouseEnter={onHover}
     >
       <div className="shrink-0 pt-1 md:mr-5">
@@ -57,7 +57,11 @@ export function CraftCard({
           initial={false}
           animate={{ width: isMobile ? "100%" : isHovered ? "100%" : "50%" }}
           transition={{ duration: 0.35, ease: EASE }}
-          style={{ marginLeft: "auto", display: "block", aspectRatio: item.aspect }}
+          style={{
+            marginLeft: "auto",
+            display: "block",
+            aspectRatio: item.aspect,
+          }}
         />
       </div>
     </a>

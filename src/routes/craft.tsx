@@ -28,7 +28,7 @@ const ITEMS = [
     date: "July 5, 2025",
     href: "https://x.com/notcnrad/status/1941561256164598196",
     src: "/design/documenting-life.mp4",
-    aspect: 3024 / 1964,
+    aspect: 3006 / 1588,
   },
   {
     title: "Marking Menus",
