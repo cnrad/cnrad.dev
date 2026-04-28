@@ -14,6 +14,7 @@ import { TextMorph } from "../components/TextMorph";
 import { GithubIcon, XTwitterIcon, LinkedInIcon } from "../icons";
 import { SpotifyPresence } from "../components/SpotifyPresence";
 import { EASE } from "../lib/constants";
+import { preloadCraftVideos, preloadArtImages } from "../lib/preload";
 
 const SOCIAL_LINKS: {
   href: string;
@@ -40,11 +41,11 @@ const transition = {
 };
 
 const pageDescriptions: Record<string, string> = {
-  "/": "everybody remembers how magical computers used to feel. more software was created with the primary purpose of revenue, and the bar for quality became less and less. i bring that magic back, in hopes of making software *feel* great again.",
+  "/": "computers used to feel like magic. but something happened as software grew—the art of care and craft were lost as the focus became money. attention to detail became an afterthought. i strive to bring that magic back, in hopes of making software *feel* great again.",
   "/craft":
     "the possibilities of human computer interaction are limitless and fascinating. i explore them through the beauty of the web (some call it design engineering). imagine what the future of software could look like, and go build it.",
   "/art":
-    "i create and share works of digital abstract expressionism, with 5m+ views and multiple features on [unsplash](https://unsplash.com/@cnrad). if you're interested in commissioning any work, [contact me](/more).",
+    "i create and share works of digital abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad). if you're interested in commissioning any work, [contact me](/more).",
   "/more":
     "here's some more about my background and what i do outside of tech. feel free to reach out about anything - whether you want to put me on to some new music, or just want to chat.",
 };
@@ -73,7 +74,7 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
       const { height } = layout(prepared, width, lineHeight);
       if (height > tallest) tallest = height;
     }
-    setMaxHeight(tallest);
+    setMaxHeight(tallest + lineHeight);
   }, [lineHeight]);
 
   useEffect(() => {
@@ -88,11 +89,13 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
 
 function useBodyNoise(size = 128) {
   useEffect(() => {
+    const dpr = window.devicePixelRatio || 1;
+    const pxSize = Math.round(size * dpr);
     const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
+    canvas.width = pxSize;
+    canvas.height = pxSize;
     const ctx = canvas.getContext("2d")!;
-    const imageData = ctx.createImageData(size, size);
+    const imageData = ctx.createImageData(pxSize, pxSize);
     const data = imageData.data;
     // Alpha ~4 matches the previous (alpha 18 * opacity 0.2) composite
     for (let i = 0; i < data.length; i += 4) {
@@ -106,11 +109,17 @@ function useBodyNoise(size = 128) {
     const url = canvas.toDataURL("image/png");
     const prevImage = document.body.style.backgroundImage;
     const prevRepeat = document.body.style.backgroundRepeat;
+    const prevSize = document.body.style.backgroundSize;
+    const prevRendering = document.body.style.imageRendering;
     document.body.style.backgroundImage = `url(${url})`;
     document.body.style.backgroundRepeat = "repeat";
+    document.body.style.backgroundSize = `${size}px ${size}px`;
+    document.body.style.imageRendering = "pixelated";
     return () => {
       document.body.style.backgroundImage = prevImage;
       document.body.style.backgroundRepeat = prevRepeat;
+      document.body.style.backgroundSize = prevSize;
+      document.body.style.imageRendering = prevRendering;
     };
   }, [size]);
 }
@@ -130,32 +139,6 @@ function FrozenOutlet() {
   }
 
   return frozenRef.current.outlet;
-}
-
-function useIsScrollable() {
-  const [scrollable, setScrollable] = useState(false);
-
-  useEffect(() => {
-    function check() {
-      setScrollable(document.documentElement.scrollHeight > window.innerHeight);
-    }
-    check();
-    window.addEventListener("resize", check);
-    const observer = new MutationObserver(check);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-    });
-    window.addEventListener("scroll", check, { passive: true });
-    return () => {
-      window.removeEventListener("resize", check);
-      window.removeEventListener("scroll", check);
-      observer.disconnect();
-    };
-  }, []);
-
-  return scrollable;
 }
 
 export function Layout() {
@@ -185,7 +168,13 @@ export function Layout() {
   );
 
   return (
-    <div className="relative text-white px-6 md:px-10 md:min-h-screen">
+    <div
+      className="relative text-white px-6 md:px-10 md:min-h-screen"
+      style={{
+        paddingBottom: "var(--craft-scroll-pad, 0px)",
+        transition: "padding-bottom 0.35s cubic-bezier(0.26, 1, 0.6, 1)",
+      }}
+    >
       {/* Bottom progressive blur — desktop only; breaks iOS 26 liquid glass */}
       <motion.div
         className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 h-20 max-md:hidden"
@@ -249,7 +238,7 @@ export function Layout() {
                 aria-label={label}
                 className="opacity-50 hover:opacity-100 transition-opacity duration-150 ease-out hit-area-1"
               >
-                <Icon className="size-6 md:size-4" />
+                <Icon className="size-5 md:size-4" />
               </a>
             ))}
           </div>
@@ -275,21 +264,32 @@ export function Layout() {
         <motion.div
           variants={fadeUp}
           transition={transition}
-          className="mt-8 mb-2 flex cursor-pointer flex-row items-center gap-3 text-sm text-neutral-600"
+          className="mt-4 md:mt-8 mb-2 flex cursor-pointer flex-row items-center gap-3 text-sm text-neutral-600"
         >
-          {navItems.map((item) => (
-            <Link
-              key={item}
-              to={item === "work" ? "/" : `/${item}`}
-              className={`transition hover:text-neutral-400 ${
-                (item === "work" && basePath === "/") || basePath === `/${item}`
-                  ? "text-neutral-300"
-                  : ""
-              }`}
-            >
-              {item}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const preloadHandler =
+              item === "craft"
+                ? preloadCraftVideos
+                : item === "art"
+                  ? preloadArtImages
+                  : undefined;
+            return (
+              <Link
+                key={item}
+                to={item === "work" ? "/" : `/${item}`}
+                onMouseEnter={preloadHandler}
+                onFocus={preloadHandler}
+                className={`transition hover:text-neutral-400 ${
+                  (item === "work" && basePath === "/") ||
+                  basePath === `/${item}`
+                    ? "text-neutral-300"
+                    : ""
+                }`}
+              >
+                {item}
+              </Link>
+            );
+          })}
         </motion.div>
 
         <motion.div

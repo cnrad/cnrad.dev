@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "motion/react";
 import { EASE } from "../../lib/constants";
+import { craftVideoElements } from "../../lib/preload";
 
 export type CraftItem = {
   title: string;
@@ -20,6 +21,8 @@ export function CraftCard({
   onHover: () => void;
 }) {
   const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoAttached = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -28,6 +31,36 @@ export function CraftCard({
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
+
+  // Attach the preloaded video element directly into the DOM
+  const attachVideo = useCallback(
+    (container: HTMLDivElement | null) => {
+      if (!container || videoAttached.current) return;
+      const preloaded = craftVideoElements.get(item.src);
+      const video = preloaded ?? document.createElement("video");
+      if (!preloaded) {
+        video.src = item.src;
+        video.preload = "auto";
+      }
+      video.muted = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.className =
+        "w-full rounded-lg object-contain outline -outline-offset-1 outline-neutral-500/20 md:w-auto";
+      video.style.marginLeft = "auto";
+      video.style.display = "block";
+      video.style.aspectRatio = String(item.aspect);
+      container.appendChild(video);
+      video.play().catch(() => {});
+      videoAttached.current = true;
+      containerRef.current = container;
+    },
+    [item.src, item.aspect],
+  );
+
+  // Animate width on the container instead of the video
+  const width = isMobile ? "100%" : isHovered ? "100%" : "50%";
 
   return (
     <a
@@ -47,15 +80,11 @@ export function CraftCard({
       </div>
 
       <div className="w-full overflow-hidden rounded-lg md:min-w-0 md:flex-1">
-        <motion.video
-          src={item.src}
-          muted
-          autoPlay
-          loop
-          playsInline
-          className="w-full rounded-lg object-contain outline -outline-offset-1 outline-neutral-500/20 md:w-auto"
+        <motion.div
+          ref={attachVideo}
+          className="rounded-lg"
           initial={false}
-          animate={{ width: isMobile ? "100%" : isHovered ? "100%" : "50%" }}
+          animate={{ width }}
           transition={{ duration: 0.35, ease: EASE }}
           style={{
             marginLeft: "auto",

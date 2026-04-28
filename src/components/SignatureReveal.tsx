@@ -17,7 +17,6 @@ const fragmentShader = `
   uniform float uProgress;
   uniform float uTime;
 
-  // simplex-ish hash noise
   float hash(vec2 p) {
     p = fract(p * vec2(443.897, 441.423));
     p += dot(p, p + 19.19);
@@ -47,27 +46,41 @@ const fragmentShader = `
   }
 
   void main() {
-    vec4 tex = texture2D(uTexture, vUv);
+    // Wind axis: 0 at top-left, 1 at bottom-right
+    float windAxis = vUv.x * 0.5 + vUv.y * 0.5;
 
-    // sweep from left to right: x position + noise distortion
-    float grain = fbm(vUv * 12.0 + uTime * 0.5);
-    float sweep = vUv.x * 0.6 + grain * 0.4;
+    // Organic noise for ragged edge
+    float n = fbm(vUv * 10.0 + uTime * 0.25);
+    float sweep = windAxis * 0.6 + n * 0.4;
 
-    // progress reveals: 0 = hidden, 1 = fully visible
-    float threshold = uProgress * 1.4 - 0.2;
-    float edge = smoothstep(threshold - 0.05, threshold + 0.15, sweep);
-    edge = 1.0 - edge;
+    // Reveal threshold: top-right (small sweep) appears first
+    float threshold = uProgress * 1.5 - 0.25;
+    float reveal = 1.0 - smoothstep(threshold - 0.12, threshold + 0.05, sweep);
 
-    // dust particles at the reveal edge
-    float dust = step(0.65, hash(vUv * 200.0 + uTime));
-    float edgeDust = smoothstep(threshold - 0.1, threshold + 0.05, sweep)
-                   * (1.0 - smoothstep(threshold + 0.05, threshold + 0.25, sweep));
-    float dustAlpha = edgeDust * dust * 0.8;
+    // Settle factor for displacement
+    float settle = 1.0 - smoothstep(threshold - 0.25, threshold + 0.15, sweep);
 
-    float alpha = tex.a * clamp(edge + dustAlpha, 0.0, 1.0);
-    vec3 color = tex.rgb;
+    // Drift from top-left: offset sampling toward bottom-right so content appears from top-left
+    vec2 windDir = vec2(0.5, 0.35);
+    float displaceMag = (1.0 - settle) * 0.06;
+    float scatter = (hash(vUv * 120.0) - 0.5) * 0.03 * (1.0 - settle);
+    vec2 offset = windDir * displaceMag + vec2(scatter, scatter * 0.7);
+    vec4 tex = texture2D(uTexture, vUv + offset);
 
-    gl_FragColor = vec4(color, alpha);
+    // Dust grains at the advancing front
+    float edgeDist = abs(sweep - threshold);
+    float dustZone = smoothstep(0.14, 0.0, edgeDist);
+    float dustGrain = step(0.62, hash(vUv * 250.0 + uTime * 1.5));
+    float dustAlpha = dustZone * dustGrain * 0.7;
+
+    // Scout particles ahead of the main front
+    float ahead = smoothstep(0.28, 0.03, threshold - sweep)
+                * (1.0 - reveal);
+    float scoutGrain = step(0.88, hash(vUv * 180.0 + uTime * 0.8));
+    float scoutAlpha = ahead * scoutGrain * 0.35;
+
+    float alpha = tex.a * clamp(reveal + dustAlpha + scoutAlpha, 0.0, 1.0);
+    gl_FragColor = vec4(tex.rgb, alpha);
   }
 `;
 
@@ -162,8 +175,9 @@ export function SignatureReveal({
         const t = (performance.now() - startTime) / 1000;
         gl!.clearColor(0, 0, 0, 0);
         gl!.clear(gl!.COLOR_BUFFER_BIT);
-        gl!.uniform1f(uProgress, progress.get());
-        gl!.uniform1f(uTime, t);
+        gl!.useProgram(program);
+        if (uProgress) gl!.uniform1f(uProgress, progress.get());
+        if (uTime) gl!.uniform1f(uTime, t);
         gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
         animId = requestAnimationFrame(render);
       }
@@ -171,9 +185,9 @@ export function SignatureReveal({
 
       // trigger the reveal
       animate(progressValue, 1, {
-        duration: 3.5,
+        duration: 5,
         ease: [0.22, 0.9, 0.4, 1],
-        delay: 0.3,
+        delay: 0,
       });
     });
 

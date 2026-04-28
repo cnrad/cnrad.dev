@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ExternalLink } from "lucide-react";
 
 const ITERATIONS = [
@@ -28,6 +28,7 @@ function useAge() {
 
 export function More() {
   const age = useAge();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
     <div className="flex w-full flex-col gap-8 text-sm text-neutral-400 cursor-default mt-4">
@@ -38,7 +39,9 @@ export function More() {
         </span>{" "}
         years old. i was a swift student challenge winner in 2022. i am an avid
         enjoyer of electronic music, and i'm alright at{" "}
-        <span className="group/drum relative inline-block">
+        <span
+          className="group/drum relative inline-block"
+        >
           <a
             className="font-semibold text-neutral-200 animate-link"
             href="https://www.instagram.com/p/DKa9eaBhsTQ/"
@@ -49,6 +52,7 @@ export function More() {
           </a>
           <span className="pointer-events-none brightness-75 absolute bottom-full left-0 z-50 px-1 w-full origin-top scale-98 translate-y-1 opacity-0 transition-all duration-200 ease-out group-hover/drum:translate-y-0 group-hover/drum:scale-100 group-hover/drum:opacity-100">
             <video
+              ref={videoRef}
               src="/misc/drumming.mp4"
               autoPlay
               loop

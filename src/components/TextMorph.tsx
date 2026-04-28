@@ -89,7 +89,7 @@ export function TextMorph({
     return lineForWord;
   }, []);
 
-  // Initial mount: line-by-line stagger with blur + opacity + y
+  // Initial mount: line-by-line stagger with blur + opacity + y (runs once)
   useLayoutEffect(() => {
     if (hasAnimatedIn.current) return;
     hasAnimatedIn.current = true;
@@ -98,13 +98,13 @@ export function TextMorph({
     const mountDelay = 600;
 
     // Need a frame for refs to populate
-    requestAnimationFrame(() => {
+    const outerFrame = requestAnimationFrame(() => {
       const wordLines = getWordLines();
       const words = parseMarkdownLite(text);
       const maxBlur = 4;
       const maxY = 6;
       const lineDelay = 80; // ms between lines
-      const lineDuration = 400; // ms per line to animate
+      const lineDuration = 550; // ms per line to animate
       const startTime = performance.now() + mountDelay;
 
       function tick(now: number) {
@@ -142,7 +142,14 @@ export function TextMorph({
 
       rafRef.current = requestAnimationFrame(tick);
     });
-  }, [text, getWordLines]);
+
+    return () => {
+      cancelAnimationFrame(outerFrame);
+      cancelAnimationFrame(rafRef.current);
+      hasAnimatedIn.current = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Transition between texts
   useEffect(() => {
@@ -231,13 +238,14 @@ export function TextMorph({
           const elements: React.ReactNode[] = [];
           let i = 0;
           while (i < newWords.length) {
-            const w = newWords[i]!;
+            const idx = i;
+            const w = newWords[idx]!;
             if (!w.href) {
               elements.push(
-                <span key={i}>
-                  {i > 0 && " "}
+                <span key={idx}>
+                  {idx > 0 && " "}
                   <span
-                    ref={(el) => { wordRefs.current[i] = el; }}
+                    ref={(el) => { wordRefs.current[idx] = el; }}
                     className="inline-block"
                     style={{
                       filter: w.blur > 0.1 ? `blur(${w.blur}px)` : "none",

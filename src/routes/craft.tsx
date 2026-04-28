@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CraftCard } from "../components/craft/CraftCard";
 
 const ITEMS = [
@@ -41,6 +41,17 @@ const ITEMS = [
 
 export function Craft() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--craft-scroll-pad",
+      hoveredIndex === null ? "150px" : "0px",
+    );
+    return () => {
+      root.style.removeProperty("--craft-scroll-pad");
+    };
+  }, [hoveredIndex]);
 
   return (
     <div

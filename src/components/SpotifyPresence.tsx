@@ -129,27 +129,34 @@ export function SpotifyPresence() {
   const [activity, setActivity] = useState<LanyardData | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     const update = () =>
-      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`, {
+        signal: controller.signal,
+      })
         .then((r) => r.json())
         .then((data) => {
           if (data.success) setActivity(data.data);
-        });
+        })
+        .catch(() => {});
 
     const task = setInterval(update, 15 * 1000);
     update();
-    return () => clearInterval(task);
+    return () => {
+      controller.abort();
+      clearInterval(task);
+    };
   }, []);
 
   if (!activity?.listening_to_spotify) return null;
 
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(4px)", y: 8 }}
-      animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-      exit={{ opacity: 0, filter: "blur(4px)", y: 8 }}
-      transition={{ duration: 1, delay: 2, ease: [0.26, 1, 0.6, 1] }}
-      className="max-sm:hidden flex flex-col mt-auto mb-6"
+      initial={{ opacity: 0, filter: "blur(4px)", x: 4, scale: 0.98 }}
+      animate={{ opacity: 1, filter: "blur(0px)", x: 0, scale: 1 }}
+      exit={{ opacity: 0, filter: "blur(4px)", x: 4, scale: 0.98 }}
+      transition={{ duration: 1.5, delay: 1.75, ease: [0.26, 1, 0.6, 1] }}
+      className="max-sm:hidden flex flex-col mt-auto mb-6 origin-bottom"
     >
       <a
         href={`https://open.spotify.com/track/${activity.spotify.track_id}`}
@@ -157,7 +164,7 @@ export function SpotifyPresence() {
         rel="noopener noreferrer"
         className="group flex flex-row items-end gap-3 cursor-pointer opacity-50 hover:opacity-100 transition-opacity duration-300 ease-out"
       >
-        <div className="flex flex-col text-end w-56">
+        <div className="flex flex-col text-end sm:w-38 md:w-56">
           <MarqueeText
             text={activity.spotify.song}
             className="text-white text-xs font-medium"
@@ -177,7 +184,7 @@ export function SpotifyPresence() {
           draggable={false}
         />
         <div className="absolute -top-0.5 right-1.25 -translate-1/2 shrink-0">
-          <span className="absolute size-1.75 rounded-full bg-green-700" />
+          <span className="absolute size-1.75 rounded-full bg-radial from-green-300 to-green-600" />
           <span className="absolute size-1.75 animate-ping rounded-full bg-[color(display-p3_0.385_0.8_0.414/1)] [animation-duration:2s]" />
         </div>
       </a>
