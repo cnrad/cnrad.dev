@@ -3,7 +3,7 @@ const EXPERIENCE = [
     name: "cside",
     role: "frontend-focused engineer making the web secure again.",
     period: "2024 - present",
-    href: "https://cside.dev",
+    href: "https://cside.com",
     logo: "/misc/cside-shield.png",
     logoClass: "size-8",
   },

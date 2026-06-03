@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
 import { Layout } from "./routes/layout";
+import { NotFound } from "./routes/not-found";
 
 const Home = lazy(() =>
   import("./routes/home").then((m) => ({ default: m.Home })),
@@ -22,6 +23,7 @@ function SuspenseWrapper({ children }: { children: React.ReactNode }) {
 export const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/",
@@ -56,5 +58,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);

@@ -41,13 +41,13 @@ const transition = {
 };
 
 const pageDescriptions: Record<string, string> = {
-  "/": "computers used to feel like magic. but something happened as software grew—the art of care and craft were lost as the focus became money. attention to detail became an afterthought. i strive to bring that magic back, in hopes of making software *feel* great again.",
+  "/": "computers used to feel like magic. as software grew into an industry, the bar for genuine care and craft seemed to disappear, and detail became an afterthought. i strive to bring that magic back - to make software *feel* great again.",
   "/craft":
-    "the possibilities of human computer interaction are limitless and fascinating. i explore them through the beauty of the web (some call it design engineering). imagine what the future of software could look like, and go build it.",
+    "great software has thoughtful consideration behind every detail of every interaction. the limitless and fascinating possibilities of human computer interaction are what make this possible. i explore what makes interactions feel *right*, and what the future of software could feel like.",
   "/art":
-    "i create and share works of digital abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad). if you're interested in commissioning any work, [contact me](/more).",
+    "i enjoy digitally exploring abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad) to my name. if you're interested in commissioning any work, [contact me](/more#email).",
   "/more":
-    "here's some more about my background and what i do outside of tech. feel free to reach out about anything - whether you want to put me on to some new music, or just want to chat.",
+    "a bit more about me — what i do outside of tech, and how to get in touch. feel free to reach out, whether you want to talk coding, share some new music, or just say hi.",
 };
 
 function stripMarkdownLite(s: string): string {
@@ -58,6 +58,11 @@ function stripMarkdownLite(s: string): string {
 
 const allDescriptions = Object.values(pageDescriptions).map(stripMarkdownLite);
 const navItems = ["work", "craft", "art", "more"];
+
+// Layout's staggerChildren intro completes around ~2.05s after first mount.
+// Children of the layout can read this flag to time their own entrance effects.
+let layoutIntroComplete = false;
+export const isLayoutIntroComplete = () => layoutIntroComplete;
 
 function useMaxParagraphHeight(font: string, lineHeight: number) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -146,6 +151,14 @@ export function Layout() {
   useBodyNoise();
   const basePath = "/" + (location.pathname.split("/")[1] ?? "");
 
+  useEffect(() => {
+    if (layoutIntroComplete) return;
+    const t = setTimeout(() => {
+      layoutIntroComplete = true;
+    }, 2100);
+    return () => clearTimeout(t);
+  }, []);
+
   const prevBasePath = useRef(basePath);
   useEffect(() => {
     if (prevBasePath.current === basePath) return;
@@ -214,11 +227,11 @@ export function Layout() {
         <motion.div
           variants={fadeUp}
           transition={transition}
-          className="mt-10 flex flex-row items-center justify-between w-full"
+          className="mt-10 flex flex-row items-center justify-between w-full mb-4 "
         >
           <SignatureReveal
             src="/signature.svg"
-            className="mb-4 h-20 object-cover -mx-6"
+            className="h-20 object-cover -mx-6"
           />
           <SpotifyPresence />
         </motion.div>
@@ -279,11 +292,11 @@ export function Layout() {
                 to={item === "work" ? "/" : `/${item}`}
                 onMouseEnter={preloadHandler}
                 onFocus={preloadHandler}
-                className={`transition hover:text-neutral-400 ${
+                className={`transition ${
                   (item === "work" && basePath === "/") ||
                   basePath === `/${item}`
-                    ? "text-neutral-300"
-                    : ""
+                    ? "text-neutral-300 hover:text-neutral-300 font-medium"
+                    : "hover:text-neutral-400"
                 }`}
               >
                 {item}

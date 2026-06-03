@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router";
 import { ExternalLink } from "lucide-react";
+import { isLayoutIntroComplete } from "./layout";
 
 const ITERATIONS = [
   { name: "v3.cnrad.dev", href: "https://v3.cnrad.dev", year: "2025" },
@@ -29,6 +31,16 @@ function useAge() {
 export function More() {
   const age = useAge();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const location = useLocation();
+  const [shimmerEmail, setShimmerEmail] = useState(false);
+
+  useEffect(() => {
+    if (location.hash !== "#email") return;
+    // Wait for the layout intro on first load; on navigation, fire quickly.
+    const delay = isLayoutIntroComplete() ? 600 : 2200;
+    const t = setTimeout(() => setShimmerEmail(true), delay);
+    return () => clearTimeout(t);
+  }, [location.hash]);
 
   return (
     <div className="flex w-full flex-col gap-8 text-sm text-neutral-400 cursor-default mt-4">
@@ -69,7 +81,10 @@ export function More() {
         you can reach out to me at{" "}
         <a
           href="mailto:hello@cnrad.dev"
-          className="text-neutral-200 hover:text-white font-semibold animate-link"
+          data-shimmer-text="hello@cnrad.dev"
+          className={`text-neutral-200 hover:text-white font-semibold animate-link${
+            shimmerEmail ? " shimmer-once" : ""
+          }`}
         >
           hello@cnrad.dev
         </a>{" "}
