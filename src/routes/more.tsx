@@ -70,6 +70,7 @@ export function More() {
               loop
               muted
               playsInline
+              preload="auto"
               className="relative w-full rounded-xl shadow-xl z-100 outline -outline-offset-1 outline-neutral-200/20"
             />
           </span>

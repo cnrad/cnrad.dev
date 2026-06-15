@@ -1,4 +1,4 @@
-import { Outlet, useLocation, Link } from "react-router";
+import { useLocation, Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
   useEffect,
@@ -47,7 +47,7 @@ const pageDescriptions: Record<string, string> = {
   "/art":
     "i enjoy digitally exploring abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad) to my name. if you're interested in commissioning any work, [contact me](/more#email).",
   "/more":
-    "a bit more about me — what i do outside of tech, and how to get in touch. feel free to reach out, whether you want to talk coding, share some new music, or just say hi.",
+    "a bit more about me — what i do outside of tech, and how to get in touch. feel free to reach out to talk software, share some music, or just say what's up.",
 };
 
 function stripMarkdownLite(s: string): string {

@@ -3,6 +3,13 @@ import { CraftCard } from "../components/craft/CraftCard";
 
 const ITEMS = [
   {
+    title: "Bionic Scrolling",
+    date: "June 10, 2026",
+    href: "https://x.com/notcnrad/status/2064720742139228200",
+    src: "/design/bionic-scrolling.mp4",
+    aspect: 2984 / 1586,
+  },
+  {
     title: "Slide to Agree",
     date: "October 16, 2025",
     href: "https://x.com/notcnrad/status/1978680621980438889",

@@ -23,6 +23,7 @@
         "@types/bun": "latest",
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
+        "sharp": "^0.34.5",
         "wrangler": "^4.80.0",
       },
       "peerDependencies": {

@@ -38,7 +38,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Aurora (4)",
     date: "10.25.25",
-    href: "/art/min/aurora_4.webp",
+    href: "/art/carousel/aurora_4.webp",
     width: 5000,
     height: 4000,
     post: "https://x.com/notcnrad/status/1982189530711990357",
@@ -46,7 +46,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Aurora (3)",
     date: "10.25.25",
-    href: "/art/min/aurora_3.webp",
+    href: "/art/carousel/aurora_3.webp",
     width: 5000,
     height: 4000,
     post: "https://x.com/notcnrad/status/1982189530711990357",
@@ -54,7 +54,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Aurora (2)",
     date: "10.25.25",
-    href: "/art/min/aurora_2.webp",
+    href: "/art/carousel/aurora_2.webp",
     width: 5000,
     height: 4000,
     post: "https://x.com/notcnrad/status/1982189530711990357",
@@ -62,7 +62,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Aurora (1)",
     date: "10.25.25",
-    href: "/art/min/aurora_1.webp",
+    href: "/art/carousel/aurora_1.webp",
     width: 5000,
     height: 4000,
     post: "https://x.com/notcnrad/status/1982189530711990357",
@@ -70,7 +70,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Ultrawide Minimalism (1)",
     date: "06.03.24",
-    href: "/art/min/ultrawide_minimalism_1.webp",
+    href: "/art/carousel/ultrawide_minimalism_1.webp",
     width: 1536,
     height: 648,
     post: "https://x.com/notcnrad/status/1797489177782845750",
@@ -78,7 +78,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Ultrawide Minimalism (2)",
     date: "06.03.24",
-    href: "/art/min/ultrawide_minimalism_2.webp",
+    href: "/art/carousel/ultrawide_minimalism_2.webp",
     width: 1536,
     height: 648,
     post: "https://x.com/notcnrad/status/1797489177782845750",
@@ -86,7 +86,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Streams",
     date: "11.07.24",
-    href: "/art/min/streams.webp",
+    href: "/art/carousel/streams.webp",
     width: 1500,
     height: 1200,
     unsplash: "https://unsplash.com/photos/Q6gZw7Hnl5w",
@@ -95,14 +95,14 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "The Moment Our Eyes First Met",
     date: "04.08.23",
-    href: "/art/min/themomentoureyesfirstmet.webp",
+    href: "/art/carousel/themomentoureyesfirstmet.webp",
     width: 750,
     height: 1200,
   },
   {
     name: "Arcus Exploration",
     date: "06.20.23",
-    href: "/art/min/arcus.webp",
+    href: "/art/carousel/arcus.webp",
     width: 1200,
     height: 1200,
     post: "https://x.com/notcnrad/status/1671238076180430851",
@@ -110,7 +110,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Arcus Exploration 2",
     date: "06.21.23",
-    href: "/art/min/arcus_background.webp",
+    href: "/art/carousel/arcus_background.webp",
     width: 1500,
     height: 1200,
     unsplash:
@@ -120,14 +120,14 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Fluctus",
     date: "01.08.24",
-    href: "/art/min/fluctus.webp",
+    href: "/art/carousel/fluctus.webp",
     width: 822,
     height: 1200,
   },
   {
     name: "Dawn of a New Tomorrow",
     date: "09.11.23",
-    href: "/art/min/dawnofanewtomorrow.webp",
+    href: "/art/carousel/dawnofanewtomorrow.webp",
     width: 1500,
     height: 1500,
     post: "https://x.com/notcnrad/status/1701223417372971378",
@@ -135,7 +135,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Neo (Commission - Hop Inc.)",
     date: "01.08.24",
-    href: "/art/min/neo_hop.webp",
+    href: "/art/carousel/neo_hop.webp",
     width: 1500,
     height: 1200,
     post: "https://x.com/notcnrad/status/1641602543703736324",
@@ -143,7 +143,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Neo",
     date: "03.29.23",
-    href: "/art/min/neo.webp",
+    href: "/art/carousel/neo.webp",
     width: 1228,
     height: 855,
     post: "https://x.com/notcnrad/status/1640931894933028870",
@@ -151,21 +151,21 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Light Trail 1",
     date: "01.08.24",
-    href: "/art/min/light_trail_2.webp",
+    href: "/art/carousel/light_trail_2.webp",
     width: 1500,
     height: 1200,
   },
   {
     name: "Light Trail 2",
     date: "01.08.24",
-    href: "/art/min/light_trail.webp",
+    href: "/art/carousel/light_trail.webp",
     width: 1500,
     height: 1200,
   },
   {
     name: "Planet",
     date: "05.09.23",
-    href: "/art/min/planet.webp",
+    href: "/art/carousel/planet.webp",
     width: 1800,
     height: 1200,
     unsplash:
@@ -175,7 +175,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Canalis",
     date: "06.18.23",
-    href: "/art/min/wallpaper_wednesday_unsplash.webp",
+    href: "/art/carousel/wallpaper_wednesday_unsplash.webp",
     width: 1500,
     height: 1200,
     unsplash: "https://unsplash.com/photos/08pUkir23Z4",
@@ -184,7 +184,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Rik Style",
     date: "01.08.24",
-    href: "/art/min/rik_style.webp",
+    href: "/art/carousel/rik_style.webp",
     width: 1200,
     height: 1800,
     unsplash:
@@ -193,7 +193,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Spectrum",
     date: "01.08.24",
-    href: "/art/min/spectrum.webp",
+    href: "/art/carousel/spectrum.webp",
     width: 1950,
     height: 1200,
     unsplash:
@@ -202,14 +202,14 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "To Gently Fall Further Away",
     date: "01.08.24",
-    href: "/art/min/togentlyfallfurtheraway.webp",
+    href: "/art/carousel/togentlyfallfurtheraway.webp",
     width: 1020,
     height: 1200,
   },
   {
     name: "WWDC Exploration 1",
     date: "06.05.23",
-    href: "/art/min/wwdcexploration1.webp",
+    href: "/art/carousel/wwdcexploration1.webp",
     width: 1500,
     height: 1200,
     unsplash:
@@ -220,7 +220,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "WWDC Exploration 2",
     date: "06.05.23",
-    href: "/art/min/wwdcexploration2.webp",
+    href: "/art/carousel/wwdcexploration2.webp",
     width: 1500,
     height: 1200,
     unsplash:
@@ -230,7 +230,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "WWDC Exploration 3",
     date: "06.05.23",
-    href: "/art/min/wwdcexploration3.webp",
+    href: "/art/carousel/wwdcexploration3.webp",
     width: 1500,
     height: 1200,
     unsplash:
@@ -240,7 +240,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Wallpaper Wednesday 1",
     date: "04.23.23",
-    href: "/art/min/wallpaper_wednesday_42323_1.webp",
+    href: "/art/carousel/wallpaper_wednesday_42323_1.webp",
     width: 1500,
     height: 1200,
     unsplash: "https://unsplash.com/photos/Utx0LfuC5Mk",
@@ -248,7 +248,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Wallpaper Wednesday 2",
     date: "04.23.23",
-    href: "/art/min/wallpaper_wednesday_42323_2.webp",
+    href: "/art/carousel/wallpaper_wednesday_42323_2.webp",
     width: 1500,
     height: 1200,
     unsplash: "https://unsplash.com/photos/xzOSH_cUHFo",
@@ -256,7 +256,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Wallpaper Wednesday 3",
     date: "04.23.23",
-    href: "/art/min/wallpaper_wednesday_42323_3.webp",
+    href: "/art/carousel/wallpaper_wednesday_42323_3.webp",
     width: 1500,
     height: 1200,
     unsplash: "https://unsplash.com/photos/mzzpvI2Z5r8",
@@ -264,7 +264,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Wallpaper Wednesday 4",
     date: "04.23.23",
-    href: "/art/min/wallpaper_wednesday_42323_4.webp",
+    href: "/art/carousel/wallpaper_wednesday_42323_4.webp",
     width: 1500,
     height: 1200,
     unsplash: "https://unsplash.com/photos/SClBP10L2WI",
@@ -272,7 +272,7 @@ export const WORKS: ArtPiece[] = withSlugs([
   {
     name: "Wallpaper Wednesday 5",
     date: "04.23.23",
-    href: "/art/min/wallpaper_wednesday_42323_5.webp",
+    href: "/art/carousel/wallpaper_wednesday_42323_5.webp",
     width: 1500,
     height: 1200,
     unsplash:
@@ -283,7 +283,7 @@ export const WORKS: ArtPiece[] = withSlugs([
     name: "Dimension",
     date: "01.31.24",
     post: "https://x.com/notcnrad/status/1752759331970285987",
-    href: "/art/min/dimension.webp",
+    href: "/art/carousel/dimension.webp",
     width: 1500,
     height: 1500,
   },

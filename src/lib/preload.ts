@@ -36,13 +36,14 @@ function preloadImage(src: string) {
 
 export function preloadArtImages() {
   // Dynamically import art data to avoid pulling it into the main bundle
-  import("../data/art").then(({ WORKS }) => {
-    const PRELOAD_AHEAD = 3;
-    for (let off = -PRELOAD_AHEAD; off <= PRELOAD_AHEAD; off++) {
-      const idx = ((off % WORKS.length) + WORKS.length) % WORKS.length;
-      const piece = WORKS[idx]!;
-      preloadImage(piece.href.replace("/art/min/", "/art/thumb/"));
-      preloadImage(piece.href.replace("/art/min/", "/art/carousel/"));
-    }
-  });
+  Promise.all([import("../data/art"), import("../components/art/BlurImage")]).then(
+    ([{ WORKS }, { previewUrl }]) => {
+      const PRELOAD_AHEAD = 3;
+      for (let off = -PRELOAD_AHEAD; off <= PRELOAD_AHEAD; off++) {
+        const idx = ((off % WORKS.length) + WORKS.length) % WORKS.length;
+        const piece = WORKS[idx]!;
+        preloadImage(previewUrl(piece.href));
+      }
+    },
+  );
 }

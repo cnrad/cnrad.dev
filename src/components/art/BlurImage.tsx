@@ -1,11 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 
-export function thumbUrl(href: string) {
-  return href.replace("/art/min/", "/art/thumb/");
-}
-
-export function carouselUrl(href: string) {
-  return href.replace("/art/min/", "/art/carousel/");
+export function previewUrl(href: string) {
+  return href.replace("/art/carousel/", "/art/preview/");
 }
 
 const loadedSrcs = new Set<string>();
@@ -33,17 +29,6 @@ export const BlurImage = memo(function BlurImage({
 
   return (
     <div className="relative h-full w-full">
-      {/* Only show blur placeholder for images not yet loaded */}
-      {!cachedAlready && (
-        <img
-          src={thumbUrl(src)}
-          alt=""
-          aria-hidden
-          draggable={false}
-          className={`${className} absolute inset-0`}
-          style={{ filter: "blur(20px)", transform: "scale(1.1)" }}
-        />
-      )}
       <img
         ref={imgRef}
         src={src}

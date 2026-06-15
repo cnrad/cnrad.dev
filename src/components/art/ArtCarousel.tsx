@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { WORKS, type ArtPiece } from "../../data/art";
 import { cn } from "../../lib/utils";
 import { EASE } from "../../lib/constants";
-import { BlurImage, thumbUrl, carouselUrl } from "./BlurImage";
+import { BlurImage, previewUrl } from "./BlurImage";
 import { LevitatedCard } from "./LevitatedCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -22,8 +22,7 @@ function preloadAround(index: number) {
   for (let off = -PRELOAD_AHEAD; off <= PRELOAD_AHEAD; off++) {
     const piece =
       WORKS[(((index + off) % WORKS.length) + WORKS.length) % WORKS.length]!;
-    preloadImage(thumbUrl(piece.href));
-    preloadImage(carouselUrl(piece.href));
+    preloadImage(previewUrl(piece.href));
   }
 }
 
@@ -240,15 +239,6 @@ export function ArtCarousel() {
     };
   }, [goNext, goPrev, expanded]);
 
-  // Close expanded when navigating
-  const prevFocusedIndex = useRef(focusedIndex);
-  useEffect(() => {
-    if (focusedIndex !== prevFocusedIndex.current) {
-      setExpanded(false);
-      prevFocusedIndex.current = focusedIndex;
-    }
-  }, [focusedIndex]);
-
   const focusedPiece = WORKS[mod(focusedIndex)]!;
 
   return (
@@ -334,7 +324,7 @@ export function ArtCarousel() {
                 >
                   <div className="relative h-full w-full overflow-hidden rounded-xl">
                     <BlurImage
-                      src={carouselUrl(piece.href)}
+                      src={previewUrl(piece.href)}
                       alt={piece.name}
                       className="block h-full w-full rounded-xl object-cover"
                     />
@@ -387,10 +377,11 @@ export function ArtCarousel() {
       <AnimatePresence>
         {expanded && cardRect && (
           <LevitatedCard
-            key={focusedPiece.slug}
             piece={focusedPiece}
             cardRect={cardRect}
             onClose={() => setExpanded(false)}
+            onNext={goNext}
+            onPrev={goPrev}
           />
         )}
       </AnimatePresence>
