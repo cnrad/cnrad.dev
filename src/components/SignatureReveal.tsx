@@ -55,6 +55,10 @@ type Particle = {
   vy: number;
   // intro delay (seconds before this particle starts flying in)
   delay: number;
+  // flips true once the particle first settles near its rest position. After
+  // that the intro's bounds-based fade is dropped so cursor scatter can still
+  // push it (and keep it visible) right up to the canvas edge.
+  arrived: boolean;
   // sprite size in canvas pixels
   size: number;
   // baseline alpha lifted from the source pixel — keeps the stroke's
@@ -217,6 +221,9 @@ export function SignatureReveal({
             vx: 0,
             vy: 0,
             delay,
+            // Reduced-motion particles spawn already at rest, so treat them
+            // as arrived from the first frame.
+            arrived: reduced,
             // Larger sprites with a tight size range so the stroke reads as a
             // single uniform fill rather than a texture of varied dots.
             size: 3.0 + Math.random() * 0.6,
@@ -254,7 +261,20 @@ export function SignatureReveal({
         const mForce = 5.5; // cursor repulsion strength
         const driftAmp = 0.12; // idle drift amplitude (canvas px)
         const fadeDur = 0.55; // fade-in duration after delay (s)
+        // Canvas-pixel depth over which an arriving particle ramps from
+        // invisible (at the canvas edge) to fully visible. Resting particles
+        // sit at least PAD px inside every edge, so keeping this below PAD
+        // guarantees they're already opaque by the time they settle — no pop
+        // when the bounds fade hands off to full visibility.
+        const fadeBand = 48;
+        const arriveDist = 6; // px from rest at which the intro fade hands off
         // ----------------------------------------------------------------
+
+        // Smooth Hermite ramp, matching the GLSL smoothstep used in the shader.
+        const smoothstep = (edge0: number, edge1: number, x: number) => {
+          const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
+          return t * t * (3 - 2 * t);
+        };
 
         function render() {
           rafScheduled = false;
@@ -311,7 +331,31 @@ export function SignatureReveal({
 
             positions[i * 2] = p.x;
             positions[i * 2 + 1] = p.y;
-            alphas[i] = Math.min(1, t / fadeDur) * p.baseAlpha;
+
+            let a = Math.min(1, t / fadeDur) * p.baseAlpha;
+            if (!p.arrived) {
+              const dxr = p.tx - p.x;
+              const dyr = p.ty - p.y;
+              if (dxr * dxr + dyr * dyr < arriveDist * arriveDist) {
+                // Settled — hand off to plain time/alpha so cursor scatter
+                // can keep it visible even when pushed toward the edge.
+                p.arrived = true;
+              } else {
+                // Still flying in: gate opacity on how deep inside the canvas
+                // the particle currently is, so it materialises as it crosses
+                // the boundary instead of snapping into view at the hard,
+                // clipped rectangular edge. Works at any aspect ratio, so the
+                // squished mobile canvas no longer shows a visible cutoff.
+                const edge = Math.min(
+                  p.x,
+                  canvasW - p.x,
+                  p.y,
+                  canvasH - p.y,
+                );
+                a *= smoothstep(0, fadeBand, edge);
+              }
+            }
+            alphas[i] = a;
           }
 
           gl!.clearColor(0, 0, 0, 0);

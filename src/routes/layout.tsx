@@ -41,7 +41,7 @@ const transition = {
 };
 
 const pageDescriptions: Record<string, string> = {
-  "/": "computers used to feel like magic. as software grew into an industry, the bar for genuine care and craft seemed to disappear, and detail became an afterthought. i strive to bring that magic back - to make software *feel* great again.",
+  "/": "computers used to feel like magic. as more and more software shipped (faster than ever before), the bar for genuine care and craft seemed to disappear, and detail became an afterthought. i strive to bring that magic back - to make software *feel* great again.",
   "/craft":
     "great software has thoughtful consideration behind every detail of every interaction. the limitless and fascinating possibilities of human computer interaction are what make this possible. i explore what makes interactions feel *right*, and what the future of software could feel like.",
   "/art":

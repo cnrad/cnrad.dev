@@ -4,6 +4,10 @@ export function previewUrl(href: string) {
   return href.replace("/art/carousel/", "/art/preview/");
 }
 
+export function largeUrl(href: string) {
+  return href.replace("/art/carousel/", "/art/large/");
+}
+
 const loadedSrcs = new Set<string>();
 
 export const BlurImage = memo(function BlurImage({

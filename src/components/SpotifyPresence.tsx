@@ -152,10 +152,10 @@ export function SpotifyPresence() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(4px)", x: 4, scale: 0.98 }}
-      animate={{ opacity: 1, filter: "blur(0px)", x: 0, scale: 1 }}
-      exit={{ opacity: 0, filter: "blur(4px)", x: 4, scale: 0.98 }}
-      transition={{ duration: 1.5, delay: 1.75, ease: [0.26, 1, 0.6, 1] }}
+      initial={{ opacity: 0, filter: "blur(4px)", y: 4 }}
+      animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+      exit={{ opacity: 0, filter: "blur(4px)", y: 4 }}
+      transition={{ duration: 1.25, delay: 1.75, ease: [0.26, 1, 0.6, 1] }}
       className="max-sm:hidden flex flex-col mt-auto mb-6 origin-bottom"
     >
       <a
@@ -164,7 +164,7 @@ export function SpotifyPresence() {
         rel="noopener noreferrer"
         className="group flex flex-row items-end gap-3 cursor-pointer opacity-50 hover:opacity-100 transition-opacity duration-300 ease-out"
       >
-        <div className="flex flex-col text-end sm:w-38 md:w-56">
+        <div className="flex flex-col text-end sm:w-38 md:max-w-56 md:w-auto">
           <MarqueeText
             text={activity.spotify.song}
             className="text-white text-xs font-medium"

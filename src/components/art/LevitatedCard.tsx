@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { EASE } from "../../lib/constants";
 import type { ArtPiece } from "../../data/art";
-import { previewUrl } from "./BlurImage";
+import { previewUrl, largeUrl } from "./BlurImage";
 
 function computeTargetRect(piece: ArtPiece) {
   const vw = window.innerWidth;
@@ -30,29 +30,56 @@ function computeTargetRect(piece: ArtPiece) {
   };
 }
 
+// Direction-agnostic crossfade: incoming and outgoing pieces only scale,
+// blur, and fade — no left/right slide regardless of which arrow was used.
 const imageVariants = {
-  enter: (dir: number) => ({
-    x: dir * 40,
+  enter: {
     opacity: 0,
     scale: 0.98,
     filter: "blur(8px)",
-  }),
+  },
   center: {
-    x: 0,
     opacity: 1,
     scale: 1,
     filter: "blur(0px)",
   },
-  exit: (dir: number) => ({
-    x: -dir * 40,
+  exit: {
     opacity: 0,
     scale: 0.98,
     filter: "blur(8px)",
-  }),
+  },
 };
 
-function PieceImage({ piece }: { piece: ArtPiece }) {
-  const [fullLoaded, setFullLoaded] = useState(false);
+// `loadFull` gates the high-res load until the open animation finishes, so the
+// expensive webp decode never competes with the opening transition for frames.
+function PieceImage({
+  piece,
+  loadFull,
+}: {
+  piece: ArtPiece;
+  loadFull: boolean;
+}) {
+  const [fullSrc, setFullSrc] = useState<string | null>(null);
+  const [fullVisible, setFullVisible] = useState(false);
+
+  useEffect(() => {
+    if (!loadFull) return;
+    let cancelled = false;
+    const src = largeUrl(piece.href);
+    const img = new Image();
+    img.src = src;
+    // Decode off the main paint path; only mount + fade in once it's ready.
+    img
+      .decode()
+      .catch(() => {}) // decode() can reject (e.g. interrupted) — show it anyway
+      .finally(() => {
+        if (!cancelled) setFullSrc(src);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loadFull, piece.href]);
+
   return (
     <>
       <img
@@ -62,14 +89,16 @@ function PieceImage({ piece }: { piece: ArtPiece }) {
         draggable={false}
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <img
-        src={piece.href}
-        alt={piece.name}
-        draggable={false}
-        onLoad={() => setFullLoaded(true)}
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
-        style={{ opacity: fullLoaded ? 1 : 0 }}
-      />
+      {fullSrc && (
+        <img
+          src={fullSrc}
+          alt={piece.name}
+          draggable={false}
+          onLoad={() => setFullVisible(true)}
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
+          style={{ opacity: fullVisible ? 1 : 0 }}
+        />
+      )}
     </>
   );
 }
@@ -88,16 +117,15 @@ export function LevitatedCard({
   onPrev: () => void;
 }) {
   const target = useMemo(() => computeTargetRect(piece), [piece]);
-  const [direction, setDirection] = useState(1);
+  // Becomes true once the card has finished animating to its expanded size.
+  // Gates the high-res image load so it doesn't stutter the open transition.
+  const [opened, setOpened] = useState(false);
 
-  const handleNext = () => {
-    setDirection(1);
-    onNext();
-  };
-  const handlePrev = () => {
-    setDirection(-1);
-    onPrev();
-  };
+  // Fallback in case onAnimationComplete doesn't fire (e.g. reduced motion).
+  useEffect(() => {
+    const t = setTimeout(() => setOpened(true), 550);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -109,13 +137,8 @@ export function LevitatedCard({
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowRight") {
-        setDirection(1);
-        onNext();
-      } else if (e.key === "ArrowLeft") {
-        setDirection(-1);
-        onPrev();
-      }
+      else if (e.key === "ArrowRight") onNext();
+      else if (e.key === "ArrowLeft") onPrev();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -134,9 +157,9 @@ export function LevitatedCard({
 
       <motion.button
         type="button"
-        onClick={handlePrev}
+        onClick={onPrev}
         aria-label="Previous"
-        className="fixed left-4 sm:left-8 top-1/2 z-50 -translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10"
+        className="fixed left-4 sm:left-8 bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-auto sm:top-1/2 z-50 sm:-translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10"
         initial={{ opacity: 0, x: -8 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -8 }}
@@ -147,9 +170,9 @@ export function LevitatedCard({
 
       <motion.button
         type="button"
-        onClick={handleNext}
+        onClick={onNext}
         aria-label="Next"
-        className="fixed right-4 sm:right-8 top-1/2 z-50 -translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10"
+        className="fixed right-4 sm:right-8 bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-auto sm:top-1/2 z-50 sm:-translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10"
         initial={{ opacity: 0, x: 8 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 8 }}
@@ -159,7 +182,7 @@ export function LevitatedCard({
       </motion.button>
 
       <motion.div
-        className="fixed z-50 cursor-default overflow-hidden outline -outline-offset-1 outline-white/10"
+        className="fixed z-50 cursor-default overflow-hidden"
         initial={{
           top: cardRect.top,
           left: cardRect.left,
@@ -185,11 +208,11 @@ export function LevitatedCard({
           },
         }}
         transition={{ duration: 0.5, ease: EASE }}
+        onAnimationComplete={() => setOpened(true)}
       >
-        <AnimatePresence initial={false} custom={direction} mode="sync">
+        <AnimatePresence initial={false} mode="sync">
           <motion.div
             key={piece.slug}
-            custom={direction}
             variants={imageVariants}
             initial="enter"
             animate="center"
@@ -197,7 +220,7 @@ export function LevitatedCard({
             transition={{ duration: 0.45, ease: EASE }}
             className="absolute inset-0"
           >
-            <PieceImage piece={piece} />
+            <PieceImage piece={piece} loadFull={opened} />
           </motion.div>
         </AnimatePresence>
       </motion.div>

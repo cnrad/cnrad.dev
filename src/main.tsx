@@ -14,9 +14,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 if (!isTouch && !prefersReducedMotion) {
   const lenis = new Lenis({
-    lerp: 0.12,
+    lerp: 0.16,
     smoothWheel: true,
-    wheelMultiplier: 0.8,
+    wheelMultiplier: 0.95,
   });
 
   (window as any).__lenis = lenis;

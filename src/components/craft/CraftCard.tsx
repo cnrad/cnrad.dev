@@ -70,7 +70,7 @@ export function CraftCard({
       className="flex flex-col gap-2 py-3 opacity-100 transition-opacity duration-300 ease-out md:group-hover:opacity-40 md:hover:opacity-100! md:flex-row md:items-start md:gap-4"
       onMouseEnter={onHover}
     >
-      <div className="shrink-0 pt-1 md:mr-5">
+      <div className="shrink-0 pt-1 md:mr-5 max-md:mb-2">
         <p className="whitespace-nowrap text-sm font-medium text-neutral-200">
           {item.title}
         </p>
@@ -82,7 +82,7 @@ export function CraftCard({
       <div className="w-full overflow-hidden rounded-lg md:min-w-0 md:flex-1">
         <motion.div
           ref={attachVideo}
-          className="rounded-lg"
+          className="rounded-lg max-md:w-full!"
           initial={false}
           animate={{ width }}
           transition={{ duration: 0.35, ease: EASE }}

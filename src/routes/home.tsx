@@ -11,7 +11,7 @@ const EXPERIENCE = [
     name: "incard",
     role: "landing rebrand(s) + design system",
     period: "2024, 2025, 2026",
-    href: "https://incard.co",
+    href: "https://incard.com",
     logo: "/misc/incard-logo.svg",
     logoClass: "px-1 w-full",
   },

@@ -271,13 +271,12 @@ export function ArtCarousel() {
           <div
             ref={containerRef}
             className={cn(
-              "relative mx-auto w-full",
+              "relative md:mx-auto w-full md:max-w-2xl",
               isMobile ? "overflow-hidden" : "overflow-visible",
             )}
             style={{
               height: FOCUSED_HEIGHT + 60,
               perspective: 1200,
-              maxWidth: "42rem",
             }}
           >
             {slots.map(({ offset, virtualIndex, piece }) => {
