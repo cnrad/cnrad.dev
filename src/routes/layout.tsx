@@ -15,6 +15,9 @@ import { GithubIcon, XTwitterIcon, LinkedInIcon } from "../icons";
 import { SpotifyPresence } from "../components/SpotifyPresence";
 import { EASE } from "../lib/constants";
 import { preloadCraftVideos, preloadArtImages } from "../lib/preload";
+import { playSound, preloadSound } from "../lib/sound";
+
+const CLICK_SOUND = "/click.wav";
 
 const SOCIAL_LINKS: {
   href: string;
@@ -41,7 +44,7 @@ const transition = {
 };
 
 const pageDescriptions: Record<string, string> = {
-  "/": "computers used to feel like magic. as more and more software shipped (faster than ever before), the bar for genuine care and craft seemed to disappear, and detail became an afterthought. i strive to bring that magic back - to make software *feel* great again.",
+  "/": "computers used to feel like magic. as more and more software ships, faster than ever before, the bar for genuine care and craft is often forgotten in the search for velocity. i strive to bring that magic back - to make software *feel* great again.",
   "/craft":
     "great software has thoughtful consideration behind every detail of every interaction. the limitless and fascinating possibilities of human computer interaction are what make this possible. i explore what makes interactions feel *right*, and what the future of software could feel like.",
   "/art":
@@ -188,30 +191,38 @@ export function Layout() {
         transition: "padding-bottom 0.35s cubic-bezier(0.26, 1, 0.6, 1)",
       }}
     >
-      {/* Bottom progressive blur — desktop only; breaks iOS 26 liquid glass */}
-      <motion.div
-        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 h-20 max-md:hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        {[
-          { blur: "1px", maskStart: 0, maskEnd: 25 },
-          { blur: "3px", maskStart: 25, maskEnd: 75 },
-          { blur: "6px", maskStart: 75, maskEnd: 100 },
-        ].map((layer, i) => (
-          <div
-            key={i}
-            className="absolute inset-0"
-            style={{
-              backdropFilter: `blur(${layer.blur})`,
-              WebkitBackdropFilter: `blur(${layer.blur})`,
-              maskImage: `linear-gradient(to bottom, transparent ${layer.maskStart}%, black ${layer.maskEnd}%)`,
-              WebkitMaskImage: `linear-gradient(to bottom, transparent ${layer.maskStart}%, black ${layer.maskEnd}%)`,
-            }}
-          />
-        ))}
-      </motion.div>
+      {/* Progressive blur at top & bottom — desktop only; breaks iOS 26 liquid glass */}
+      {(["top", "bottom"] as const).map((edge) => (
+        <motion.div
+          key={edge}
+          className="pointer-events-none fixed left-0 right-0 z-40 h-20 max-md:hidden"
+          style={{ [edge]: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          {[
+            { blur: "1px", maskStart: 0, maskEnd: 25 },
+            { blur: "3px", maskStart: 25, maskEnd: 75 },
+            { blur: "6px", maskStart: 75, maskEnd: 100 },
+          ].map((layer, i) => {
+            const dir = edge === "bottom" ? "to bottom" : "to top";
+            const mask = `linear-gradient(${dir}, transparent ${layer.maskStart}%, black ${layer.maskEnd}%)`;
+            return (
+              <div
+                key={i}
+                className="absolute inset-0"
+                style={{
+                  backdropFilter: `blur(${layer.blur})`,
+                  WebkitBackdropFilter: `blur(${layer.blur})`,
+                  maskImage: mask,
+                  WebkitMaskImage: mask,
+                }}
+              />
+            );
+          })}
+        </motion.div>
+      ))}
 
       {/* Content */}
       <motion.div
@@ -274,27 +285,37 @@ export function Layout() {
             className="text-sm text-neutral-400 leading-5.5"
           />
         </motion.div>
+
         <motion.div
           variants={fadeUp}
           transition={transition}
           className="mt-4 md:mt-8 mb-2 flex cursor-pointer flex-row items-center gap-3 text-sm text-neutral-600"
         >
           {navItems.map((item) => {
+            const target = item === "work" ? "/" : `/${item}`;
+            const isActive =
+              (item === "work" && basePath === "/") || basePath === `/${item}`;
             const preloadHandler =
               item === "craft"
                 ? preloadCraftVideos
                 : item === "art"
                   ? preloadArtImages
                   : undefined;
+            const handleMouseEnter = () => {
+              preloadHandler?.();
+              preloadSound(CLICK_SOUND);
+            };
             return (
               <Link
                 key={item}
-                to={item === "work" ? "/" : `/${item}`}
-                onMouseEnter={preloadHandler}
+                to={target}
+                onMouseEnter={handleMouseEnter}
                 onFocus={preloadHandler}
+                onClick={() => {
+                  if (!isActive) playSound(CLICK_SOUND);
+                }}
                 className={`transition ${
-                  (item === "work" && basePath === "/") ||
-                  basePath === `/${item}`
+                  isActive
                     ? "text-neutral-300 hover:text-neutral-300 font-medium"
                     : "hover:text-neutral-400"
                 }`}
