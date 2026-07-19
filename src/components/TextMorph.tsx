@@ -5,6 +5,7 @@ type WordMeta = {
   text: string;
   italic?: boolean;
   href?: string;
+  shimmer?: boolean;
 };
 
 type WordState = WordMeta & {
@@ -15,7 +16,7 @@ type WordState = WordMeta & {
 
 function parseMarkdownLite(input: string): WordMeta[] {
   const words: WordMeta[] = [];
-  const regex = /\*([^*]+)\*|\[([^\]]+)\]\(([^)]+)\)/g;
+  const regex = /\*([^*]+)\*|\[([^\]]+)\]\(([^)]+)\)|==([^=]+)==/g;
   let lastIndex = 0;
   let match;
 
@@ -30,6 +31,9 @@ function parseMarkdownLite(input: string): WordMeta[] {
     } else if (match[2] !== undefined) {
       for (const w of match[2].split(" "))
         if (w) words.push({ text: w, href: match[3] });
+    } else if (match[4] !== undefined) {
+      for (const w of match[4].split(" "))
+        if (w) words.push({ text: w, shimmer: true });
     }
     lastIndex = regex.lastIndex;
     const trailing = input.slice(lastIndex).match(/^[.,;:!?)]+/);
@@ -246,7 +250,8 @@ export function TextMorph({
                   {idx > 0 && " "}
                   <span
                     ref={(el) => { wordRefs.current[idx] = el; }}
-                    className="inline-block"
+                    className={w.shimmer ? "inline-block shimmer-text" : "inline-block"}
+                    data-shimmer-text={w.shimmer ? w.text : undefined}
                     style={{
                       filter: w.blur > 0.1 ? `blur(${w.blur}px)` : "none",
                       opacity: w.opacity,

@@ -155,8 +155,7 @@ body {
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
-  filter:
-    drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 1))
     drop-shadow(0 0 10px rgba(255, 255, 255, 0.7))
     drop-shadow(0 0 22px rgba(255, 255, 255, 0.4));
   animation: shimmerSweep 1.5s cubic-bezier(0.26, 1, 0.6, 1) 1 both;
@@ -221,5 +220,32 @@ body {
     bottom: var(--hit-area-b, 0px);
     left: var(--hit-area-l, 0px);
     pointer-events: inherit;
+  }
+}
+
+@utility hit-area-y-* {
+  position: relative;
+  --hit-area-t: --spacing(--value(number) * -1);
+  --hit-area-t: calc(--value([*]) * -1);
+  --hit-area-b: --spacing(--value(number) * -1);
+  --hit-area-b: calc(--value([*]) * -1);
+  /* Two strips living only in the extended top/bottom margin — the element's
+     own body (text) is never covered, so it stays selectable while the
+     hover/click target grows vertically. */
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: inherit;
+  }
+  &::before {
+    bottom: 100%;
+    height: calc(var(--hit-area-t, 0px) * -1);
+  }
+  &::after {
+    top: 100%;
+    height: calc(var(--hit-area-b, 0px) * -1);
   }
 }

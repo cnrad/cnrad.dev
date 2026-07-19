@@ -3,6 +3,13 @@ import { CraftCard } from "../components/craft/CraftCard";
 
 const ITEMS = [
   {
+    title: "HDR Sunset",
+    date: "July 2, 2026",
+    href: "https://x.com/notcnrad/status/2072581377141211312?s=20",
+    src: "/design/hdr-sunset.mp4",
+    aspect: 1920 / 1080,
+  },
+  {
     title: "Bionic Scrolling",
     date: "June 10, 2026",
     href: "https://x.com/notcnrad/status/2064720742139228200",
@@ -71,6 +78,7 @@ export function Craft() {
           item={item}
           isHovered={hoveredIndex === i}
           onHover={() => setHoveredIndex(i)}
+          onUnhover={() => setHoveredIndex((cur) => (cur === i ? null : cur))}
         />
       ))}
     </div>

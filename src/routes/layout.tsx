@@ -46,9 +46,9 @@ const transition = {
 const pageDescriptions: Record<string, string> = {
   "/": "computers used to feel like magic. as more and more software ships, faster than ever before, the bar for genuine care and craft is often forgotten in the search for velocity. i strive to bring that magic back - to make software *feel* great again.",
   "/craft":
-    "great software has thoughtful consideration behind every detail of every interaction. the limitless and fascinating possibilities of human computer interaction are what make this possible. i explore what makes interactions feel *right*, and what the future of software could feel like.",
+    "great software has thoughtful consideration behind every pixel and every interaction. i ship the details that make software feel intuitive, and *right*. the limitless possibilities of human computer interaction excite me—the best interfaces haven't been built yet.",
   "/art":
-    "i enjoy digitally exploring abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad) to my name. if you're interested in commissioning any work, [contact me](/more#email).",
+    "i digitally explore abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad) to my name. if you're interested in commissioning work, [contact me](/more#email).",
   "/more":
     "a bit more about me — what i do outside of tech, and how to get in touch. feel free to reach out to talk software, share some music, or just say what's up.",
 };
@@ -56,7 +56,8 @@ const pageDescriptions: Record<string, string> = {
 function stripMarkdownLite(s: string): string {
   return s
     .replace(/\*([^*]+)\*/g, "$1")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/==([^=]+)==/g, "$1");
 }
 
 const allDescriptions = Object.values(pageDescriptions).map(stripMarkdownLite);
@@ -95,41 +96,21 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
   return { containerRef, maxHeight };
 }
 
-function useBodyNoise(size = 128) {
-  useEffect(() => {
-    const dpr = window.devicePixelRatio || 1;
-    const pxSize = Math.round(size * dpr);
-    const canvas = document.createElement("canvas");
-    canvas.width = pxSize;
-    canvas.height = pxSize;
-    const ctx = canvas.getContext("2d")!;
-    const imageData = ctx.createImageData(pxSize, pxSize);
-    const data = imageData.data;
-    // Alpha ~4 matches the previous (alpha 18 * opacity 0.2) composite
-    for (let i = 0; i < data.length; i += 4) {
-      const v = Math.random() * 255;
-      data[i] = v;
-      data[i + 1] = v;
-      data[i + 2] = v;
-      data[i + 3] = 4;
-    }
-    ctx.putImageData(imageData, 0, 0);
-    const url = canvas.toDataURL("image/png");
-    const prevImage = document.body.style.backgroundImage;
-    const prevRepeat = document.body.style.backgroundRepeat;
-    const prevSize = document.body.style.backgroundSize;
-    const prevRendering = document.body.style.imageRendering;
-    document.body.style.backgroundImage = `url(${url})`;
-    document.body.style.backgroundRepeat = "repeat";
-    document.body.style.backgroundSize = `${size}px ${size}px`;
-    document.body.style.imageRendering = "pixelated";
-    return () => {
-      document.body.style.backgroundImage = prevImage;
-      document.body.style.backgroundRepeat = prevRepeat;
-      document.body.style.backgroundSize = prevSize;
-      document.body.style.imageRendering = prevRendering;
-    };
-  }, [size]);
+/** SVG feTurbulence noise, rendered once and tiled across the viewport. */
+function NoiseBackground() {
+  return (
+    <figure
+      className="pointer-events-none fixed inset-0 z-10 opacity-5 mix-blend-screen"
+      style={{ filter: "url(#noise-bg-fx) grayscale(100%)" }}
+      aria-hidden="true"
+    >
+      <svg>
+        <filter id="noise-bg-fx">
+          <feTurbulence baseFrequency="0.8" />
+        </filter>
+      </svg>
+    </figure>
+  );
 }
 
 /**
@@ -151,7 +132,6 @@ function FrozenOutlet() {
 
 export function Layout() {
   const location = useLocation();
-  useBodyNoise();
   const basePath = "/" + (location.pathname.split("/")[1] ?? "");
 
   useEffect(() => {
@@ -191,11 +171,13 @@ export function Layout() {
         transition: "padding-bottom 0.35s cubic-bezier(0.26, 1, 0.6, 1)",
       }}
     >
+      <NoiseBackground />
+
       {/* Progressive blur at top & bottom — desktop only; breaks iOS 26 liquid glass */}
       {(["top", "bottom"] as const).map((edge) => (
         <motion.div
           key={edge}
-          className="pointer-events-none fixed left-0 right-0 z-40 h-20 max-md:hidden"
+          className="pointer-events-none fixed left-0 right-0 z-40 h-14 max-md:hidden"
           style={{ [edge]: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -226,11 +208,7 @@ export function Layout() {
 
       {/* Content */}
       <motion.div
-        className="relative mx-auto flex max-w-2xl flex-col items-start justify-start py-16 z-10 pb-20"
-        style={{
-          paddingTop: "calc(4rem + env(safe-area-inset-top))",
-          paddingBottom: "calc(5rem + env(safe-area-inset-bottom) + 1.5rem)",
-        }}
+        className="relative mx-auto flex max-w-2xl flex-col items-start justify-start py-8 md:py-16 z-10 pb-20"
         initial="initial"
         animate="animate"
         transition={{ staggerChildren: 0.25 }}
@@ -238,7 +216,7 @@ export function Layout() {
         <motion.div
           variants={fadeUp}
           transition={transition}
-          className="mt-10 flex flex-row items-center justify-between w-full mb-4 "
+          className="mt-10 flex flex-row items-center justify-between w-full mb-4"
         >
           <SignatureReveal
             src="/signature.svg"

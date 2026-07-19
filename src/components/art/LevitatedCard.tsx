@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -106,17 +106,77 @@ function PieceImage({
 export function LevitatedCard({
   piece,
   cardRect,
+  getSourceRect,
   onClose,
   onNext,
   onPrev,
 }: {
   piece: ArtPiece;
   cardRect: DOMRect;
+  getSourceRect: () => DOMRect | null;
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
 }) {
-  const target = useMemo(() => computeTargetRect(piece), [piece]);
+  // Recomputed on resize (not just on piece change) so the expanded image stays
+  // centered and correctly sized as the window changes size.
+  const [target, setTarget] = useState(() => computeTargetRect(piece));
+
+  useEffect(() => {
+    setTarget(computeTargetRect(piece));
+    let frame = 0;
+    function recompute() {
+      frame = 0;
+      setTarget(computeTargetRect(piece));
+    }
+    function schedule() {
+      if (frame) return;
+      frame = requestAnimationFrame(recompute);
+    }
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [piece]);
+
+  // The exit animation returns to the source card's *current* position. The
+  // background can scroll (or resize) while the card is expanded, which moves
+  // the fixed-positioned source card on screen, so we re-read its live rect
+  // rather than reuse the rect captured at open time.
+  const [exitRect, setExitRect] = useState(() => ({
+    top: cardRect.top,
+    left: cardRect.left,
+    width: cardRect.width,
+    height: cardRect.height,
+  }));
+
+  useEffect(() => {
+    let frame = 0;
+    function sync() {
+      frame = 0;
+      const r = getSourceRect();
+      if (r) {
+        setExitRect({
+          top: r.top,
+          left: r.left,
+          width: r.width,
+          height: r.height,
+        });
+      }
+    }
+    function schedule() {
+      if (frame) return;
+      frame = requestAnimationFrame(sync);
+    }
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [getSourceRect]);
   // Becomes true once the card has finished animating to its expanded size.
   // Gates the high-res image load so it doesn't stutter the open transition.
   const [opened, setOpened] = useState(false);
@@ -159,26 +219,26 @@ export function LevitatedCard({
         type="button"
         onClick={onPrev}
         aria-label="Previous"
-        className="fixed left-4 sm:left-8 bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-auto sm:top-1/2 z-50 sm:-translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10"
+        className="rounded-md fixed z-500 flex cursor-pointer items-center justify-center bg-white/5 text-white/40 hover:bg-white/10 active:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10 bottom-4 left-4 h-20 w-[calc(50%-1.5rem)] pb-[env(safe-area-inset-bottom)] sm:bottom-auto sm:top-1/2 sm:left-8 sm:h-11 sm:w-11 sm:rounded-full sm:-translate-y-1/2 sm:pb-0"
         initial={{ opacity: 0, x: -8 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -8 }}
         transition={{ duration: 0.3, delay: 0.15 }}
       >
-        <ChevronLeft className="size-5" />
+        <ChevronLeft className="size-7 sm:size-5" />
       </motion.button>
 
       <motion.button
         type="button"
         onClick={onNext}
         aria-label="Next"
-        className="fixed right-4 sm:right-8 bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-auto sm:top-1/2 z-50 sm:-translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10"
+        className="rounded-md fixed z-500 flex cursor-pointer items-center justify-center bg-white/5 text-white/40 hover:bg-white/10 active:bg-white/10 hover:text-white/90 transition-colors backdrop-blur-md outline -outline-offset-1 outline-white/10 bottom-4 right-4 h-20 w-[calc(50%-1.5rem)] pb-[env(safe-area-inset-bottom)] sm:bottom-auto sm:top-1/2 sm:right-8 sm:h-11 sm:w-11 sm:rounded-full sm:-translate-y-1/2 sm:pb-0"
         initial={{ opacity: 0, x: 8 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 8 }}
         transition={{ duration: 0.3, delay: 0.15 }}
       >
-        <ChevronRight className="size-5" />
+        <ChevronRight className="size-7 sm:size-5" />
       </motion.button>
 
       <motion.div
@@ -196,10 +256,10 @@ export function LevitatedCard({
           height: target.height,
         }}
         exit={{
-          top: cardRect.top,
-          left: cardRect.left,
-          width: cardRect.width,
-          height: cardRect.height,
+          top: exitRect.top,
+          left: exitRect.left,
+          width: exitRect.width,
+          height: exitRect.height,
           opacity: 0,
           transition: {
             duration: 0.5,

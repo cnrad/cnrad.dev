@@ -92,10 +92,40 @@ export function ArtCarousel() {
   const goNext = useCallback(() => setFocusedIndex((i) => i + 1), []);
   const goPrev = useCallback(() => setFocusedIndex((i) => i - 1), []);
 
+  // Live rect of the currently-focused card, read on demand. The expanded
+  // card animates back to this on close, so it must reflect the card's current
+  // on-screen position (e.g. after the background scrolled), not a stale capture.
+  const focusedIndexRef = useRef(focusedIndex);
+  focusedIndexRef.current = focusedIndex;
+  const getSourceRect = useCallback(
+    () =>
+      slotRefs.current.get(focusedIndexRef.current)?.getBoundingClientRect() ??
+      null,
+    [],
+  );
+
+  const openFocused = useCallback(() => {
+    const el = slotRefs.current.get(focusedIndexRef.current);
+    setCardRect(el?.getBoundingClientRect() ?? null);
+    setExpanded(true);
+  }, []);
+
   // Preload focused + nearby images eagerly
   useEffect(() => {
     preloadAround(focusedIndex);
   }, [focusedIndex]);
+
+  // Close the expanded view when the tab is hidden — returning to it later
+  // means re-decoding the large image, which leaves a blank card for seconds.
+  useEffect(() => {
+    if (!expanded) return;
+    function onVisibilityChange() {
+      if (document.hidden) setExpanded(false);
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [expanded]);
 
   const slots: { offset: number; virtualIndex: number; piece: ArtPiece }[] = [];
   for (let off = -VISIBLE_SIDE; off <= VISIBLE_SIDE; off++) {
@@ -103,25 +133,23 @@ export function ArtCarousel() {
     slots.push({ offset: off, virtualIndex: vi, piece: WORKS[mod(vi)]! });
   }
 
-  // Keyboard navigation (only when not expanded — LevitatedCard handles its own keys)
+  // Arrow-key navigation (only when not expanded — LevitatedCard handles its own
+  // keys). Enter/Space to open is handled on the focused card itself so it only
+  // fires when that card is actually focused, not globally (e.g. from the nav).
   useEffect(() => {
     if (expanded) return;
     function onKey(e: KeyboardEvent) {
       if (e.key === "ArrowLeft") goPrev();
       if (e.key === "ArrowRight") goNext();
-      if (e.key === "Enter") {
-        const el = slotRefs.current.get(focusedIndex);
-        setCardRect(el?.getBoundingClientRect() ?? null);
-        setExpanded(true);
-      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goPrev, goNext, expanded, focusedIndex]);
+  }, [goPrev, goNext, expanded]);
 
-  // Drag / swipe handling (desktop only)
+  // Drag / swipe handling (desktop pointer drag + mobile touch swipe).
+  // touchAction: "pan-y" on the wrapper lets the browser keep vertical page
+  // scrolling while horizontal gestures are delivered here as pointer events.
   useEffect(() => {
-    if (isMobile) return;
     const el = wrapperRef.current;
     if (!el) return;
 
@@ -172,7 +200,7 @@ export function ArtCarousel() {
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
     };
-  }, [isMobile]);
+  }, []);
 
   const handleCardClick = (
     offset: number,
@@ -196,6 +224,8 @@ export function ArtCarousel() {
       | undefined;
     let accumulated = 0;
     const threshold = 60;
+    const minStepInterval = 30; // ms — caps scroll speed so paints/preloads keep up
+    let lastStepTime = 0;
     let isHorizontalLocked = false;
     let lockTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -223,11 +253,16 @@ export function ArtCarousel() {
 
       e.preventDefault();
       accumulated += e.deltaX;
-      if (accumulated > threshold) {
-        goNext();
-        accumulated = 0;
-      } else if (accumulated < -threshold) {
-        goPrev();
+      if (Math.abs(accumulated) > threshold) {
+        const now = performance.now();
+        if (now - lastStepTime < minStepInterval) {
+          // clamp so a fast fling can't queue a burst of steps
+          accumulated = Math.sign(accumulated) * threshold;
+          return;
+        }
+        lastStepTime = now;
+        if (accumulated > 0) goNext();
+        else goPrev();
         accumulated = 0;
       }
     }
@@ -320,6 +355,19 @@ export function ArtCarousel() {
                   }}
                   transition={{ duration: 0.5, ease: EASE }}
                   onClick={(e) => handleCardClick(offset, e)}
+                  tabIndex={isFocused ? 0 : -1}
+                  role={isFocused ? "button" : undefined}
+                  aria-label={isFocused ? `Expand ${piece.name}` : undefined}
+                  onKeyDown={
+                    isFocused
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openFocused();
+                          }
+                        }
+                      : undefined
+                  }
                 >
                   <div className="relative h-full w-full overflow-hidden rounded-xl">
                     <BlurImage
@@ -338,11 +386,11 @@ export function ArtCarousel() {
                       animate={{ opacity: isFocused ? 1 : 0 }}
                       transition={{ duration: 0.3 }}
                     >
+                      <p className="text-xs text-white/50">{piece.date}</p>
                       <p className="text-sm font-semibold text-white/85">
                         {piece.name}
                         {piece.featured ? " *" : ""}
                       </p>
-                      <p className="text-xs text-white/40">{piece.date}</p>
                     </motion.div>
                   </div>
                 </motion.div>
@@ -378,6 +426,7 @@ export function ArtCarousel() {
           <LevitatedCard
             piece={focusedPiece}
             cardRect={cardRect}
+            getSourceRect={getSourceRect}
             onClose={() => setExpanded(false)}
             onNext={goNext}
             onPrev={goPrev}

@@ -46,14 +46,12 @@ export function More() {
     <div className="flex w-full flex-col gap-8 text-sm text-neutral-400 cursor-default mt-4">
       <p>
         i'm{" "}
-        <span className="font-semibold text-neutral-200">
+        <span className="font-semibold text-neutral-200 tabular-nums">
           {age.toFixed(10)}
         </span>{" "}
         years old. i was a swift student challenge winner in 2022. i am an avid
         enjoyer of electronic music, and i'm alright at{" "}
-        <span
-          className="group/drum relative inline-block"
-        >
+        <span className="group/drum relative inline-block">
           <a
             className="font-semibold text-neutral-200 animate-link"
             href="https://www.instagram.com/p/DKa9eaBhsTQ/"

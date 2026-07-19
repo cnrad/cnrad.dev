@@ -6,7 +6,7 @@ import { craftVideoElements } from "../../lib/preload";
 export type CraftItem = {
   title: string;
   date: string;
-  href: string;
+  href?: string;
   src: string;
   aspect: number;
 };
@@ -15,10 +15,12 @@ export function CraftCard({
   item,
   isHovered,
   onHover,
+  onUnhover,
 }: {
   item: CraftItem;
   isHovered: boolean;
   onHover: () => void;
+  onUnhover: () => void;
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,8 +69,10 @@ export function CraftCard({
       href={item.href}
       rel="noopener noreferrer"
       target="_blank"
-      className="flex flex-col gap-2 py-3 opacity-100 transition-opacity duration-300 ease-out md:group-hover:opacity-40 md:hover:opacity-100! md:flex-row md:items-start md:gap-4"
+      className="flex flex-col gap-2 py-3 opacity-100 transition-opacity duration-300 ease-out md:group-hover:opacity-40 md:group-focus-within:opacity-40 md:hover:opacity-100! md:focus:opacity-100! md:flex-row md:items-start md:gap-4"
       onMouseEnter={onHover}
+      onFocus={onHover}
+      onBlur={onUnhover}
     >
       <div className="shrink-0 pt-1 md:mr-5 max-md:mb-2">
         <p className="whitespace-nowrap text-sm font-medium text-neutral-200">
@@ -82,7 +86,7 @@ export function CraftCard({
       <div className="w-full overflow-hidden rounded-lg md:min-w-0 md:flex-1">
         <motion.div
           ref={attachVideo}
-          className="rounded-lg max-md:w-full!"
+          className="relative rounded-lg max-md:w-full!"
           initial={false}
           animate={{ width }}
           transition={{ duration: 0.35, ease: EASE }}
@@ -91,7 +95,11 @@ export function CraftCard({
             display: "block",
             aspectRatio: item.aspect,
           }}
-        />
+        >
+          {/* iOS Safari paints the video's compositing layer over an outline set
+              on the <video> itself, so draw the ring on an overlay above it. */}
+          <div className="pointer-events-none absolute inset-0 rounded-lg outline -outline-offset-1 outline-neutral-500/20 md:hidden" />
+        </motion.div>
       </div>
     </a>
   );
