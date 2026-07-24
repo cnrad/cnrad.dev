@@ -21,7 +21,7 @@ export function NotFound() {
   const detail =
     status === 404
       ? "the page you're looking for doesn't exist. maybe it never did."
-      : "an error happened on the way to this page. try going home and starting over.";
+      : "something happened on this page. try going home and starting over.";
 
   return (
     <div className="relative min-h-screen text-white px-6 md:px-10 overflow-hidden">
@@ -45,7 +45,7 @@ export function NotFound() {
             className="text-sm font-medium text-neutral-600 hover:text-neutral-300 transition-colors -ml-1"
           >
             <ChevronLeft size={14} className="inline-block mr-0.5" />
-            home
+            get me out of here
           </Link>
         </motion.div>
         <motion.h1
@@ -80,9 +80,9 @@ export function NotFound() {
         className="pointer-events-none absolute bottom-0 left-0 right-0 w-full h-screen z-0"
         style={{
           maskImage:
-            "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 80%, black 100%)",
+            "linear-gradient(to bottom, transparent 15%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.5) 90%, black 100%)",
           WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 80%, black 100%)",
+            "linear-gradient(to bottom, transparent 15%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.5) 90%, black 100%)",
         }}
       >
         <FluidAscii className="h-full w-full" />

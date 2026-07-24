@@ -207,12 +207,11 @@ export function SignatureReveal({
           const ty = t.y + PAD;
           // Each particle spawns at a random angle far outside the canvas.
           const angle = Math.random() * Math.PI * 2;
-          const dist = Math.max(canvasW, canvasH) * (0.55 + Math.random() * 0.6);
+          const dist =
+            Math.max(canvasW, canvasH) * (0.55 + Math.random() * 0.6);
           // Reading-order stagger: left edge starts first, right edge last,
           // with a touch of randomness so the boundary isn't a hard line.
-          const delay = reduced
-            ? 0
-            : (t.x / w) * 0.48 + Math.random() * 0.24;
+          const delay = reduced ? 0 : (t.x / w) * 0.48 + Math.random() * 0.24;
           return {
             tx,
             ty,
@@ -256,19 +255,11 @@ export function SignatureReveal({
 
         // Tuning knobs ---------------------------------------------------
         const k = 0.014; // spring stiffness — nudged up for a slightly quicker settle
-        // Velocity damping per (fixed 60 Hz) step. Kept at/just below the
-        // critical point for this stiffness so particles settle cleanly onto
-        // the stroke without the little overshoot-and-spring-back ("double
-        // bounce") that a higher value produced.
         const damp = 0.8;
         const mr = 130; // cursor radius (canvas px)
         const mForce = 5.5; // cursor repulsion strength
         const driftAmp = 0.12; // idle drift amplitude (canvas px)
         const fadeDur = 0.48; // fade-in duration after delay (s)
-        // Canvas-pixel distance from the rest position over which an arriving
-        // particle ramps from invisible to fully visible. Gated on distance to
-        // the TARGET (the signature's shape) — not depth inside the canvas — so
-        // the fly-in never traces the rectangular canvas bounding box.
         const revealBand = 140;
         const arriveDist = 6; // px from rest at which the intro fade hands off
         // ----------------------------------------------------------------
