@@ -49,6 +49,12 @@ body {
      md:min-h-screen), that height is shorter than the viewport, leaving a
      gap. Floor it at the viewport height so the grain always fills. */
   min-height: 100dvh;
+  /* On retina, 256px CSS covers 512 device px, so the browser bilinearly
+     upscales the 256px tile 2x and it looks blurry. Nearest-neighbor keeps
+     the original coarse grain size but with hard, crisp pixel edges instead
+     of smeared ones — still one static tile composited on the GPU (no cost). */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 @media (min-width: 768px) {
