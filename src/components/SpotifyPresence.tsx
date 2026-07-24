@@ -14,6 +14,9 @@ const SCROLL_SPEED = 30;
 const PAUSE = 1;
 const RETURN = 0.15;
 
+const EDGE_MASK =
+  "linear-gradient(to right, transparent, #000 var(--marquee-fade-left), #000 calc(100% - var(--marquee-fade-right)), transparent)";
+
 function MarqueeText({
   text,
   className,
@@ -82,45 +85,21 @@ function MarqueeText({
           {
             scrollTimelineName: "--marquee",
             scrollTimelineAxis: "inline",
+            ...(overflow > 0 && {
+              maskImage: EDGE_MASK,
+              WebkitMaskImage: EDGE_MASK,
+              animationName: "marqueeFadeLeft, marqueeFadeRight",
+              animationDuration: "1ms, 1ms",
+              animationFillMode: "both, both",
+              animationTimeline: "--marquee, --marquee",
+              animationRangeStart: "0%, 92%",
+              animationRangeEnd: "8%, 100%",
+            }),
           } as CSSProperties
         }
       >
         <span className="inline-block whitespace-nowrap">{text}</span>
       </div>
-      {overflow > 0 && (
-        <>
-          <div
-            className="absolute inset-y-0 left-0 w-4 pointer-events-none z-10"
-            style={
-              {
-                background: "linear-gradient(to right, #090909, transparent)",
-                opacity: 0,
-                animationName: "marqueeEdgeShow",
-                animationDuration: "1ms",
-                animationFillMode: "both",
-                animationTimeline: "--marquee",
-                animationRangeStart: "0%",
-                animationRangeEnd: "8%",
-              } as CSSProperties
-            }
-          />
-          <div
-            className="absolute inset-y-0 right-0 w-4 pointer-events-none z-10"
-            style={
-              {
-                background: "linear-gradient(to left, #090909, transparent)",
-                opacity: 1,
-                animationName: "marqueeEdgeHide",
-                animationDuration: "1ms",
-                animationFillMode: "both",
-                animationTimeline: "--marquee",
-                animationRangeStart: "92%",
-                animationRangeEnd: "100%",
-              } as CSSProperties
-            }
-          />
-        </>
-      )}
     </motion.div>
   );
 }
@@ -180,10 +159,21 @@ export function SpotifyPresence() {
           height={56}
           alt={activity.spotify.album}
           fetchPriority="high"
-          className="size-12 rounded-sm shadow-md select-none"
+          className="size-12 rounded-sm shadow-md select-none -outline-offset-1 outline outline-neutral-500/10 z-10"
           draggable={false}
         />
-        <div className="absolute -top-0.5 right-1.25 -translate-1/2 shrink-0">
+
+        <img
+          src={activity.spotify.album_art_url}
+          width={56}
+          height={56}
+          alt={activity.spotify.album}
+          fetchPriority="high"
+          className="size-12 scale-75 group-hover:scale-80 opacity-0 group-hover:opacity-100 rounded-md blur-[0.65rem] absolute right-0 top-1/2 -translate-y-1/2 z-8 transition-all duration-500 ease-out pointer-events-none"
+          draggable={false}
+        />
+
+        <div className="absolute -top-0.5 right-1.25 -translate-1/2 shrink-0 z-12">
           <span className="absolute size-1.75 rounded-full bg-radial from-green-300 to-green-600" />
           <span className="absolute size-1.75 animate-ping rounded-full bg-[color(display-p3_0.385_0.8_0.414/1)] [animation-duration:2s]" />
         </div>

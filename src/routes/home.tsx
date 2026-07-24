@@ -3,7 +3,10 @@ import { cn } from "../lib/utils";
 type ExperienceItem = {
   name: string;
   title: string;
-  period: string;
+  startDate: string;
+  endDate: string;
+  /** on-and-off contract work — renders the date dash as a dashed line */
+  dashed?: boolean;
   description: string;
   href: string;
   logo: string;
@@ -14,7 +17,8 @@ const WORK: ExperienceItem[] = [
   {
     name: "cside",
     title: "Product Engineer",
-    period: "2024 — Now",
+    startDate: "2024",
+    endDate: "Now",
     description: "frontend-focused, making the web secure again",
     href: "https://cside.com",
     logo: "/misc/cside-shield.png",
@@ -23,7 +27,9 @@ const WORK: ExperienceItem[] = [
   {
     name: "Incard",
     title: "Frontend Engineer",
-    period: "2024 — 2026",
+    startDate: "2024",
+    endDate: "2026",
+    dashed: true,
     description: "marketing pages + product design system",
     href: "https://incard.com",
     logo: "/misc/incard-logo.svg",
@@ -32,7 +38,8 @@ const WORK: ExperienceItem[] = [
   {
     name: "Dimension",
     title: "Full-stack Engineer",
-    period: "2023 — 2024",
+    startDate: "2023",
+    endDate: "2024",
     description: "",
     href: "https://dimension.dev",
     logo: "/misc/dimension.png",
@@ -44,7 +51,8 @@ const OTHER: ExperienceItem[] = [
   {
     name: "Bagel Fund",
     title: "General Partner",
-    period: "2024 — Now",
+    startDate: "2024",
+    endDate: "Now",
     description: "microgrants ($100-500) for ambitious young builders",
     href: "https://bagel.fund/",
     logo: "/misc/bagel-fund.png",
@@ -73,7 +81,15 @@ function ExperienceRow({ item }: { item: ExperienceItem }) {
   return (
     <div className="flex flex-row gap-4 md:gap-6 group cursor-default hit-area-y-2.5">
       <p className="shrink-0 w-24 text-neutral-500 tabular-nums leading-5 group-hover:text-neutral-200 transition-colors duration-150 ease-out">
-        {item.period}
+        {item.startDate}
+        <span
+          aria-hidden="true"
+          className={cn(
+            "inline-block w-3 mx-1.5 align-middle border-t border-current",
+            item.dashed ? "border-dashed" : "border-solid",
+          )}
+        />
+        {item.endDate}
       </p>
       <div className="flex flex-col gap-1 leading-5">
         <div className="flex flex-wrap gap-y-0.5 items-center">

@@ -1,5 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CraftCard } from "../components/craft/CraftCard";
+
+// ms between each card's fade-in and its video's playback start. Spreading the
+// video decodes across frames (instead of firing them all at once on mount)
+// keeps the heavy mount from stuttering the header's text-morph animation.
+const STAGGER_MS = 100;
 
 const ITEMS = [
   {
@@ -67,16 +72,61 @@ export function Craft() {
     };
   }, [hoveredIndex]);
 
+  // Keep the hovered card in sync with whatever sits under the cursor while the
+  // page scrolls. Browsers don't refresh :hover when content moves under a
+  // stationary pointer, so we re-run the hit-test ourselves. It's a single
+  // elementFromPoint per animation frame — cheap, and no virtual scroll needed
+  // (that's what made the old Lenis version heavy on Safari).
+  const pointer = useRef<{ x: number; y: number } | null>(null);
+  const rafId = useRef(0);
+  useEffect(() => {
+    // Hover-follow only makes sense with a fine pointer; skip on touch.
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    const onPointerMove = (e: PointerEvent) => {
+      pointer.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const resolveHover = () => {
+      rafId.current = 0;
+      const p = pointer.current;
+      if (!p) return;
+      const el = document.elementFromPoint(p.x, p.y) as HTMLElement | null;
+      const card = el?.closest<HTMLElement>("[data-craft-index]");
+      const next = card ? Number(card.dataset.craftIndex) : null;
+      setHoveredIndex((cur) => (cur === next ? cur : next));
+    };
+
+    const onScroll = () => {
+      if (rafId.current) return; // coalesce to one hit-test per frame
+      rafId.current = requestAnimationFrame(resolveHover);
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
+  }, []);
+
   return (
     <div
       className="group flex w-full flex-col"
+      // Opt out of the layout's block-level route fade; each card fades itself
+      // in on a stagger instead (see CraftCard), so the two don't compound.
+      style={{ animation: "none" }}
       onMouseLeave={() => setHoveredIndex(null)}
     >
       {ITEMS.map((item, i) => (
         <CraftCard
           key={item.title}
           item={item}
+          index={i}
+          delay={i * STAGGER_MS}
           isHovered={hoveredIndex === i}
+          anyHovered={hoveredIndex !== null}
           onHover={() => setHoveredIndex(i)}
           onUnhover={() => setHoveredIndex((cur) => (cur === i ? null : cur))}
         />

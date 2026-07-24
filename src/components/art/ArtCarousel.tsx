@@ -158,6 +158,11 @@ export function ArtCarousel() {
     let accumulated = 0;
 
     function onDown(e: PointerEvent) {
+      // Deliberately no setPointerCapture / preventDefault here: capturing on
+      // pointerdown retargets the synthesized click to this wrapper (breaking
+      // the focused card's onClick), and preventDefault suppresses the touch
+      // tap's click — both killed click/tap-to-expand. We defer both to onMove,
+      // once an actual drag begins, so a plain press still opens the card.
       pointerId = e.pointerId;
       startX = e.clientX;
       accumulated = 0;
@@ -172,7 +177,18 @@ export function ArtCarousel() {
     function onMove(e: PointerEvent) {
       if (e.pointerId !== pointerId) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 5) isDragging.current = true;
+      if (Math.abs(dx) > 5 && !isDragging.current) {
+        isDragging.current = true;
+        // Now it's a real drag: capture the pointer and cancel the native
+        // press/selection gesture (the Safari edge auto-scroll fix). Doing this
+        // only after movement is what keeps a plain click/tap opening the card.
+        try {
+          el?.setPointerCapture(e.pointerId);
+        } catch {
+          /* capture is best-effort */
+        }
+      }
+      if (isDragging.current) e.preventDefault();
 
       accumulated = dx;
       const steps = Math.trunc(accumulated / dragThreshold);
@@ -192,7 +208,7 @@ export function ArtCarousel() {
       window.removeEventListener("pointercancel", onUp);
     }
 
-    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("pointerdown", onDown, { passive: false });
 
     return () => {
       el.removeEventListener("pointerdown", onDown);
@@ -219,9 +235,6 @@ export function ArtCarousel() {
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
-    const lenis = (window as any).__lenis as
-      | { stop: () => void; start: () => void }
-      | undefined;
     let accumulated = 0;
     const threshold = 60;
     const minStepInterval = 30; // ms — caps scroll speed so paints/preloads keep up
@@ -232,7 +245,6 @@ export function ArtCarousel() {
     function unlock() {
       isHorizontalLocked = false;
       accumulated = 0;
-      lenis?.start();
     }
 
     function onWheel(e: WheelEvent) {
@@ -241,10 +253,7 @@ export function ArtCarousel() {
       const absY = Math.abs(e.deltaY);
 
       if (absX > absY && absX > 2) {
-        if (!isHorizontalLocked) {
-          isHorizontalLocked = true;
-          lenis?.stop();
-        }
+        isHorizontalLocked = true;
         if (lockTimeout) clearTimeout(lockTimeout);
         lockTimeout = setTimeout(unlock, 150);
       }
@@ -270,7 +279,6 @@ export function ArtCarousel() {
     return () => {
       el.removeEventListener("wheel", onWheel);
       if (lockTimeout) clearTimeout(lockTimeout);
-      if (isHorizontalLocked) lenis?.start();
     };
   }, [goNext, goPrev, expanded]);
 
@@ -288,6 +296,8 @@ export function ArtCarousel() {
             ? "calc(-1.5rem - env(safe-area-inset-left))"
             : "calc(-1 * (min(100vw, 1200px) - 100%) / 2)",
           touchAction: "pan-y",
+          userSelect: "none",
+          WebkitUserSelect: "none",
           cursor: isMobile ? "default" : isPointerDown ? "grabbing" : "grab",
         }}
       >
@@ -404,6 +414,7 @@ export function ArtCarousel() {
       {isMobile ? (
         <div className="flex items-center justify-between w-full mt-2">
           <button
+            type="button"
             onClick={goPrev}
             className="hit-area-2 flex items-center justify-center size-8 rounded-full bg-neutral-800/60 text-neutral-400 active:bg-neutral-700/60 active:text-neutral-200 transition-colors"
             aria-label="Previous"
@@ -411,6 +422,7 @@ export function ArtCarousel() {
             <ChevronLeft className="size-4" />
           </button>
           <button
+            type="button"
             onClick={goNext}
             className="hit-area-2 flex items-center justify-center size-8 rounded-full bg-neutral-800/60 text-neutral-400 active:bg-neutral-700/60 active:text-neutral-200 transition-colors"
             aria-label="Next"

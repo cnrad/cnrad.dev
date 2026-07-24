@@ -8,12 +8,6 @@ type WordMeta = {
   shimmer?: boolean;
 };
 
-type WordState = WordMeta & {
-  blur: number;
-  opacity: number;
-  y: number;
-};
-
 function parseMarkdownLite(input: string): WordMeta[] {
   const words: WordMeta[] = [];
   const regex = /\*([^*]+)\*|\[([^\]]+)\]\(([^)]+)\)|==([^=]+)==/g;
@@ -58,18 +52,25 @@ export function TextMorph({
   text: string;
   className?: string;
 }) {
-  const [newWords, setNewWords] = useState<WordState[]>(() =>
-    parseMarkdownLite(text).map((w) => ({ ...w, blur: 4, opacity: 0, y: 6 })),
-  );
-  const [oldSnapshot, setOldSnapshot] = useState<{
-    html: string;
-  } | null>(null);
-  const [oldOpacity, setOldOpacity] = useState(0);
+  // Structural word list — only changes when `text` changes, never per-frame.
+  // The animation itself is driven by direct DOM writes in the rAF loops below
+  // (see setWordStyle), so animating never triggers React reconciliation. This
+  // keeps the morph cheap and resilient when a heavy mount (craft/art videos)
+  // is competing for the main thread — the old per-frame setState re-rendered
+  // ~60 blurred spans every frame, which Safari in particular choked on.
+  const [words, setWords] = useState<WordMeta[]>(() => parseMarkdownLite(text));
+  const [oldSnapshot, setOldSnapshot] = useState<{ html: string } | null>(null);
   const prevText = useRef(text);
   const rafRef = useRef<number>(0);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
+  const oldParagraphRef = useRef<HTMLParagraphElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const hasAnimatedIn = useRef(false);
+  // True when the pending `words` change came from a text swap (→ morph) rather
+  // than the first mount (→ intro). A plain boolean read at animation time —
+  // NOT a consume-once flag — so it survives React StrictMode's dev remount
+  // (mount → cleanup → mount) instead of being nulled out and leaving the
+  // intro blank on the second mount.
+  const morphRequested = useRef(false);
 
   // Detect which visual line each word is on
   const getWordLines = useCallback(() => {
@@ -93,82 +94,106 @@ export function TextMorph({
     return lineForWord;
   }, []);
 
-  // Initial mount: line-by-line stagger with blur + opacity + y (runs once)
+  const setWordStyle = (
+    el: HTMLSpanElement | null | undefined,
+    blur: number,
+    opacity: number,
+    y: number,
+  ) => {
+    if (!el) return;
+    el.style.filter = blur > 0.1 ? `blur(${blur}px)` : "";
+    el.style.opacity = String(opacity);
+    el.style.transform = y > 0.1 ? `translateY(${y}px)` : "";
+    el.style.willChange =
+      blur > 0.1 || y > 0.1 ? "filter, opacity, transform" : "auto";
+  };
+
+  // A text change: freeze the current paragraph as an outgoing snapshot, then
+  // swap in the new word list and queue a morph. Capturing innerHTML here (in
+  // the effect, before React re-renders) grabs the DOM as it currently reads.
+  useEffect(() => {
+    if (text === prevText.current) return;
+    prevText.current = text;
+    cancelAnimationFrame(rafRef.current);
+
+    if (paragraphRef.current) {
+      setOldSnapshot({ html: paragraphRef.current.innerHTML });
+    }
+    morphRequested.current = true;
+    setWords(parseMarkdownLite(text));
+  }, [text]);
+
+  // Runs after `words` renders (so wordRefs point at the new spans) and BEFORE
+  // paint (so the hidden start-state is set with no flash of fully-visible
+  // text). Drives the whole animation via direct style writes.
   useLayoutEffect(() => {
-    if (hasAnimatedIn.current) return;
-    hasAnimatedIn.current = true;
+    // A `words` change is either the first mount (intro) or a text swap (morph).
+    // Text swaps always set morphRequested before setWords, so this cleanly
+    // distinguishes the two and re-runs correctly on a StrictMode remount.
+    const isMorph = morphRequested.current;
+    morphRequested.current = false;
 
-    // Delay to sync with parent stagger (TextMorph is ~4th child at 0.15s each)
-    const mountDelay = 600;
+    if (!isMorph) {
+      // Start hidden.
+      for (const el of wordRefs.current) setWordStyle(el, 4, 0, 6);
 
-    // Need a frame for refs to populate
-    const outerFrame = requestAnimationFrame(() => {
-      const wordLines = getWordLines();
-      const words = parseMarkdownLite(text);
+      // Delay to sync with parent stagger (TextMorph is ~4th child at 0.15s each)
+      const mountDelay = 600;
       const maxBlur = 4;
       const maxY = 6;
       const lineDelay = 80; // ms between lines
       const lineDuration = 550; // ms per line to animate
-      const startTime = performance.now() + mountDelay;
 
-      function tick(now: number) {
-        const elapsed = now - startTime;
-        const result: WordState[] = [];
-        let allDone = true;
+      // Need a frame for layout so getWordLines can read positions.
+      const outerFrame = requestAnimationFrame(() => {
+        const wordLines = getWordLines();
+        const n = words.length;
+        const startTime = performance.now() + mountDelay;
 
-        for (let i = 0; i < words.length; i++) {
-          const line = wordLines[i] ?? 0;
-          const lineElapsed = elapsed - line * lineDelay;
+        function tick(now: number) {
+          const elapsed = now - startTime;
+          let allDone = true;
 
-          if (lineElapsed < 0) {
-            result.push({ ...words[i]!, blur: maxBlur, opacity: 0, y: maxY });
-            allDone = false;
-          } else if (lineElapsed < lineDuration) {
-            const t = lineElapsed / lineDuration;
-            const ease = 1 - Math.pow(1 - t, 3); // cubic ease out
-            result.push({
-              ...words[i]!,
-              blur: (1 - ease) * maxBlur,
-              opacity: ease,
-              y: (1 - ease) * maxY,
-            });
-            allDone = false;
-          } else {
-            result.push({ ...words[i]!, blur: 0, opacity: 1, y: 0 });
+          for (let i = 0; i < n; i++) {
+            const line = wordLines[i] ?? 0;
+            const lineElapsed = elapsed - line * lineDelay;
+
+            let blur: number, opacity: number, y: number;
+            if (lineElapsed < 0) {
+              blur = maxBlur;
+              opacity = 0;
+              y = maxY;
+              allDone = false;
+            } else if (lineElapsed < lineDuration) {
+              const t = lineElapsed / lineDuration;
+              const ease = 1 - Math.pow(1 - t, 3); // cubic ease out
+              blur = (1 - ease) * maxBlur;
+              opacity = ease;
+              y = (1 - ease) * maxY;
+              allDone = false;
+            } else {
+              blur = 0;
+              opacity = 1;
+              y = 0;
+            }
+            setWordStyle(wordRefs.current[i], blur, opacity, y);
           }
+
+          if (!allDone) rafRef.current = requestAnimationFrame(tick);
         }
 
-        setNewWords(result);
-        if (!allDone) {
-          rafRef.current = requestAnimationFrame(tick);
-        }
-      }
+        rafRef.current = requestAnimationFrame(tick);
+      });
 
-      rafRef.current = requestAnimationFrame(tick);
-    });
-
-    return () => {
-      cancelAnimationFrame(outerFrame);
-      cancelAnimationFrame(rafRef.current);
-      hasAnimatedIn.current = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Transition between texts
-  useEffect(() => {
-    if (text === prevText.current) return;
-
-    prevText.current = text;
-    cancelAnimationFrame(rafRef.current);
-
-    const toWords = parseMarkdownLite(text);
-
-    // Capture the current rendered paragraph as a frozen snapshot
-    if (paragraphRef.current) {
-      setOldSnapshot({ html: paragraphRef.current.innerHTML });
+      return () => {
+        cancelAnimationFrame(outerFrame);
+        cancelAnimationFrame(rafRef.current);
+      };
     }
-    setOldOpacity(1);
+
+    // Morph: per-word blur-in, cross-fading the frozen snapshot out.
+    const n = words.length;
+    for (let i = 0; i < n; i++) setWordStyle(wordRefs.current[i], 6, 0, 0);
 
     const staggerMs = 20;
     const blurDownMs = 200;
@@ -178,33 +203,31 @@ export function TextMorph({
 
     function tick(now: number) {
       const elapsed = now - startTime;
-      const result: WordState[] = [];
       let allDone = true;
 
       const fadeT = Math.min(elapsed / fadeDuration, 1);
-      setOldOpacity(1 - fadeT);
+      if (oldParagraphRef.current) {
+        oldParagraphRef.current.style.opacity = String(1 - fadeT);
+      }
 
-      for (let i = 0; i < toWords.length; i++) {
+      for (let i = 0; i < n; i++) {
         const wordElapsed = elapsed - i * staggerMs;
-
+        let blur: number, opacity: number;
         if (wordElapsed < 0) {
-          result.push({ ...toWords[i]!, blur: maxBlur, opacity: 0, y: 0 });
+          blur = maxBlur;
+          opacity = 0;
           allDone = false;
         } else if (wordElapsed < blurDownMs) {
           const t = wordElapsed / blurDownMs;
-          result.push({
-            ...toWords[i]!,
-            blur: (1 - t) * maxBlur,
-            opacity: t,
-            y: 0,
-          });
+          blur = (1 - t) * maxBlur;
+          opacity = t;
           allDone = false;
         } else {
-          result.push({ ...toWords[i]!, blur: 0, opacity: 1, y: 0 });
+          blur = 0;
+          opacity = 1;
         }
+        setWordStyle(wordRefs.current[i], blur, opacity, 0);
       }
-
-      setNewWords(result);
 
       if (!allDone || fadeT < 1) {
         rafRef.current = requestAnimationFrame(tick);
@@ -215,19 +238,20 @@ export function TextMorph({
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [text]);
+  }, [words, getWordLines]);
 
   return (
     <div className="relative">
       {oldSnapshot && (
         <p
+          ref={oldParagraphRef}
           className={className}
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            opacity: oldOpacity,
+            opacity: 1,
             pointerEvents: "none",
           }}
           dangerouslySetInnerHTML={{ __html: oldSnapshot.html }}
@@ -241,36 +265,34 @@ export function TextMorph({
         {(() => {
           const elements: React.ReactNode[] = [];
           let i = 0;
-          while (i < newWords.length) {
+          while (i < words.length) {
             const idx = i;
-            const w = newWords[idx]!;
+            const w = words[idx]!;
             if (!w.href) {
               elements.push(
                 <span key={idx}>
                   {idx > 0 && " "}
                   <span
-                    ref={(el) => { wordRefs.current[idx] = el; }}
-                    className={w.shimmer ? "inline-block shimmer-text" : "inline-block"}
-                    data-shimmer-text={w.shimmer ? w.text : undefined}
-                    style={{
-                      filter: w.blur > 0.1 ? `blur(${w.blur}px)` : "none",
-                      opacity: w.opacity,
-                      transform: w.y > 0.1 ? `translateY(${w.y}px)` : "none",
-                      willChange: w.blur > 0.1 || w.y > 0.1 ? "filter, opacity, transform" : "auto",
-                      fontStyle: w.italic ? "italic" : undefined,
+                    ref={(el) => {
+                      wordRefs.current[idx] = el;
                     }}
+                    className={
+                      w.shimmer ? "inline-block shimmer-text" : "inline-block"
+                    }
+                    data-shimmer-text={w.shimmer ? w.text : undefined}
+                    style={{ fontStyle: w.italic ? "italic" : undefined }}
                   >
                     {w.text}
                   </span>
-                </span>
+                </span>,
               );
               i++;
             } else {
               const groupStart = i;
               const href = w.href;
-              const groupWords: typeof newWords = [];
-              while (i < newWords.length && newWords[i]!.href === href) {
-                groupWords.push(newWords[i]!);
+              const groupWords: WordMeta[] = [];
+              while (i < words.length && words[i]!.href === href) {
+                groupWords.push(words[i]!);
                 i++;
               }
               elements.push(
@@ -281,22 +303,18 @@ export function TextMorph({
                       <span key={groupStart + gi}>
                         {gi > 0 && " "}
                         <span
-                          ref={(el) => { wordRefs.current[groupStart + gi] = el; }}
-                          className="inline-block"
-                          style={{
-                            filter: gw.blur > 0.1 ? `blur(${gw.blur}px)` : "none",
-                            opacity: gw.opacity,
-                            transform: gw.y > 0.1 ? `translateY(${gw.y}px)` : "none",
-                            willChange: gw.blur > 0.1 || gw.y > 0.1 ? "filter, opacity, transform" : "auto",
-                            fontStyle: gw.italic ? "italic" : undefined,
+                          ref={(el) => {
+                            wordRefs.current[groupStart + gi] = el;
                           }}
+                          className="inline-block"
+                          style={{ fontStyle: gw.italic ? "italic" : undefined }}
                         >
                           {gw.text}
                         </span>
                       </span>
                     ))}
                   </Link>
-                </span>
+                </span>,
               );
             }
           }

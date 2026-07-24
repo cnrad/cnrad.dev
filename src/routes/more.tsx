@@ -11,14 +11,14 @@ const ITERATIONS = [
 
 const BIRTHDAY = new Date(2004, 11, 8); // December 8, 2004
 
+function getAge() {
+  const now = Date.now();
+  const diff = now - BIRTHDAY.getTime();
+  return diff / (365.25 * 24 * 60 * 60 * 1000);
+}
+
 function useAge() {
   const [age, setAge] = useState(() => getAge());
-
-  function getAge() {
-    const now = Date.now();
-    const diff = now - BIRTHDAY.getTime();
-    return diff / (365.25 * 24 * 60 * 60 * 1000);
-  }
 
   useEffect(() => {
     const interval = setInterval(() => setAge(getAge()), 50);
@@ -50,7 +50,7 @@ export function More() {
           {age.toFixed(10)}
         </span>{" "}
         years old. i was a swift student challenge winner in 2022. i am an avid
-        enjoyer of electronic music, and i'm alright at{" "}
+        enjoyer of electronic music, bouldering, and i'm alright at{" "}
         <span className="group/drum relative inline-block">
           <a
             className="font-semibold text-neutral-200 animate-link"

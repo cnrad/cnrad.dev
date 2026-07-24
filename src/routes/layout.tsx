@@ -5,6 +5,7 @@ import {
   useState,
   useRef,
   useCallback,
+  useMemo,
   type ComponentType,
 } from "react";
 import { useOutlet } from "react-router";
@@ -44,9 +45,9 @@ const transition = {
 };
 
 const pageDescriptions: Record<string, string> = {
-  "/": "computers used to feel like magic. as more and more software ships, faster than ever before, the bar for genuine care and craft is often forgotten in the search for velocity. i strive to bring that magic back - to make software *feel* great again.",
+  "/": "computers used to feel like magic. as more and more software ships, faster than ever before, the bar for genuine care and craft is often forgotten in the search for velocity. i develop polished web experiences to bring that magic back; to make software *feel* great again.",
   "/craft":
-    "great software has thoughtful consideration behind every pixel and every interaction. i ship the details that make software feel intuitive, and *right*. the limitless possibilities of human computer interaction excite me—the best interfaces haven't been built yet.",
+    "great software has thoughtful consideration behind every pixel and every interaction. i ship the details that make software feel intuitive, and *right*. the possibilities of human computer interaction are limitless — the best interfaces haven't been built yet.",
   "/art":
     "i digitally explore abstract expressionism, with 5,000,000+ views and multiple features on [unsplash](https://unsplash.com/@cnrad) to my name. if you're interested in commissioning work, [contact me](/more#email).",
   "/more":
@@ -71,7 +72,10 @@ export const isLayoutIntroComplete = () => layoutIntroComplete;
 function useMaxParagraphHeight(font: string, lineHeight: number) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [maxHeight, setMaxHeight] = useState<number | undefined>(undefined);
-  const preparedTexts = useRef(allDescriptions.map((t) => prepare(t, font)));
+  const preparedTexts = useMemo(
+    () => allDescriptions.map((t) => prepare(t, font)),
+    [font],
+  );
 
   const measure = useCallback(() => {
     const el = containerRef.current;
@@ -79,12 +83,12 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
     const width = el.clientWidth;
 
     let tallest = 0;
-    for (const prepared of preparedTexts.current) {
+    for (const prepared of preparedTexts) {
       const { height } = layout(prepared, width, lineHeight);
       if (height > tallest) tallest = height;
     }
     setMaxHeight(tallest + lineHeight);
-  }, [lineHeight]);
+  }, [lineHeight, preparedTexts]);
 
   useEffect(() => {
     measure();
@@ -96,20 +100,12 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
   return { containerRef, maxHeight };
 }
 
-/** SVG feTurbulence noise, rendered once and tiled across the viewport. */
 function NoiseBackground() {
   return (
-    <figure
-      className="pointer-events-none fixed inset-0 z-10 opacity-5 mix-blend-screen"
-      style={{ filter: "url(#noise-bg-fx) grayscale(100%)" }}
+    <div
+      className="noise-bg pointer-events-none absolute inset-0 z-0 opacity-[0.01]"
       aria-hidden="true"
-    >
-      <svg>
-        <filter id="noise-bg-fx">
-          <feTurbulence baseFrequency="0.8" />
-        </filter>
-      </svg>
-    </figure>
+    />
   );
 }
 
@@ -147,15 +143,7 @@ export function Layout() {
     if (prevBasePath.current === basePath) return;
     prevBasePath.current = basePath;
     if (window.scrollY === 0) return;
-
-    const lenis = (window as any).__lenis as
-      | { scrollTo: (target: number, opts?: { duration?: number }) => void }
-      | undefined;
-    if (lenis?.scrollTo) {
-      lenis.scrollTo(0, { duration: 0.8 });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [basePath]);
   const description = pageDescriptions[basePath] ?? pageDescriptions["/"]!;
   const { containerRef, maxHeight } = useMaxParagraphHeight(
@@ -172,39 +160,6 @@ export function Layout() {
       }}
     >
       <NoiseBackground />
-
-      {/* Progressive blur at top & bottom — desktop only; breaks iOS 26 liquid glass */}
-      {(["top", "bottom"] as const).map((edge) => (
-        <motion.div
-          key={edge}
-          className="pointer-events-none fixed left-0 right-0 z-40 h-14 max-md:hidden"
-          style={{ [edge]: 0 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {[
-            { blur: "1px", maskStart: 0, maskEnd: 25 },
-            { blur: "3px", maskStart: 25, maskEnd: 75 },
-            { blur: "6px", maskStart: 75, maskEnd: 100 },
-          ].map((layer, i) => {
-            const dir = edge === "bottom" ? "to bottom" : "to top";
-            const mask = `linear-gradient(${dir}, transparent ${layer.maskStart}%, black ${layer.maskEnd}%)`;
-            return (
-              <div
-                key={i}
-                className="absolute inset-0"
-                style={{
-                  backdropFilter: `blur(${layer.blur})`,
-                  WebkitBackdropFilter: `blur(${layer.blur})`,
-                  maskImage: mask,
-                  WebkitMaskImage: mask,
-                }}
-              />
-            );
-          })}
-        </motion.div>
-      ))}
 
       {/* Content */}
       <motion.div
@@ -267,7 +222,7 @@ export function Layout() {
         <motion.div
           variants={fadeUp}
           transition={transition}
-          className="mt-4 md:mt-8 mb-2 flex cursor-pointer flex-row items-center gap-3 text-sm text-neutral-600"
+          className="mt-8 mb-2 flex cursor-pointer flex-row items-center gap-3 text-sm text-neutral-600"
         >
           {navItems.map((item) => {
             const target = item === "work" ? "/" : `/${item}`;

@@ -56,8 +56,8 @@ type Particle = {
   // intro delay (seconds before this particle starts flying in)
   delay: number;
   // flips true once the particle first settles near its rest position. After
-  // that the intro's bounds-based fade is dropped so cursor scatter can still
-  // push it (and keep it visible) right up to the canvas edge.
+  // that the intro's reveal fade is dropped so cursor scatter can still push it
+  // (and keep it visible) right up to the canvas edge.
   arrived: boolean;
   // sprite size in canvas pixels
   size: number;
@@ -212,7 +212,7 @@ export function SignatureReveal({
           // with a touch of randomness so the boundary isn't a hard line.
           const delay = reduced
             ? 0
-            : (t.x / w) * 0.55 + Math.random() * 0.28;
+            : (t.x / w) * 0.48 + Math.random() * 0.24;
           return {
             tx,
             ty,
@@ -255,18 +255,21 @@ export function SignatureReveal({
         gl!.vertexAttribPointer(aAlpha, 1, gl!.FLOAT, false, 0, 0);
 
         // Tuning knobs ---------------------------------------------------
-        const k = 0.012; // spring stiffness toward resting position
-        const damp = 0.85; // velocity damping per frame
+        const k = 0.014; // spring stiffness — nudged up for a slightly quicker settle
+        // Velocity damping per (fixed 60 Hz) step. Kept at/just below the
+        // critical point for this stiffness so particles settle cleanly onto
+        // the stroke without the little overshoot-and-spring-back ("double
+        // bounce") that a higher value produced.
+        const damp = 0.8;
         const mr = 130; // cursor radius (canvas px)
         const mForce = 5.5; // cursor repulsion strength
         const driftAmp = 0.12; // idle drift amplitude (canvas px)
-        const fadeDur = 0.55; // fade-in duration after delay (s)
-        // Canvas-pixel depth over which an arriving particle ramps from
-        // invisible (at the canvas edge) to fully visible. Resting particles
-        // sit at least PAD px inside every edge, so keeping this below PAD
-        // guarantees they're already opaque by the time they settle — no pop
-        // when the bounds fade hands off to full visibility.
-        const fadeBand = 48;
+        const fadeDur = 0.48; // fade-in duration after delay (s)
+        // Canvas-pixel distance from the rest position over which an arriving
+        // particle ramps from invisible to fully visible. Gated on distance to
+        // the TARGET (the signature's shape) — not depth inside the canvas — so
+        // the fly-in never traces the rectangular canvas bounding box.
+        const revealBand = 140;
         const arriveDist = 6; // px from rest at which the intro fade hands off
         // ----------------------------------------------------------------
 
@@ -276,12 +279,9 @@ export function SignatureReveal({
           return t * t * (3 - 2 * t);
         };
 
-        function render() {
-          rafScheduled = false;
-          if (cancelled || !isVisible) return;
-          if (startTime === 0) startTime = performance.now();
-          const elapsed = (performance.now() - startTime) / 1000;
-
+        // One physics step, advancing the sim to `elapsed` seconds. Split out
+        // from the draw so the render loop can run it on a fixed 60 Hz timestep.
+        function step(elapsed: number) {
           for (let i = 0; i < particles.length; i++) {
             const p = particles[i]!;
             const t = elapsed - p.delay;
@@ -336,26 +336,55 @@ export function SignatureReveal({
             if (!p.arrived) {
               const dxr = p.tx - p.x;
               const dyr = p.ty - p.y;
-              if (dxr * dxr + dyr * dyr < arriveDist * arriveDist) {
+              const dist2 = dxr * dxr + dyr * dyr;
+              if (dist2 < arriveDist * arriveDist) {
                 // Settled — hand off to plain time/alpha so cursor scatter
                 // can keep it visible even when pushed toward the edge.
                 p.arrived = true;
               } else {
-                // Still flying in: gate opacity on how deep inside the canvas
-                // the particle currently is, so it materialises as it crosses
-                // the boundary instead of snapping into view at the hard,
-                // clipped rectangular edge. Works at any aspect ratio, so the
-                // squished mobile canvas no longer shows a visible cutoff.
-                const edge = Math.min(
-                  p.x,
-                  canvasW - p.x,
-                  p.y,
-                  canvasH - p.y,
-                );
-                a *= smoothstep(0, fadeBand, edge);
+                // Still flying in: reveal by proximity to the rest position
+                // (the signature's shape), so mid-flight particles stay hidden
+                // and the stroke materialises in place — never a hazy rectangle
+                // outlining the canvas bounds.
+                a *= 1 - smoothstep(arriveDist, revealBand, Math.sqrt(dist2));
               }
             }
             alphas[i] = a;
+          }
+        }
+
+        // Fixed-timestep loop. The spring physics is calibrated for a 60 Hz
+        // step, so we advance it by real elapsed time in fixed 1/60 s chunks —
+        // decoupled from the paint rate. On Safari (which paints this below
+        // 60fps) catch-up steps keep the intro running at the right speed
+        // instead of dragging; on a 120 Hz display it can't run 2x fast. The
+        // reveal is therefore identical in every browser.
+        const STEP_MS = 1000 / 60;
+        let lastNow = 0;
+        let accMs = 0;
+        let simMs = 0;
+
+        function render() {
+          rafScheduled = false;
+          if (cancelled || !isVisible) return;
+
+          const now = performance.now();
+          if (startTime === 0) {
+            startTime = now;
+            // Seed lastNow a step back so the first frame runs one step.
+            lastNow = now - STEP_MS;
+          }
+          let frameDt = now - lastNow;
+          lastNow = now;
+          // Long gap (backgrounded tab, GC, scrolled out and back) shouldn't
+          // unleash a burst of catch-up steps.
+          if (frameDt > 250) frameDt = STEP_MS;
+          accMs += frameDt;
+          if (accMs > STEP_MS * 5) accMs = STEP_MS * 5;
+          while (accMs >= STEP_MS) {
+            step(simMs / 1000);
+            simMs += STEP_MS;
+            accMs -= STEP_MS;
           }
 
           gl!.clearColor(0, 0, 0, 0);
