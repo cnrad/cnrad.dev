@@ -11,7 +11,7 @@
     "art:previews": "bun run scripts/build-previews.ts"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260402.1",
+    "@cloudflare/workers-types": "^5.20260722.1",
     "@types/bun": "latest",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
