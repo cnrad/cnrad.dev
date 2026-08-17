@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
+import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import { isLayoutIntroComplete } from "./layout";
+import { WRITING } from "../lib/writing";
+import { EASE } from "../lib/constants";
 
 const ITERATIONS = [
   { name: "v3.cnrad.dev", href: "https://v3.cnrad.dev", year: "2025" },
@@ -33,6 +36,12 @@ export function More() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const location = useLocation();
   const [shimmerEmail, setShimmerEmail] = useState(false);
+
+  // A single gray highlight that slides (translateY) between writing rows and
+  // fades (opacity) in/out. We keep the last position so leaving fades in place
+  // instead of sliding back to the top.
+  const [hlPos, setHlPos] = useState({ top: 0, height: 0 });
+  const [hlVisible, setHlVisible] = useState(false);
 
   useEffect(() => {
     if (location.hash !== "#email") return;
@@ -90,27 +99,78 @@ export function More() {
         — or shoot me a message on X.
       </p>
 
-      <div className="text-sm text-neutral-600 flex flex-row gap-3 items-start">
-        past iterations of this site:
-        <div className="flex flex-col group *:first:pt-0 *:last:pb-0 *:hit-area font-medium">
-          {ITERATIONS.map((iter) => (
-            <a
-              key={iter.name}
-              href={iter.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="group/link inline-flex items-center gap-1 text-neutral-400 transition-colors duration-150 ease-out hover:text-neutral-200 group-hover:not-hover:text-neutral-500"
-            >
-              {iter.name}
-              <ExternalLink className="size-2.5 ml-1 scale-50 origin-left opacity-0 transition-all duration-200 ease-out group-hover/link:scale-100 group-hover/link:opacity-100" />
-            </a>
-          ))}
+      <div className="text-sm text-neutral-600 flex flex-col xs:flex-row gap-3 items-start">
+        <p className="max-w-48 w-full">past iterations of this site:</p>
+        <div className="flex-row gap-3 items-start w-full flex">
+          <div className="flex flex-col group *:first:pt-0 *:last:pb-0 *:hit-area font-medium">
+            {ITERATIONS.map((iter) => (
+              <a
+                key={iter.name}
+                href={iter.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="group/link inline-flex items-center gap-1 text-neutral-400 transition-colors duration-150 ease-out hover:text-neutral-200 group-hover:not-hover:text-neutral-500"
+              >
+                {iter.name}
+                <ExternalLink className="size-2.5 ml-1 scale-50 origin-left opacity-0 transition-all duration-200 ease-out group-hover/link:scale-100 group-hover/link:opacity-100" />
+              </a>
+            ))}
+          </div>
+          <div className="flex flex-col group *:first:pt-0 *:last:pb-0 font-medium ml-auto">
+            {ITERATIONS.map((iter) => (
+              <p
+                key={iter.name}
+                className="text-neutral-600 font-medium italic"
+              >
+                ({iter.year})
+              </p>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col group *:first:pt-0 *:last:pb-0 font-medium ml-auto">
-          {ITERATIONS.map((iter) => (
-            <p key={iter.name} className="text-neutral-600 font-medium italic">
-              ({iter.year})
-            </p>
+      </div>
+
+      <div className="h-px w-full bg-neutral-900" />
+
+      <div className="text-sm text-neutral-600 flex flex-col xs:flex-row gap-3 items-start">
+        <h3 className="max-w-48 w-full">writing</h3>
+        <div
+          className="group relative flex flex-col [&>a:first-of-type]:pt-0 [&>a:last-of-type]:pb-0 w-full"
+          onMouseLeave={() => setHlVisible(false)}
+        >
+          {/* Sliding hover highlight — a thin white line on the right edge that
+              slides between rows and fades in/out. */}
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0"
+            initial={false}
+            animate={{
+              y: hlPos.top,
+              height: hlPos.height,
+              opacity: hlVisible ? 1 : 0,
+            }}
+            transition={{ duration: 0.2, ease: EASE }}
+          >
+            <div className="absolute right-1 top-1 bottom-1 w-0.5 rounded-full bg-white/50" />
+          </motion.div>
+
+          {WRITING.map((post) => (
+            <Link
+              key={post.slug}
+              to={`/writing/${post.slug}`}
+              onMouseEnter={(e) => {
+                setHlPos({
+                  top: e.currentTarget.offsetTop,
+                  height: e.currentTarget.offsetHeight,
+                });
+                setHlVisible(true);
+              }}
+              className="relative z-10 flex flex-col gap-1 py-2 transition-opacity duration-300 ease-out group-hover:opacity-40 hover:opacity-100!"
+            >
+              <p className="text-sm font-medium text-neutral-200">
+                {post.title}
+              </p>
+              <p className="text-xs text-neutral-500">{post.date}</p>
+            </Link>
           ))}
         </div>
       </div>

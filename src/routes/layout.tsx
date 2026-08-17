@@ -14,6 +14,8 @@ import { SignatureReveal } from "../components/SignatureReveal";
 import { TextMorph } from "../components/TextMorph";
 import { GithubIcon, XTwitterIcon, LinkedInIcon } from "../icons";
 import { SpotifyPresence } from "../components/SpotifyPresence";
+import { NoiseBackground } from "../components/NoiseBackground";
+import { WritingOverlay } from "../components/WritingOverlay";
 import { EASE } from "../lib/constants";
 import { preloadCraftVideos, preloadArtImages } from "../lib/preload";
 import { playSound, preloadSound } from "../lib/sound";
@@ -100,15 +102,6 @@ function useMaxParagraphHeight(font: string, lineHeight: number) {
   return { containerRef, maxHeight };
 }
 
-function NoiseBackground() {
-  return (
-    <div
-      className="noise-bg pointer-events-none absolute inset-0 z-0 opacity-[0.01]"
-      aria-hidden="true"
-    />
-  );
-}
-
 /**
  * Freezes the outlet only during exit animations (when the base path changes).
  * Allows updates within the same base path (e.g. /art → /art/slug).
@@ -130,6 +123,21 @@ export function Layout() {
   const location = useLocation();
   const basePath = "/" + (location.pathname.split("/")[1] ?? "");
 
+  // A writing post renders as a full-screen overlay layer on top of the site,
+  // not as a page in the content column. While it's open we hold the column on
+  // the page it was launched from (the "background" base path) so the site
+  // behind the overlay stays put and doesn't crossfade.
+  const isWriting = basePath === "/writing";
+  // Seed with the real base path — even on a direct /writing load. Forcing "/"
+  // here would make the column's AnimatePresence key already "/", so navigating
+  // home wouldn't change the key, the column wouldn't remount, and FrozenOutlet
+  // would keep returning the stale (null) writing outlet — leaving home blank.
+  const bgBasePath = useRef(basePath);
+  if (!isWriting) bgBasePath.current = basePath;
+  const writingSlug = isWriting
+    ? (location.pathname.split("/")[2] ?? null)
+    : null;
+
   useEffect(() => {
     if (layoutIntroComplete) return;
     const t = setTimeout(() => {
@@ -141,11 +149,20 @@ export function Layout() {
   const prevBasePath = useRef(basePath);
   useEffect(() => {
     if (prevBasePath.current === basePath) return;
+    const wasWriting = prevBasePath.current === "/writing";
     prevBasePath.current = basePath;
+    // Don't move the background when the overlay opens or closes — keep the
+    // reader's place in the page behind it.
+    if (basePath === "/writing" || wasWriting) return;
     if (window.scrollY === 0) return;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [basePath]);
-  const description = pageDescriptions[basePath] ?? pageDescriptions["/"]!;
+  // Use the background page's description, not the writing route's — the header
+  // is hidden behind the overlay while a post is open, so morphing it there
+  // would just replay the animation when the reader returns. Holding it means
+  // the site is already settled and static underneath.
+  const description =
+    pageDescriptions[bgBasePath.current] ?? pageDescriptions["/"]!;
   const { containerRef, maxHeight } = useMaxParagraphHeight(
     "14px Open Sans",
     22,
@@ -266,7 +283,7 @@ export function Layout() {
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={location.pathname.split("/").slice(0, 2).join("/")}
+              key={bgBasePath.current}
               className="w-full origin-top stagger-children"
               initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
@@ -278,6 +295,8 @@ export function Layout() {
           </AnimatePresence>
         </motion.div>
       </motion.div>
+
+      <WritingOverlay slug={writingSlug} backTo={bgBasePath.current} />
     </div>
   );
 }

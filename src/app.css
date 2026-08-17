@@ -20,6 +20,9 @@
 
 @theme {
   --font-sans: "Open Sans", sans-serif;
+  /* Extra-small breakpoint (v4 has none by default). Enables `xs:` variants,
+     e.g. stacking a row into a column below 480px. */
+  --breakpoint-xs: 30rem;
 }
 
 html {

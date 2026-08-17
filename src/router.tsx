@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import { Layout } from "./routes/layout";
 import { NotFound } from "./routes/not-found";
 
@@ -56,6 +56,19 @@ export const router = createBrowserRouter([
             <More />
           </SuspenseWrapper>
         ),
+      },
+      {
+        // Bare /writing isn't a page — bounce it to /more (where the writing
+        // list lives). The loader redirects before anything renders.
+        path: "/writing",
+        loader: () => redirect("/more"),
+      },
+      {
+        // The post itself renders as a full-screen overlay from the Layout
+        // (see WritingOverlay); this route only needs to match the URL so the
+        // Layout stays mounted underneath and doesn't fall through to NotFound.
+        path: "/writing/:slug",
+        element: null,
       },
     ],
   },
