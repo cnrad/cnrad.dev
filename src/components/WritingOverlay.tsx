@@ -51,6 +51,17 @@ export function WritingOverlay({
     };
   }, [open]);
 
+  // Reflect the open post in the document title, restoring the site default
+  // (whatever it was) once the overlay closes or the post changes.
+  useEffect(() => {
+    if (!open || !post) return;
+    const prev = document.title;
+    document.title = `${post.title} — Conrad Crawford`;
+    return () => {
+      document.title = prev;
+    };
+  }, [open, post]);
+
   // Escape dismisses the layer, matching the top link (back, or home).
   useEffect(() => {
     if (!open) return;

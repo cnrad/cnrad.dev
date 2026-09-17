@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import { Link } from "react-router";
+import { WRITING_COMPONENTS } from "./writing/registry";
 
 // A small, dependency-free markdown renderer — just enough for prose posts:
 // headings, paragraphs, lists, blockquotes, code (inline + fenced), rules, and
@@ -8,7 +9,8 @@ import { Link } from "react-router";
 
 // --- inline: bold, italic, inline code, links -------------------------------
 
-const INLINE = /(\*\*[^*]+\*\*)|(\*[^*]+\*)|(`[^`]+`)|(\[[^\]]*\]\([^)]+\))/g;
+const INLINE =
+  /(\*\*[^*]+\*\*)|(\*[^*]+\*)|(`[^`]+`)|(!\[[^\]]*\]\([^)]+\))|(\[[^\]]*\]\([^)]+\))|(\^\d+)/g;
 
 function parseInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
@@ -36,6 +38,19 @@ function parseInline(text: string): ReactNode[] {
           {token.slice(1, -1)}
         </code>,
       );
+    } else if (token.startsWith("![")) {
+      const m = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(token);
+      const alt = m?.[1] ?? "";
+      const src = m?.[2] ?? "";
+      nodes.push(
+        <img
+          key={key++}
+          src={src}
+          alt={alt}
+          className="inline-block max-w-full rounded-md border border-neutral-500/10"
+          loading="lazy"
+        />,
+      );
     } else if (token.startsWith("[")) {
       const m = /^\[([^\]]*)\]\(([^)]+)\)$/.exec(token);
       const label = m?.[1] ?? "";
@@ -61,6 +76,17 @@ function parseInline(text: string): ReactNode[] {
             {label}
           </a>
         ),
+      );
+    } else if (token.startsWith("^")) {
+      // footnote reference — a raised, linked number that jumps to the matching
+      // definition (a `^N ...` line, rendered at the foot of the post).
+      const n = token.slice(1);
+      nodes.push(
+        <sup key={key++} id={`fnref-${n}`} className="ml-px text-[0.65em]">
+          <a href={`#fn-${n}`} className="font-medium text-neutral-400 animate-link">
+            {n}
+          </a>
+        </sup>,
       );
     } else {
       // single-asterisk italic
@@ -115,10 +141,120 @@ export function Markdown({ content }: { content: string }) {
       continue;
     }
 
+    // embedded component. Two forms:
+    //   :::component <Name>                 ← bare, no props
+    //   :::component <Name>                 ← fenced, with JSON props
+    //   { "prop": 1 }
+    //   :::
+    // A props block is present only when the next line opens with `{`; otherwise
+    // this is a bare directive and we consume nothing else (so following prose
+    // isn't swallowed even without a closing `:::`).
+    const directive = /^:::component\s+(\S+)\s*$/.exec(line.trim());
+    if (directive) {
+      const name = directive[1] ?? "";
+      const body: string[] = [];
+      i++;
+      if ((lines[i] ?? "").trim().startsWith("{")) {
+        while (i < lines.length && (lines[i] ?? "").trim() !== ":::") {
+          body.push(lines[i] ?? "");
+          i++;
+        }
+        if (i < lines.length) i++; // closing :::
+      } else if ((lines[i] ?? "").trim() === ":::") {
+        i++; // empty fenced form
+      }
+      const Component = WRITING_COMPONENTS[name];
+      let props: Record<string, unknown> = {};
+      const rawProps = body.join("\n").trim();
+      if (rawProps) {
+        try {
+          props = JSON.parse(rawProps);
+        } catch {
+          // Leave props empty on malformed JSON; the fallback below still shows
+          // a visible marker if the component itself is missing.
+        }
+      }
+      blocks.push(
+        Component ? (
+          <Component key={key++} {...props} />
+        ) : (
+          <div
+            key={key++}
+            className="rounded-md border border-red-500/20 bg-red-950/20 p-3 font-mono text-xs text-red-400/80"
+          >
+            Unknown component: {name}
+          </div>
+        ),
+      );
+      continue;
+    }
+
+    // standalone image — a lone markdown image or raw <img> tag on its own line,
+    // rendered as a centered block figure rather than inline in a paragraph.
+    const mdImage = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(line.trim());
+    const rawImage = /^<img\s+[^>]*\/?>\s*$/.test(line.trim());
+    if (mdImage || rawImage) {
+      let src = mdImage?.[2] ?? "";
+      let alt = mdImage?.[1] ?? "";
+      if (rawImage) {
+        src = /\bsrc\s*=\s*["']([^"']+)["']/.exec(line)?.[1] ?? "";
+        alt = /\balt\s*=\s*["']([^"']*)["']/.exec(line)?.[1] ?? "";
+      }
+      blocks.push(
+        <img
+          key={key++}
+          src={src}
+          alt={alt}
+          className="mx-auto my-2 max-w-full rounded-md border border-neutral-500/10"
+          loading="lazy"
+        />,
+      );
+      i++;
+      continue;
+    }
+
     // horizontal rule
     if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
       blocks.push(<hr key={key++} className="border-neutral-500/15" />);
       i++;
+      continue;
+    }
+
+    // footnote definition: `^N ...` at the start of a line. Rendered small and
+    // muted with the number as its marker and a ↩ back to its reference. Wrapped
+    // continuation lines are folded in until a blank line or the next footnote.
+    const footnote = /^\^(\d+)\s+(.*)$/.exec(line);
+    if (footnote) {
+      const n = footnote[1] ?? "";
+      const body: string[] = [footnote[2] ?? ""];
+      i++;
+      while (
+        i < lines.length &&
+        (lines[i] ?? "").trim() !== "" &&
+        !/^\^\d+\s+/.test(lines[i] ?? "")
+      ) {
+        body.push((lines[i] ?? "").trim());
+        i++;
+      }
+      blocks.push(
+        <div
+          key={key++}
+          id={`fn-${n}`}
+          className="flex scroll-mt-24 gap-2 text-xs leading-6 text-neutral-500"
+        >
+          <span className="shrink-0 font-medium text-neutral-400">{n}.</span>
+          <p>
+            {parseInline(body.join(" "))}{" "}
+            <a
+              href={`#fnref-${n}`}
+              aria-label="Back to reference"
+              className="text-neutral-600 animate-link"
+            >
+              ↩
+            </a>
+          </p>
+        </div>,
+      );
       continue;
     }
 
@@ -202,6 +338,10 @@ export function Markdown({ content }: { content: string }) {
       if (
         cur.trim() === "" ||
         cur.trim().startsWith("```") ||
+        cur.trim().startsWith(":::component") ||
+        /^\^\d+\s+/.test(cur) ||
+        /^!\[[^\]]*\]\([^)]+\)$/.test(cur.trim()) ||
+        /^<img\s+[^>]*\/?>\s*$/.test(cur.trim()) ||
         /^(#{1,3})\s+/.test(cur) ||
         cur.trimStart().startsWith(">") ||
         /^\s*[-*]\s+/.test(cur) ||
