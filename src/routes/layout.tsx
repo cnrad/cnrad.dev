@@ -16,6 +16,7 @@ import { GithubIcon, XTwitterIcon, LinkedInIcon } from "../icons";
 import { SpotifyPresence } from "../components/SpotifyPresence";
 import { NoiseBackground } from "../components/NoiseBackground";
 import { WritingOverlay } from "../components/WritingOverlay";
+import { PageErrorBoundary } from "../components/PageErrorBoundary";
 import { EASE } from "../lib/constants";
 import { preloadCraftVideos, preloadArtImages } from "../lib/preload";
 import { playSound, preloadSound } from "../lib/sound";
@@ -290,7 +291,12 @@ export function Layout() {
               exit={{ opacity: 0, y: 2, filter: "blur(4px)" }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
-              <FrozenOutlet />
+              {/* A render error in the active page is caught here so the site
+                  chrome above stays put and the error shows as a modal over it,
+                  rather than replacing the whole page. Reset it on navigation. */}
+              <PageErrorBoundary resetKey={location.pathname}>
+                <FrozenOutlet />
+              </PageErrorBoundary>
             </motion.div>
           </AnimatePresence>
         </motion.div>

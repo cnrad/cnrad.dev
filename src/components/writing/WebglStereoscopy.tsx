@@ -208,10 +208,23 @@ export function WebglStereoscopy() {
     };
     updateSun();
 
+    // Render at full device resolution (up to 2x) for a crisp image, but never
+    // more than MAX_W buffer pixels wide, and back off via `quality` if the GPU
+    // can't keep a smooth frame rate (see the adaptive block in `frame`).
+    const MAX_DPR = 2;
+    const MAX_W = 1600;
+    const QUALITY_FLOOR = 0.6;
+    let quality = 1;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-      const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
-      const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR) * quality;
+      let w = Math.round(canvas.clientWidth * dpr);
+      let h = Math.round(canvas.clientHeight * dpr);
+      if (w > MAX_W) {
+        h = Math.round((h * MAX_W) / w);
+        w = MAX_W;
+      }
+      w = Math.max(1, w);
+      h = Math.max(1, h);
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -228,11 +241,29 @@ export function WebglStereoscopy() {
     let clock = 0;
     let last = 0;
     let running = false;
+    let emaMs = 16; // smoothed frame time
+    let warmup = 0;
     const frame = (now: number) => {
       if (!running) return;
       if (!last) last = now;
-      clock += Math.min(0.05, (now - last) / 1000);
+      const dtMs = now - last;
       last = now;
+      clock += Math.min(0.05, dtMs / 1000);
+
+      // Adaptive resolution: if the smoothed frame time stays high (≈ below
+      // ~38fps) after a short warmup, drop render scale a notch (one-way, so it
+      // never oscillates) until it's smooth again.
+      if (warmup < 30) {
+        warmup++;
+      } else if (quality > QUALITY_FLOOR) {
+        emaMs = emaMs * 0.9 + dtMs * 0.1;
+        if (emaMs > 26) {
+          quality = Math.max(QUALITY_FLOOR, quality - 0.15);
+          warmup = 0;
+          emaMs = 16;
+        }
+      }
+
       resize();
       updateSun();
       gl.uniform1f(uTime, clock);

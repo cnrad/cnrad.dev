@@ -1,28 +1,21 @@
-import { Link, useRouteError, isRouteErrorResponse } from "react-router";
+import { Link } from "react-router";
 import { motion } from "motion/react";
 import { FluidAscii } from "../components/FluidAscii";
 import { EASE } from "../lib/constants";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 const fadeUp = {
   initial: { opacity: 0, y: 8, filter: "blur(4px)" },
   animate: { opacity: 1, y: 0, filter: "blur(0px)" },
 };
 
+/**
+ * The 404 page — strictly "this URL doesn't exist." Runtime/render errors are a
+ * different thing and surface as a modal over the site instead (ErrorModal, via
+ * PageErrorBoundary and RouteErrorFallback), so this page never has to pretend
+ * to be both.
+ */
 export function NotFound() {
-  const error = useRouteError();
-  const isErrorBoundary = error !== undefined;
-  const status =
-    isRouteErrorResponse(error) && typeof error.status === "number"
-      ? error.status
-      : 404;
-
-  const heading = status === 404 ? "page not found" : "something broke";
-  const detail =
-    status === 404
-      ? "the page you're looking for doesn't exist. maybe it never did."
-      : "something happened on this page. try going home and starting over.";
-
   return (
     <div className="relative min-h-screen text-white px-6 md:px-10 overflow-hidden">
       <motion.div
@@ -53,24 +46,15 @@ export function NotFound() {
           transition={{ duration: 0.6, ease: EASE }}
           className="mt-2 text-2xl font-semibold"
         >
-          {heading}
+          page not found
         </motion.h1>
         <motion.p
           variants={fadeUp}
           transition={{ duration: 0.6, ease: EASE }}
           className="mt-3 max-w-md text-sm text-neutral-400 leading-5.5"
         >
-          {detail}
+          the page you're looking for doesn't exist. maybe it never did.
         </motion.p>
-        {isErrorBoundary && error instanceof Error ? (
-          <motion.pre
-            variants={fadeUp}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="mt-10 max-w-full overflow-x-auto whitespace-pre-wrap rounded-md border border-neutral-500/10 bg-neutral-950/50 p-3 text-xs text-neutral-500"
-          >
-            {error.message}
-          </motion.pre>
-        ) : null}
       </motion.div>
 
       <motion.div
