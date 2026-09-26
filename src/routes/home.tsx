@@ -18,7 +18,7 @@ const WORK: ExperienceItem[] = [
     name: "cside",
     title: "Product Engineer",
     startDate: "2024",
-    endDate: "Now",
+    endDate: "2026",
     description: "frontend-focused, making the web secure again",
     href: "https://cside.com",
     logo: "/misc/cside-shield.png",
