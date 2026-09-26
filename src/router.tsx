@@ -15,6 +15,9 @@ const Craft = lazy(() =>
 const More = lazy(() =>
   import("./routes/more").then((m) => ({ default: m.More })),
 );
+const Scrollbars = lazy(() =>
+  import("./routes/scrollbars").then((m) => ({ default: m.Scrollbars })),
+);
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={null}>{children}</Suspense>;
@@ -71,6 +74,15 @@ export const router = createBrowserRouter([
         element: null,
       },
     ],
+  },
+  {
+    // A standalone piece — outside Layout, so none of the site chrome.
+    path: "/scrollbars",
+    element: (
+      <SuspenseWrapper>
+        <Scrollbars />
+      </SuspenseWrapper>
+    ),
   },
   {
     path: "*",
