@@ -418,7 +418,7 @@ export function Scrollbars() {
       className="fixed inset-0 flex select-none flex-col items-center justify-center overflow-hidden bg-white text-[#111] antialiased"
       style={{ fontFamily: FONT }}
     >
-      <div className="relative mb-14">
+      <div className="mb-10 flex flex-col items-center">
         <Scrollbar
           {...barStyles("v")}
           length={V_LEN}
@@ -428,13 +428,8 @@ export function Scrollbars() {
           thumbLen={s.vThumb}
           svgProps={barProps("v")}
         />
-        {/* Hugs the scrollbar's live edge, top-aligned with it */}
         <div
-          className="absolute top-0 whitespace-nowrap"
-          style={{
-            left: ((BOX + s.w) / 2 + PAD) * S + 20,
-            marginTop: PAD * S - 5,
-          }}
+          className="mt-5 flex flex-col items-center whitespace-nowrap"
           aria-live="polite"
         >
           <Title t={labelT} />
@@ -545,7 +540,7 @@ function Title({ t }: { t: number }) {
         return (
           <div
             key={i}
-            className="absolute top-0 left-0"
+            className="absolute inset-x-0 top-0 text-center"
             style={{
               lineHeight: `${TITLE_ROW}px`,
               opacity: o,
