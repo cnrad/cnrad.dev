@@ -1,6 +1,6 @@
 ---
 title: Why should we care about the inputs?
-date: Sept 28, 2026
+date: September 28, 2026
 ---
 
 I've been making music on the computer since I was a kid. Growing up, I had this idea that for a song to be my own, the majority of it had to be made from scratch, aside from a few drums or presets. I didn't particularly like the idea that someone could drag a bunch of pre-made loops together and call it a song they "made". It felt lazy and disingenuous to just slap together a bunch of someone else's work and call it my own, because that's not what "true" producers do.
