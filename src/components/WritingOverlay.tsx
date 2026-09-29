@@ -51,6 +51,17 @@ export function WritingOverlay({
     };
   }, [open]);
 
+  // The tab reads as the post while it's open, and the site's own name comes
+  // back when it closes. Set explicitly rather than restored: a post opened
+  // from a direct link starts on a shell whose title is already the post's.
+  useEffect(() => {
+    if (!open || !post) return;
+    document.title = `${post.title} - Conrad Crawford`;
+    return () => {
+      document.title = "Conrad Crawford";
+    };
+  }, [open, post]);
+
   // Escape dismisses the layer, matching the top link (back, or home).
   useEffect(() => {
     if (!open) return;

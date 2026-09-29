@@ -20,6 +20,6 @@ Interestingly, this shift in perspective has happened to me for music as well. I
 The concept of work is changing - maybe we shouldn't care about the inputs at all, and instead focus on making the outputs as perfect as they can be.
 
 
-^1 One could argue that you also lose a lot of context, since you aren't touching the code. I think this is mostly a skill issue though - there are ways to use these tools and still maintain a good level of ownership over the architecture / code.
+^1 One could argue that you also lose a lot of context, since you aren't touching the code. I think this is mostly a skill issue though - there are ways to use these tools and still maintain a good level of ownership over the architecture / code itself.
 
-^2 The term "taste" has been thrown around on X a lot recently. I consider taste to be the intuition required to make something feel polished, and the ability to articulate why you made those decisions.
+^2 The term "taste" has been thrown around on X a lot recently. I consider taste to be the intuition needed to make something look / feel polished, and the ability to articulate and defend the decisions you made.

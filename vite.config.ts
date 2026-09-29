@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { postMeta } from "./vite-post-meta";
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), postMeta()],
   server: {
-    allowedHosts: ["e4ca-2601-19b-4186-8c20-71f4-7157-b162-ba6d.ngrok-free.app"],
+    // any host so my tunnels just work
+    allowedHosts: true,
   },
 });
