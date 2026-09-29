@@ -1,14 +1,91 @@
 import { Fragment, type ReactNode } from "react";
 import { Link } from "react-router";
+import { cn } from "../lib/utils";
 
 // A small, dependency-free markdown renderer — just enough for prose posts:
 // headings, paragraphs, lists, blockquotes, code (inline + fenced), rules, and
 // inline emphasis/links. Content is first-party (our own .md files), so this
 // isn't meant to be a hardened general-purpose parser.
 
+// --- footnote navigation -----------------------------------------------------
+//
+// Jumping between a footnote reference and its definition is done by hand
+// rather than by the anchor's default: the target is scrolled to sit about a
+// third of the way down the viewport (where the eye already is, instead of
+// pinned to the top edge), and then "bursts" — the same shimmer sweep the /more
+// page uses on the contact email — so you can see exactly what you landed on.
+// Runs `cb` once a smooth scroll on `scroller` has come to rest: the position
+// is sampled every frame and must hold still for a few frames after moving.
+// If it never moves (target already in view, or the scroller is pinned at its
+// end) it fires after a short grace period; a hard cap guards against a scroll
+// that's interrupted mid-way. `scrollend` would be simpler, but Safari support
+// is still too recent to lean on.
+function afterScroll(scroller: HTMLElement | null, cb: () => void) {
+  const read = () => (scroller ? scroller.scrollTop : window.scrollY);
+  let last = read();
+  let stable = 0;
+  let moved = false;
+  const t0 = performance.now();
+  const tick = () => {
+    const now = read();
+    if (now !== last) {
+      moved = true;
+      stable = 0;
+      last = now;
+    } else {
+      stable++;
+    }
+    const done =
+      (moved && stable >= 3) || (!moved && stable >= 8) || performance.now() - t0 > 1800;
+    if (done) cb();
+    else requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+function jumpTo(id: string, burst: { selector: string; cls: string }) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  // Posts render inside a scrolling overlay, not the window — so scroll the
+  // nearest scrollable ancestor (falling back to the window).
+  let scroller: HTMLElement | null = el.parentElement;
+  while (scroller) {
+    const { overflowY } = getComputedStyle(scroller);
+    if (/(auto|scroll)/.test(overflowY) && scroller.scrollHeight > scroller.clientHeight) break;
+    scroller = scroller.parentElement;
+  }
+  const elTop = el.getBoundingClientRect().top;
+  if (scroller) {
+    const top = scroller.scrollTop + (elTop - scroller.getBoundingClientRect().top) - scroller.clientHeight * 0.35;
+    scroller.scrollTo({ top: Math.max(0, top), behavior: "instant" });
+  } else {
+    const top = elTop + window.scrollY - window.innerHeight * 0.35;
+    window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
+  }
+  history.replaceState(null, "", `#${id}`);
+
+  // Burst only once the smooth scroll has actually arrived, so the flash lands
+  // in view. The class is removed and re-added around a reflow so a repeat
+  // click restarts the animation.
+  const target = document.querySelector<HTMLElement>(burst.selector);
+  if (!target) return;
+  afterScroll(scroller, () => {
+    target.classList.remove(burst.cls);
+    void target.offsetWidth;
+    target.classList.add(burst.cls);
+    window.setTimeout(() => target.classList.remove(burst.cls), 1600);
+  });
+}
+
+// The plain words of a footnote, for the shimmer overlay to redraw over the
+// real text (it must wrap identically, so no markup).
+const plainText = (md: string) =>
+  md.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/[*_`]/g, "");
+
 // --- inline: bold, italic, inline code, links -------------------------------
 
-const INLINE = /(\*\*[^*]+\*\*)|(\*[^*]+\*)|(`[^`]+`)|(\[[^\]]*\]\([^)]+\))/g;
+const INLINE =
+  /(\*\*[^*]+\*\*)|(\*[^*]+\*)|(`[^`]+`)|(!\[[^\]]*\]\([^)]+\))|(\[[^\]]*\]\([^)]+\))|(\^\d+)/g;
 
 function parseInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
@@ -36,6 +113,19 @@ function parseInline(text: string): ReactNode[] {
           {token.slice(1, -1)}
         </code>,
       );
+    } else if (token.startsWith("![")) {
+      const m = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(token);
+      const alt = m?.[1] ?? "";
+      const src = m?.[2] ?? "";
+      nodes.push(
+        <img
+          key={key++}
+          src={src}
+          alt={alt}
+          className="inline-block max-w-full rounded-md border border-neutral-500/10"
+          loading="lazy"
+        />,
+      );
     } else if (token.startsWith("[")) {
       const m = /^\[([^\]]*)\]\(([^)]+)\)$/.exec(token);
       const label = m?.[1] ?? "";
@@ -62,6 +152,32 @@ function parseInline(text: string): ReactNode[] {
           </a>
         ),
       );
+    } else if (token.startsWith("^")) {
+      // footnote reference — a raised, linked number that jumps to the matching
+      // definition (a `^N ...` line, rendered at the foot of the post).
+      const n = token.slice(1);
+      nodes.push(
+        <sup
+          key={key++}
+          id={`fnref-${n}`}
+          data-shimmer-text={n}
+          className="ml-px text-[0.65em]"
+        >
+          <a
+            href={`#fn-${n}`}
+            className="font-medium text-neutral-400 animate-link"
+            onClick={(e) => {
+              e.preventDefault();
+              jumpTo(`fn-${n}`, {
+                selector: `#fn-${n} [data-shimmer-text]`,
+                cls: "shimmer-once",
+              });
+            }}
+          >
+            {n}
+          </a>
+        </sup>,
+      );
     } else {
       // single-asterisk italic
       nodes.push(
@@ -85,6 +201,9 @@ export function Markdown({ content }: { content: string }) {
   const blocks: ReactNode[] = [];
   let i = 0;
   let key = 0;
+  // The first footnote after the body gets extra room above it, so the notes
+  // read as a separate section; the ones after it keep the normal gap.
+  let lastWasFootnote = false;
 
   while (i < lines.length) {
     const line = lines[i] ?? "";
@@ -115,10 +234,119 @@ export function Markdown({ content }: { content: string }) {
       continue;
     }
 
+    // standalone image — a lone markdown image or raw <img> tag on its own line,
+    // rendered as a centered block figure rather than inline in a paragraph.
+    const mdImage = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(line.trim());
+    const rawImage = /^<img\s+[^>]*\/?>\s*$/.test(line.trim());
+    if (mdImage || rawImage) {
+      let src = mdImage?.[2] ?? "";
+      let alt = mdImage?.[1] ?? "";
+      // A raw <img> may carry its own `class` (merged over the defaults below
+      // via `cn`, so any Tailwind class wins) for per-image styling. Markdown
+      // `![]()` images have nowhere to put one, so they stay on the defaults.
+      let rawClass = "";
+      if (rawImage) {
+        src = /\bsrc\s*=\s*["']([^"']+)["']/.exec(line)?.[1] ?? "";
+        alt = /\balt\s*=\s*["']([^"']*)["']/.exec(line)?.[1] ?? "";
+        rawClass =
+          /\bclass(?:Name)?\s*=\s*["']([^"']*)["']/.exec(line)?.[1] ?? "";
+      }
+      i++;
+
+      // An italic line placed directly under the image (no blank line between)
+      // becomes its caption — small, muted, centered beneath the figure. The
+      // `[^*]` guard keeps `**bold**` from being read as an italic caption.
+      const captionMatch = /^\*([^*].*?)\*$/.exec((lines[i] ?? "").trim());
+      if (captionMatch) {
+        i++;
+        blocks.push(
+          <figure key={key++} className="mx-auto my-2 flex flex-col gap-2">
+            <img
+              src={src}
+              alt={alt}
+              className={cn(
+                "max-w-full rounded-md border border-neutral-500/10",
+                rawClass,
+              )}
+              loading="lazy"
+            />
+            <figcaption className="text-center text-xs leading-5 text-neutral-500">
+              {parseInline(captionMatch[1] ?? "")}
+            </figcaption>
+          </figure>,
+        );
+        continue;
+      }
+
+      blocks.push(
+        <img
+          key={key++}
+          src={src}
+          alt={alt}
+          className={cn(
+            "mx-auto my-2 max-w-full rounded-md border border-neutral-500/10",
+            rawClass,
+          )}
+          loading="lazy"
+        />,
+      );
+      continue;
+    }
+
     // horizontal rule
     if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
       blocks.push(<hr key={key++} className="border-neutral-500/15" />);
       i++;
+      continue;
+    }
+
+    // footnote definition: `^N ...` at the start of a line. Rendered small and
+    // muted with the number as its marker and a ↩ back to its reference. Wrapped
+    // continuation lines are folded in until a blank line or the next footnote.
+    const footnote = /^\^(\d+)\s+(.*)$/.exec(line);
+    if (!footnote) lastWasFootnote = false;
+    if (footnote) {
+      const first = !lastWasFootnote;
+      lastWasFootnote = true;
+      const n = footnote[1] ?? "";
+      const body: string[] = [footnote[2] ?? ""];
+      i++;
+      while (
+        i < lines.length &&
+        (lines[i] ?? "").trim() !== "" &&
+        !/^\^\d+\s+/.test(lines[i] ?? "")
+      ) {
+        body.push((lines[i] ?? "").trim());
+        i++;
+      }
+      blocks.push(
+        <div
+          key={key++}
+          id={`fn-${n}`}
+          className={`flex scroll-mt-24 gap-2 text-xs leading-5 text-neutral-500 ${first ? "mt-6" : ""}`}
+        >
+          <span className="shrink-0 font-medium text-neutral-400">{n}.</span>
+          {/* data-shimmer-text carries the plain sentence for the burst overlay */}
+          <p className="shimmer-wrap" data-shimmer-text={plainText(body.join(" "))}>
+            {parseInline(body.join(" "))}{" "}
+            <a
+              href={`#fnref-${n}`}
+              aria-label="Back to reference"
+              className="text-neutral-600 animate-link"
+              onClick={(e) => {
+                e.preventDefault();
+                // Back to the sentence this footnote hangs off, and burst it.
+                jumpTo(`fnref-${n}`, {
+                  selector: `[data-fn-sentence="${n}"]`,
+                  cls: "sentence-burst",
+                });
+              }}
+            >
+              ↩
+            </a>
+          </p>
+        </div>,
+      );
       continue;
     }
 
@@ -129,10 +357,10 @@ export function Markdown({ content }: { content: string }) {
       const text = parseInline(heading[2] ?? "");
       const cls =
         level === 1
-          ? "text-lg font-semibold text-neutral-100"
+          ? "text-2xl font-semibold text-neutral-100 mt-8"
           : level === 2
-            ? "text-base font-semibold text-neutral-100"
-            : "text-sm font-semibold text-neutral-200";
+            ? "text-xl font-semibold text-neutral-100 mt-8"
+            : "text-lg font-semibold text-neutral-200 mt-8";
       const Tag = `h${level}` as "h1" | "h2" | "h3";
       blocks.push(
         <Tag key={key++} className={cls}>
@@ -140,6 +368,25 @@ export function Markdown({ content }: { content: string }) {
         </Tag>,
       );
       i++;
+      continue;
+    }
+
+    // caption: `>* text *<` on its own line. Attaches to WHATEVER block sits
+    // above it (an embedded component, an image, a code block…) — small, muted
+    // and centred, pulled up against the block so it reads as its caption
+    // rather than a paragraph of its own. Checked before blockquotes, since it
+    // also begins with `>`.
+    const caption = /^>\*\s*(.+?)\s*\*<$/.exec(line.trim());
+    if (caption) {
+      i++;
+      blocks.push(
+        <p
+          key={key++}
+          className="-mt-4 text-center text-xs leading-5 text-neutral-500"
+        >
+          {parseInline(caption[1] ?? "")}
+        </p>,
+      );
       continue;
     }
 
@@ -202,6 +449,9 @@ export function Markdown({ content }: { content: string }) {
       if (
         cur.trim() === "" ||
         cur.trim().startsWith("```") ||
+        /^\^\d+\s+/.test(cur) ||
+        /^!\[[^\]]*\]\([^)]+\)$/.test(cur.trim()) ||
+        /^<img\s+[^>]*\/?>\s*$/.test(cur.trim()) ||
         /^(#{1,3})\s+/.test(cur) ||
         cur.trimStart().startsWith(">") ||
         /^\s*[-*]\s+/.test(cur) ||
@@ -213,7 +463,34 @@ export function Markdown({ content }: { content: string }) {
       para.push(cur.trim());
       i++;
     }
-    blocks.push(<p key={key++}>{parseInline(para.join(" "))}</p>);
+    // Wrap the sentence each footnote reference belongs to in a marked span, so
+    // the ↩ on the footnote can jump back and burst exactly that sentence. A
+    // sentence runs from the previous terminator (". ", "? ", "! ") to the ref,
+    // taking a terminator that trails the ref ("…effect^2.") along with it.
+    const text = para.join(" ");
+    const parts: ReactNode[] = [];
+    let cursor = 0;
+    for (const m of text.matchAll(/\^(\d+)/g)) {
+      const idx = m.index ?? 0;
+      if (idx < cursor) continue;
+      const before = text.slice(0, idx);
+      let start = cursor;
+      for (const b of before.matchAll(/[.!?]["')\]]*\s+/g)) {
+        const s = (b.index ?? 0) + b[0].length;
+        if (s >= cursor) start = s;
+      }
+      const trailing = /^[.!?]["')\]]*/.exec(text.slice(idx + m[0].length))?.[0] ?? "";
+      const end = idx + m[0].length + trailing.length;
+      parts.push(
+        <Fragment key={`b${idx}`}>{parseInline(text.slice(cursor, start))}</Fragment>,
+        <span key={`s${idx}`} data-fn-sentence={m[1]} className="rounded-[3px]">
+          {parseInline(text.slice(start, end))}
+        </span>,
+      );
+      cursor = end;
+    }
+    parts.push(<Fragment key="tail">{parseInline(text.slice(cursor))}</Fragment>);
+    blocks.push(<p key={key++}>{parts}</p>);
   }
 
   return (
