@@ -8,6 +8,13 @@ const STAGGER_MS = 100;
 
 const ITEMS = [
   {
+    title: "A-(eye) candy",
+    date: "October 6, 2026",
+    href: "https://x.com/notcnrad/status/2107466404031328554",
+    src: "/design/a-eye-candy.mp4",
+    aspect: 1920 / 1080,
+  },
+  {
     title: "HDR Sunset",
     date: "July 2, 2026",
     href: "https://x.com/notcnrad/status/2072581377141211312?s=20",
