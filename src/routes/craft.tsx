@@ -8,6 +8,13 @@ const STAGGER_MS = 100;
 
 const ITEMS = [
   {
+    title: "Physical Input",
+    date: "October 28, 2026",
+    href: "https://x.com/notcnrad/status/2115654565584375919",
+    src: "/design/physical-input.mp4",
+    aspect: 1720 / 916,
+  },
+  {
     title: "A-(eye) candy",
     date: "October 6, 2026",
     href: "https://x.com/notcnrad/status/2107466404031328554",
